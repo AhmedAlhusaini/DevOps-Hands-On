@@ -1,0 +1,30 @@
+
+
+############# Script 1 #############
+
+ubuntu@DolfinED:~$ vim sc4.sh
+---
+#!/bin/bash
+d=$(pwd)
+echo "My Directory is = $d"
+---
+
+
+############# Script  #############
+
+ubuntu@DolfinED:~$ vim sc4.sh
+---
+#!/bin/bash
+
+echo " Hello this script will take some seconds to run"
+
+start=$(date +%s)
+sleep 2
+end=$(date +%s)
+
+difference=$(( end - start ))
+
+echo 
+
+echo " The Script Time is $difference seconds "
+---
