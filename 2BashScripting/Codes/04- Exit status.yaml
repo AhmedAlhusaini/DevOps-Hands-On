@@ -1,0 +1,25 @@
+
+
+############# Script 1 #############
+
+
+ubuntu@DolfinED:~$ vim ex.sh
+
+---
+#!/bin/bash
+echo "Hello From DolfinED"
+echo $?
+Ls
+echo $?
+---
+
+ubuntu@DolfinED:~$ chmod +x ex.sh
+
+ubuntu@DolfinED:~$ ./ex.sh
+Hello From DolfinED
+0
+./ex.sh: line 7: Ls: command not found
+127
+
+
+
