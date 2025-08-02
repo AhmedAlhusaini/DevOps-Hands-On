@@ -1,0 +1,74 @@
+
+############# Script 1 #############
+
+ubuntu@DolfinED:~$ vim sc1.sh
+---
+#!/bin/bash
+if [ 5 -gt 3 ]
+then
+        echo "You are right"
+fi
+---
+
+
+############# Script 2 #############
+
+ubuntu@DolfinED:~$ vim sc1.sh
+---
+#!/bin/bash
+if [ $1 -gt $2 ]
+then
+        echo "You are right"
+fi
+---
+
+
+
+############# Script 3 #############
+
+ubuntu@DolfinED:~$ vim sc1.sh
+---
+#!/bin/bash
+if [ $1 -gt $2 ]
+then
+        echo "You are right"
+else
+        echo " You are wrong "
+fi
+---
+
+
+############# Script 4 #############
+
+ubuntu@DolfinED:~$ vim sc2.sh
+---
+#!/bin/bash
+read -p "Enter the number= " num
+
+if [ $num -gt 50 ]
+then
+        echo "This number is greater than 50"
+else
+        echo "This number is less than 50"
+fi
+---
+
+
+
+############# Script 5 #############
+
+ubuntu@DolfinED:~$ vim sc2.sh
+---
+#!/bin/bash
+read -p "Enter the number= " num
+
+if [ $num -gt 50 ]
+then
+        echo "This number is greater than 50"
+elif [ $num -lt 50 ] 
+then
+        echo "This number is less than 50"     
+else
+        echo "This number is equal to 50"
+fi
+---
