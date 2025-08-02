@@ -1,0 +1,52 @@
+
+
+############# Script 1 #############
+
+ubuntu@DolfinED:~$ vim shift2.sh
+---
+#!/bin/bash
+echo "The passed arguments are: $@"
+
+shift
+
+
+echo "The arguments after one shift: $@"
+
+shift
+
+echo "The arguments after another shift: $@"
+---
+
+
+
+
+############# Script 2 #############
+
+#### Using While ####
+
+ubuntu@DolfinED:~$ vim shift.sh
+---
+#!/bin/bash
+
+while [ $# -gt 0 ]
+do
+    echo "$*"
+    shift
+done
+---
+
+
+
+
+############# Script 3 #############
+
+ubuntu@DolfinED:~$ vim shift.sh
+---
+#!/bin/bash
+
+while [ $# -gt 0 ]
+do
+    echo "$*"
+    shift 2
+done
+---
