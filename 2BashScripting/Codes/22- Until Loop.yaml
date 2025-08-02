@@ -1,0 +1,50 @@
+
+############# Script 1 #############
+
+ubuntu@DolfinED:~$ vim until.sh
+
+---
+#!/bin/bash
+
+read -p "Enter A Number: " count
+
+until [ $count -gt 5 ]
+do
+    echo $count
+    ((count++))
+done
+---
+
+
+
+
+############# Script 2 #############
+
+ubuntu@DolfinED:~$ vim until.sh
+---
+#!/bin/bash
+
+read -p "Enter A Number: " count
+
+while [ $count -gt 5 ]
+do
+    echo $count
+    ((count++))
+done
+---
+
+
+
+############# Script 3 #############
+
+ubuntu@DolfinED:~$ vim while.sh
+---
+#!/bin/bash
+
+read -p "Enter A Number: " count
+
+while [ $count -le 5 ]; do
+    echo $count
+    ((count++))
+done
+---
