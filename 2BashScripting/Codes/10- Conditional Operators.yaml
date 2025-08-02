@@ -1,0 +1,42 @@
+
+
+# Space is important
+
+
+######### Comparison Operators for Numerical Values #######
+
+ubuntu@DolfinED:~$ [ 10 -eq 10 ] ; echo $?
+
+ubuntu@DolfinED:~$ [[ a -eq b ]] ; echo $?
+
+ubuntu@DolfinED:~$ [ $string1 != $string2  ] ; echo $?
+
+
+ubuntu@DolfinED:~$ [ -z $string1 ] ; echo $?
+
+
+####### File Operators #######
+
+ubuntu@DolfinED:~$ [ -e sc1.sh ] ; echo $?
+
+
+ubuntu@DolfinED:~$ [ -d dolfined ] ; echo $?
+
+
+ubuntu@DolfinED:~$ [ -x sc5.sh ] ; echo $?
+
+
+========================================================
+
+####### Logical Operators #########
+
+ubuntu@DolfinED:~$ [ $a -gt $b ] && [ $a -ne $b ] ; echo $?
+
+
+ubuntu@DolfinED:~$ [ $a -eq $b ] || [ $a -ne $b ] ; echo $?
+
+
+ubuntu@DolfinED:~$ ! [ $a -gt $b ] ; echo $?
+
+
+
