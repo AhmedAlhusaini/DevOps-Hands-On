@@ -14,8 +14,25 @@ I’m currently a student on a mission to master DevOps, cloud, and geospatial s
 
 Wish me all the best as I grow through these exciting journeys! 💪
 
+# 🚀 DEPI DevOps Learning Roadmap - Topics and Descriptions
 
-## 📚 What's Inside
+| #  | Subject                             | Description                                                                 |
+|----|-------------------------------------|-----------------------------------------------------------------------------|
+| 1  | **Linux**                           | Operating system foundation for system and server administration.           |
+| 2  | **Bash Scripting**                  | Script-based automation using command-line tools.                          |
+| 3  | **Web Servers (e.g. NGINX)**        | Delivering web content, reverse proxying, and load balancing.              |
+| 4  | **Version Control (Git & GitHub)**  | Tracking changes and collaboration via centralized code repositories.      |
+| 5  | **DevOps & Cloud Introduction**     | Overview of DevOps principles and cloud computing basics.                  |
+| 6  | **Cloud Services (AWS)**            | Learning to use Amazon Web Services for scalable infrastructure.           |
+| 7  | **Terraform**                       | Infrastructure as Code for automated cloud provisioning.                   |
+| 8  | **Ansible**                         | Configuration management for post-deployment setup and automation.         |
+| 9  | **Docker**                          | Containerization for consistent app deployment across environments.        |
+| 10 | **Kubernetes**                      | Orchestration and management of containerized workloads.                   |
+| 11 | **Jenkins**                         | CI/CD automation to streamline development and deployment cycles.          |
+| 12 | **Prometheus**                      | Monitoring and logging to ensure visibility into system health.            |
+
+
+## 📚 What's Inside Currently
 
 A modular series of hands-on labs:
 
