@@ -1,0 +1,54 @@
+
+
+
+
+# reset the app choice for the crontab -e
+ubuntu@DolfinED:~$ rm ~/.selected_editor
+
+
+############# Script 1 #############
+
+ubuntu@DolfinED:~$ vim cron.sh
+---
+#!/bin/bash
+
+date >> cron.txt
+---
+
+
+
+############# Script 2 #############
+
+ubuntu@DolfinED:~$ vim cron1.sh
+---
+#!/bin/bash
+
+date >> /home/ubuntu/cron-new.txt
+---
+
+
+
+
+ubuntu@DolfinED:~$ date
+Wed Sep 13 18:20:57 EEST 2023
+
+ubuntu@DolfinED:~$ sudo timedatectl set-ntp 0
+# to disable Automatic time synchronization
+
+ubuntu@DolfinED:~$ sudo timedatectl set-time 18:15:57
+
+ubuntu@DolfinED:~$ date
+Wed Sep 13 18:15:59 EEST 2023
+
+ubuntu@DolfinED:~$ sudo cp /home/ubuntu/cron1.sh /etc/cron.hourly/cron1
+
+ubuntu@DolfinED:~$ ls /etc/cron.hourly/
+cron1
+
+
+ubuntu@DolfinED:~$ sudo rm /etc/cron.hourly/cron1
+# Remove the script
+
+ubuntu@DolfinED:~$ sudo timedatectl set-ntp 1
+# enable Automatic time synchronization
+
