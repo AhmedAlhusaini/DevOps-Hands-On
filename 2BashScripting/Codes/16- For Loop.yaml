@@ -1,0 +1,99 @@
+
+############# Script 1 #############
+
+## Loop over strings
+
+ubuntu@DolfinED:~$ vim for.sh
+---
+#!/bin/bash
+
+for num in 1 2 3 4 5
+do
+        echo "The Number is: $num"
+done
+---
+
+
+
+############# Script 2 #############
+
+## Reading Command-line arguments
+ubuntu@DolfinED:~$ vim for2.sh
+---
+#!/bin/bash
+
+for var in $*
+do
+        echo "The value is: $var"
+done
+---
+
+
+
+############# Script 3 #############
+
+## Loop over a number range "Brace Expansion"
+
+ubuntu@DolfinED:~$ vim for3.sh
+---
+#!/bin/bash
+
+for num in {0..10}
+do
+        echo "The Number is: $num "
+done
+---
+
+
+############# Script 4 #############
+
+
+## {START..END..INCREMENT}
+
+ubuntu@DolfinED:~$ vim for4.sh
+---
+#!/bin/bash
+
+for num in {0..20..2}
+do
+  echo "Number: $num"
+done
+---
+
+
+
+############# Script 5 #############
+
+## Loop over array elements
+
+
+ubuntu@DolfinED:~$ vim for5.sh
+---
+#!/bin/bash
+
+courses=(Linux Bash_Script AWS Git Python Docker K8s Jenkins)
+
+for i in "${courses[@]}"
+do
+        echo "DolfinED Provides Many Courses in DevOps Like: $i"
+done
+---
+
+############# Script 6 #############
+
+## command substitute
+
+
+ubuntu@DolfinED:~$ vim for6.sh
+---
+#!/bin/bash
+
+file=$(cat file.txt)
+
+echo "DolfinED Provides Many Courses in DevOps Like: "
+
+for i in $file
+do
+        echo $i
+done
+---
