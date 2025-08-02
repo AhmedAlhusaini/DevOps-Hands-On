@@ -1,0 +1,29 @@
+
+
+## Change the timezone
+
+ubuntu@DolfinED:~$ date
+Wed Sep 13 09:31:36 UTC 2023
+
+ubuntu@DolfinED:~$ timedatectl list-timezones
+Africa/Cairo
+
+
+ubuntu@DolfinED:~$ sudo timedatectl set-timezone Africa/Cairo
+
+ubuntu@DolfinED:~$ date
+Wed Sep 13 12:31:56 EEST 2023
+
+
+
+
+############# Script 1 #############
+
+ubuntu@DolfinED:~$ vim at.sh
+---
+#!/bin/bash
+
+mkdir file-at
+
+touch file-at/test
+---
