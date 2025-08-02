@@ -1,0 +1,30 @@
+
+
+#### indexing of elements in an array=(0 1 2)
+ubuntu@DolfinED:~$ num=(first second third)
+
+ubuntu@DolfinED:~$ echo ${num[0]}
+
+
+ubuntu@DolfinED:~$ echo ${num[1]}
+
+
+ubuntu@DolfinED:~$ echo ${num[2]}
+
+
+ubuntu@DolfinED:~$ echo ${!num[@]}
+
+
+ubuntu@DolfinED:~$ echo ${#num[@]}
+
+
+### adding an element 
+ubuntu@DolfinED:~$ num+=(fourth)
+
+
+## remove an element 
+ubuntu@DolfinED:~$ unset num[3]
+
+
+ubuntu@DolfinED:~$ echo ${num[@]:0:2}
+
