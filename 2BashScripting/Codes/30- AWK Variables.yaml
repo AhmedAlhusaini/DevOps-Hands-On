@@ -1,0 +1,32 @@
+
+
+################################################
+############ AWK Variables – Part 1 ############
+################################################
+
+
+ubuntu@DolfinED:~$ vim file1.txt
+---
+Name      DEP     Salary
+Nader    account   45000
+Sara     account   25000
+Mena     sales     50000
+Ali      account   47000
+Ahmed    sales     15000
+deepak   sales     23000
+Sara     sales     13000
+satvik   HR        80000
+---
+
+
+
+################################################
+############ AWK Variables – Part 2 ############
+################################################
+
+
+######### RS, ORS #########
+
+
+ubuntu@DolfinED:~$ tail -n 5 /etc/passwd > file2.txt
+
