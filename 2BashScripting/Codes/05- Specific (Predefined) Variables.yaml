@@ -1,0 +1,35 @@
+
+############# Script 1 #############
+
+ubuntu@DolfinED:~$ vim pre.sh
+---
+#!/bin/bash
+
+echo "Name of the shell script = $0"
+echo "Argument 1 = $1"
+echo "Argument 2 = $2"
+echo "Argument 3 = $3"
+echo "Number of arguments passed to this script = $#"
+echo "Your arguments list = $*"
+LS
+echo "Exit Status = $?"
+---
+
+
+
+############# Script 2 #############
+
+ubuntu@DolfinED:~$ vim pre.sh
+---
+#!/bin/bash
+
+echo "Name of the shell script = $0"
+echo "Argument 1 = $1"
+echo "Argument 2 = $2"
+echo "Argument 3 = $3"
+echo "Number of arguments passed to this script = $#"
+echo "Your arguments list = $*"
+echo
+ls
+echo "Exit Status = $?"
+---
