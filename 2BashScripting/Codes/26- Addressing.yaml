@@ -1,0 +1,14 @@
+
+
+ubuntu@DolfinED:~$ sed '2,3 s/dolfined/DolfinED/g' file.txt
+
+
+### Regular Expression
+
+ubuntu@DolfinED:~$ sed ' s/^dolfined/DolfinED/g' file.txt
+
+ubuntu@DolfinED:~$ sed ' s/dolfi.../DolfinED/g' file.txt
+
+
+ubuntu@DolfinED:~$ sed ' s/center$/Platform/g' file.txt 
+
