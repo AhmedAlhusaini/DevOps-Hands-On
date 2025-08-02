@@ -1,0 +1,25 @@
+
+
+
+############# Script 1 #############
+
+ubuntu@DolfinED:~$ vim sc5.sh
+
+---
+#!/bin/bash
+num1=5
+num2=5
+
+# Try with $(( ))
+result=$(( num1 * num2 ))
+echo " The Result from (( )) is $result  "
+
+# Try with $(( ))
+result=$(( $num1 * $num2 ))
+echo " The Result from ((\$,\$)) is $result  "
+
+# Try with let
+let result=num1*num2
+echo " The Result from let is $result  "
+---
+
