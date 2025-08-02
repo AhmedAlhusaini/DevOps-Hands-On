@@ -1,0 +1,32 @@
+
+
+
+ubuntu@DolfinED:~$ awk ' BEGIN { print "DolfinED"  } '
+
+
+
+ubuntu@DolfinED:~$ vim file.txt
+---
+one
+two
+three
+four
+five
+---
+
+
+ubuntu@DolfinED:~$ awk 'BEGIN {print "***********"} {print} END {print "--------------"}' file.txt
+***********
+one
+two
+three
+four
+five
+--------------
+
+ubuntu@DolfinED:~$ awk ' BEGIN {i=0} {i++} END {print i}  ' file.txt
+
+
+ubuntu@DolfinED:~$ echo "one two three" | awk 'BEGIN {print "***********"} {print}'
+***********
+one two three
