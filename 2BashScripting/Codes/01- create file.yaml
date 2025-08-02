@@ -1,0 +1,110 @@
+
+
+
+
+ubuntu@DolfinED:~$ cat /etc/shells
+# /etc/shells: valid login shells
+/bin/sh
+/bin/bash
+/usr/bin/bash
+/bin/rbash
+/usr/bin/rbash
+/bin/dash
+/usr/bin/dash
+/usr/bin/tmux
+/usr/bin/screen
+
+ubuntu@DolfinED:~$ echo $SHELL
+/bin/bash
+
+ubuntu@DolfinED:~$ which bash
+/usr/bin/bash
+
+ubuntu@DolfinED:~$ which python3
+/usr/bin/python3
+
+
+ubuntu@DolfinED:~$ vim test.sh
+---
+#!/bin/bash
+---
+
+ubuntu@DolfinED:~$ file test.sh
+test.sh: Bourne-Again shell script, ASCII text executable
+
+ubuntu@DolfinED:~$ vim test.sh
+---
+#!/usr/bin/python
+---
+
+ubuntu@DolfinED:~$ file test.sh
+test.sh: Python script, ASCII text executable
+
+
+
+
+#### Create First Script ####
+
+
+ubuntu@DolfinED:~/my-script$ vim script1.sh
+---
+#!/bin/bash
+
+echo "Hello From DolfinED"
+---
+
+
+
+#### RUN #####
+
+ubuntu@DolfinED:~/my-script$ ./script1.sh
+Hello From DolfinED
+
+ubuntu@DolfinED:~/my-script$ bash ./script1.sh
+Hello From DolfinED
+
+
+
+### Try to add a comment ###
+
+ubuntu@DolfinED:~/my-script$ vim script1.sh
+
+---
+#!/bin/bash
+
+# This is a Comment
+
+echo "Hello From DolfinED"
+---
+
+ubuntu@DolfinED:~/my-script$ ./script1.sh
+Hello From DolfinED
+
+
+##### Add the script path in PATH #####
+
+ubuntu@DolfinED:~$ cd my-script/
+
+ubuntu@DolfinED:~/my-script$ pwd
+/home/ubuntu/my-script
+
+
+ubuntu@DolfinED:~/my-script$ echo $PATH
+/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
+
+ubuntu@DolfinED:~/my-script$ vim ~/.profile
+
+# Add this line in the file
+---
+export PATH=$PATH:/home/ubuntu/my-script
+---
+# Restart the machine and then verify it
+
+
+ubuntu@DolfinED:~/my-script$ echo $PATH
+/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/home/ubuntu/my-script
+
+
+# Now, you can run your Script from anywhere.
+ 
+
