@@ -1,0 +1,75 @@
+
+
+ubuntu@DolfinED:~$ vim file.txt
+---
+Linux
+   Bash_Script
+        AWS
+  Git
+Python
+Docker
+\K8s
+\Jenkins
+---
+
+
+############# Script 1 #############
+
+ubuntu@DolfinED:~$ vim read.sh
+---
+#!/bin/bash
+
+file="file.txt"
+while read line
+do
+        echo $line
+done < $file
+---
+
+
+
+############# Script 2 #############
+
+ubuntu@DolfinED:~$ vim read.sh
+---
+#!/bin/bash
+
+file="file.txt"
+while IFS= read -r  line
+do
+        echo "$line"
+done < $file
+---
+
+
+
+
+############# Script 3 #############
+
+ubuntu@DolfinED:~$ vim read.sh
+---
+#!/bin/bash
+
+file=$1
+while IFS= read -r  line
+do
+        echo "$line"
+done < $file
+---
+
+
+
+
+
+############# Script 4 #############
+
+ubuntu@DolfinED:~$ vim read2.sh
+---
+#!/bin/bash
+file="/etc/passwd"
+
+while IFS=: read -r f1 f2 f3 f4 f5 f6 f7
+do
+        printf "Username: %s ..... Home Dir: %s\n" "$f1" "$f6"
+done < "$file"
+---
