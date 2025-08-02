@@ -1,0 +1,47 @@
+
+
+############# Script 1 #############
+
+ubuntu@DolfinED:~$ vim sc7.sh
+---
+#!/bin/bash
+
+read -p "Enter Your Name: " name
+read -p "Enter Your Age: " age
+
+echo
+
+echo "Nice to meet you $name "
+echo "Your Age is $age"
+---
+
+############# Script 2 #############
+
+ubuntu@DolfinED:~$ vim sc7.sh
+---
+#!/bin/bash
+
+read -t 2 -p "Enter Your Name: " name
+read -t 2 -p "Enter Your Age: " age
+
+echo
+
+echo "Nice to meet you $name "
+echo "Your Age is $age"
+---
+
+
+############# Script 3 #############
+
+ubuntu@DolfinED:~$ vim sc7.sh
+---
+#!/bin/bash
+
+read -s -p "Enter Your Name: " name
+read -sp "Enter Your Age: " age
+
+echo
+
+echo "Nice to meet you $name "
+echo "Your Age is $age"
+---
