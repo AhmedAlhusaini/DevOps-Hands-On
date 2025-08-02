@@ -1,0 +1,56 @@
+
+
+
+
+## unset the variable
+
+ubuntu@DolfinED:~$ unset var1
+
+ubuntu@DolfinED:~$ export | grep var
+
+
+
+############# Script 1 #############
+
+ubuntu@DolfinED:~$ var1=one
+
+ubuntu@DolfinED:~$ export var2=two
+
+ubuntu@DolfinED:~$ vim sc3.sh
+
+---
+#!/bin/bash
+
+echo "Local Variable is $var1 "
+
+echo "Global Variable is $var2 "
+---
+
+ubuntu@DolfinED:~$ chmod +x sc3.sh
+
+ubuntu@DolfinED:~$ ./sc3.sh
+Local Variable is
+Global Variable is two
+
+
+
+
+############# Script 2 #############
+
+ubuntu@DolfinED:~$ vim sc2.sh
+
+---
+#!/bin/bash
+
+name=DolfinED
+
+# try ""
+echo "Using Double quote .......... Hello From $name"
+
+# Try ''
+echo 'Using Single quote ....Hello From $name'
+
+# Try \ 
+echo "Using \ .. Hello From \$name "
+---
+
