@@ -1,0 +1,90 @@
+
+############# Script 1 #############
+
+ubuntu@DolfinED:~$ vim cs.sh
+---
+#!/bin/bash
+
+read -p "Do you know Bash Scripting? " bash
+
+case $bash in
+        Yes|yes|Y|y)
+                echo "That's very good"
+                ;;
+        No|no|n|N)
+                echo "You should learn it"
+                ;;
+esac
+---
+
+
+############# Script 2 #############
+
+ubuntu@DolfinED:~$ vim cs.sh
+---
+#!/bin/bash
+read -p "Do you know Bash Scripting? " bash
+case $bash in
+        Yes|yes|Y|y)
+                echo "That's very good"
+                ;;
+        No|no|n|N)
+                echo "You should learn it"
+                ;;
+        *)
+                echo "Please, Enter (Yes,No)"
+esac
+---
+
+
+############# Script 3 #############
+
+ubuntu@DolfinED:~$ vim cs1.sh
+---
+#!/bin/bash
+
+read -p "Please enter a number of up to three digits= " num
+case "$num" in
+      [0-9])
+            echo "You entered a single digit"
+            ;;
+      [0-9][0-9])
+            echo "You entered two digits"
+            ;;
+      [0-9][0-9][0-9])
+            echo "You entered three digis"
+            ;;
+      *)
+            echo "Please, enter three digits maximum"
+            ;;
+esac
+---
+
+
+
+
+############# Script 4 #############
+
+ubuntu@DolfinED:~$ vim cs2.sh
+---
+#!/bin/bash
+
+read -p "Please enter your score= " score
+case "$score" in
+      8[5-9] | 9[0-9] | 100)
+            echo "Your grade is A"
+            ;;
+      7[5-9] | 8[0-4])
+            echo "Your grade is B"
+            ;;
+      6[5-9] | 7[0-4])
+            echo "Your grade is C"
+            ;;
+      6[0-4])
+            echo "Your grade is D"
+            ;;
+      *)
+            echo "Your grade is F"
+            ;;
+esac
+---
