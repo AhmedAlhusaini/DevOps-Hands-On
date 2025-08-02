@@ -1,0 +1,16 @@
+
+
+
+
+
+##### -f 
+
+ubuntu@DolfinED:~$ vim sed.txt
+---
+s/dolfined/DolfinED/g
+s/center/website/g
+3,4 d
+---
+
+ubuntu@DolfinED:~$ sed -f sed.txt file.txt
+
