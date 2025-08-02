@@ -1,0 +1,61 @@
+
+
+## Demo - if statment using File Operators ##
+
+
+###### File Operators ######
+
+
+############# Script 1 #############
+
+ubuntu@DolfinED:~$ vim sc3.sh
+---
+#!/bin/bash
+if [ -f file1 ]
+then
+        cat file1   
+else
+        touch file1 
+        echo "file1 has been created"
+fi
+---
+
+
+
+
+######## Logical Operator "&&" "||" ########
+
+
+############# Script 2 #############
+
+ubuntu@DolfinED:~$ vim sc4.sh
+---
+#!/bin/bash
+ 
+read -p "Enter The First Number: "  first
+read -p "Enter The Second Number: "  second
+ 
+if [ $first -le 50 ]  && [ $second -gt 50 ]
+then
+    echo "true"
+else
+    echo "false"
+fi
+---
+
+############# Script 3 #############
+
+ubuntu@DolfinED:~$ vim sc4.sh
+---
+#!/bin/bash
+ 
+read -p "Enter The First Number: "  first
+read -p "Enter The Second Number: "  second
+ 
+if [ $first -le 50 ]  || [ $second -gt 50 ]
+then
+    echo "True"
+else
+    echo "false"
+fi
+---
