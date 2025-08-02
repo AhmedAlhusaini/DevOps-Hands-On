@@ -1,0 +1,39 @@
+
+
+############# Script 1 #############
+
+ubuntu@DolfinED:~$ vim fun.sh
+---
+#!/bin/bash
+
+sum ()
+{
+let result=$1+$2
+echo "$result"
+}
+
+mul ()
+{
+let result=$1*$2
+echo "$result"
+}
+
+---
+
+
+
+
+############# Script 2 #############
+
+ubuntu@DolfinED:~$ vim script.sh
+---
+#!/bin/bash
+
+source ./fun.sh
+
+read -p "Enter The first Number: " n1
+read -p "Enter The Second Number: " n2
+
+echo The sum of numbers is: $(sum $n1 $n2)
+echo The mul of numbers is: $(mul $n1 $n2)
+---
