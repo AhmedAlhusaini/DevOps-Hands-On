@@ -1,0 +1,18 @@
+
+
+############# Script 1 #############
+
+ubuntu@DolfinED:~$ vim sc5.sh
+---
+#!/bin/bash
+
+read -p "What is your age= " age
+
+if [[ $age =~ ^[0-9]+$ ]]
+then
+        echo "Your age is $age"
+else
+        echo "Please Enter a Number"
+fi
+---
+
