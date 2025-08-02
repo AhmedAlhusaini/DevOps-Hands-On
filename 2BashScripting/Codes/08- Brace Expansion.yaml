@@ -1,0 +1,17 @@
+
+# With {} ... No space
+
+ubuntu@DolfinED:~$ echo {Hello,From,DolfinED}
+
+ubuntu@DolfinED:~$ echo {1..10}
+
+ubuntu@DolfinED:~$ echo {5..-5}
+
+ubuntu@DolfinED:~$ echo {0..20..2}
+
+ubuntu@DolfinED:~$ echo {a..z}
+
+ubuntu@DolfinED:~$ echo {a..e}{1..3}
+
+ubuntu@DolfinED:~$ rm file*
+
