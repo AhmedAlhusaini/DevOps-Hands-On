@@ -1,0 +1,47 @@
+
+
+
+############# Script 1 #############
+
+ubuntu@DolfinED:~$ vim text
+---
+Bash
+
+
+AWS
+
+Python
+Docker
+
+K8s
+
+Linux
+---
+
+
+
+ubuntu@DolfinED:~$ vim sed.sh
+---
+#!/bin/bash
+
+file="text"
+
+sed '/^$/d ' $file > new-text
+
+echo "Blank lines removed"
+---
+
+
+
+############# Script 2 #############
+
+ubuntu@DolfinED:~$ vim sed1.sh
+---
+#!/bin/bash
+
+file="new-text"
+
+sed -e 's/Bash/Bash Scripting/g' -e 's/K8s/Kubernetes/g ' $file > new-text1
+
+echo "File Edit Completed."
+---
