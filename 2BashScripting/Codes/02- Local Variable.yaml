@@ -1,0 +1,15 @@
+
+############# Script 1 #############
+
+
+ubuntu@DolfinED:~$ vim name-var.sh
+
+---
+#!/bin/bash
+
+# Print Local VAR
+
+name=dolfined
+
+echo $name
+---
