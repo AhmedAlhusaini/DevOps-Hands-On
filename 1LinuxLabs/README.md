@@ -85,7 +85,7 @@ Connect this Linux foundation to full DevOps workflows and cloud architectures.
 If this repo helped you, consider supporting my mission:  
 Empowering **Careers**, building the **Next Generation Spatial Infrastructure**, and advancing **GIS DevOps & Cloud Learning** 🚀
 
-![Buy Me A Coffee](../../Assets/buyme.gif)
+![Buy Me A Coffee](../Assets/buyme.gif)
 
 - [☕ Buy Me a Coffee](https://buymeacoffee.com/ahmedalhusainy)  
 - 📺 [Subscribe to My YouTube – GISOverflow](https://www.youtube.com/@GISOverflow)  
