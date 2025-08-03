@@ -132,3 +132,14 @@ This project is openly accessible for **educational and personal use**. For comm
 - Follow Me 
 
 ---
+## ☕ Support My Work
+
+If this repo helped you, consider supporting my mission:  
+Empowering **Careers**, building the **Next Generation Spatial Infrastructure**, and advancing **GIS DevOps & Cloud Learning** 🚀
+
+![Buy Me A Coffee](../../Assets/buyme.gif)
+
+- [☕ Buy Me a Coffee](https://buymeacoffee.com/ahmedalhusainy)  
+- 📺 [Subscribe to My YouTube – GISOverflow](https://www.youtube.com/@GISOverflow)  
+- 💻 [Follow Me on GitHub](https://github.com/AhmedAlhusaini)  
+- 📅 [Book a 1:1 Mentorship Session](https://tidycal.com/ahmedtarekalhusainy)
