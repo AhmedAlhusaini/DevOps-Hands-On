@@ -1,0 +1,50 @@
+#first server
+sudo mkdir -p /var/www/portfolio
+sudo mkdir -p /var/www/blog
+sudo mkdir -p /var/www/html  # for default
+
+# Create simple HTML files
+echo "<h1>My Portfolio Site</h1>" | sudo tee /var/www/portfolio/index.html
+echo "<h1>My Blog</h1>" | sudo tee /var/www/blog/index.html
+echo "<h1>Default Page</h1>" | sudo tee /var/www/html/index.html
+
+# Create portfolio site config
+sudo vi /etc/nginx/sites-available/portfolio
+
+server {
+    listen 80;
+    server_name portfolio.com;
+    root /var/www/portfolio;
+    index index.html;
+    
+    location / {
+        try_files $uri $uri/ =404;
+    }
+}
+==========================================================================================
+# Create blog site config
+sudo vi /etc/nginx/sites-available/blog
+
+
+server {
+    listen 80;
+    server_name blog.com;
+    root /var/www/blog;
+    index index.html;
+    
+    location / {
+        try_files $uri $uri/ =404;
+    }
+}
+==========================================================================================
+# Create symbolic links to enable sites
+sudo ln -s /etc/nginx/sites-available/portfolio /etc/nginx/sites-enabled/
+sudo ln -s /etc/nginx/sites-available/blog /etc/nginx/sites-enabled/
+
+# Test configuration and reload
+sudo nginx -t
+sudo systemctl reload nginx
+==========================================================================================
+# Add to /etc/hosts (Linux/Mac) or C:\Windows\System32\drivers\etc\hosts (Windows)
+YOUR_EC2_IP portfolio.com
+YOUR_EC2_IP blog.com
