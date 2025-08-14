@@ -1,0 +1,88 @@
+REVERSE PROXY
+=============
+# Update package list
+sudo apt update
+
+# Install Node.js and npm
+sudo apt install nodejs npm -y
+
+# Verify installation
+node --version
+npm —version
+
+# Create directory (no sudo needed for user directories)
+mkdir node-app
+cd node-app
+
+# Initialize npm (no sudo needed)
+npm init -y
+npm install express
+
+# Create app.js (no sudo needed for files in user directory)
+sudo tee app.js << 'EOF'
+const express = require('express');
+const app = express();
+const PORT = 3100;
+
+// Serve static files
+app.use(express.static('public'));
+
+// API endpoint
+app.get('/api/status', (req, res) => {
+    res.json({
+        message: 'Node.js backend is running!',
+        port: PORT,
+        timestamp: new Date().toISOString()
+    });
+});
+
+// Main route
+app.get('/', (req, res) => {
+    res.send(`
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <title>Node.js Server - Port ${PORT}</title>
+        </head>
+        <body>
+            <h1>Node.js frontend Server</h1>
+            <p>Running on port ${PORT}</p>
+            <p><a href="/api/status">Check API Status</a></p>
+        </body>
+        </html>
+    `);
+});
+
+app.listen(PORT, '0.0.0.0', () => {
+    console.log(`Server running at http://0.0.0.0:${PORT}`);
+});
+EOF
+
+# Create public directory and file (no sudo needed)
+mkdir public
+echo "<h2>Static file served by Node.js</h2>" | sudo tee public/test.html
+
+
+# Run the app
+node app.js
+
+================================================================================================================
+in another terminal
+
+
+sudo vi /etc/nginx/sites-available/app
+
+server {
+    listen 81;
+    server_name 54.204.108.19;
+    
+    location / {
+        proxy_pass http://localhost:3100;
+    }
+}
+
+sudo ln -s /etc/nginx/sites-available/app2 /etc/nginx/sites-enabled/
+sudo nginx -t
+sudo systemctl reload nginx
+================================================================================================================
+
