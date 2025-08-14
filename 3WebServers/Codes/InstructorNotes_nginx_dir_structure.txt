@@ -6,24 +6,28 @@ Purpose: Main configuration file that defines global settings
 Contains: Main context, events context, http context, and global directives
 Examples: Worker processes, connection limits, MIME types, logging settings
 Priority: Highest - this file is read first by Nginx
+
 sites-available/
 
 Purpose: Storage for all server block configurations (virtual hosts)
 Contains: Individual .conf files for each website/domain
 Status: These configs are NOT active until enabled
 Example files: default, example.com.conf, api.mysite.conf
+
 sites-enabled/
 
 Purpose: Contains active server configurations
 How it works: Symbolic links to files in sites-available/
 Activation: sudo ln -s /etc/nginx/sites-available/mysite.conf /etc/nginx/sites-enabled/
 Benefit: Easy enable/disable of sites without deleting configs
+
 conf.d/
 
 Purpose: Additional configuration files that are automatically included
 Auto-loading: Any .conf file here is automatically loaded by nginx.conf
 Use case: Modular configurations, third-party configs, shared settings
 Alternative: Some prefer this over sites-available/enabled structure
+
 modules-enabled/
 
 Purpose: Contains enabled Nginx modules
@@ -38,6 +42,7 @@ Purpose: Records all client requests to the server
 Contains: IP addresses, timestamps, requested URLs, response codes, user agents
 Format: Usually in Combined Log Format or custom format
 Usage: Traffic analysis, debugging, security monitoring
+
 error.log
 
 Purpose: Records server errors, warnings, and debug information
@@ -52,6 +57,7 @@ Purpose: Default document root for serving web content
 Contains: HTML files, CSS, JavaScript, images, and other static assets
 Default: Standard location on Ubuntu/Debian systems
 Permissions: Usually owned by www-data user
+
 /usr/share/nginx/html/
 
 Purpose: Alternative document root (primarily on CentOS/RHEL)
