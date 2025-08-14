@@ -1,0 +1,110 @@
+
+########################################################################################
+########################################################################################
+###############################      AWK     ###########################################
+########################################################################################
+########################################################################################
+
+# Print entire line (default action)
+echo "apple banana cherry" | awk '{ print }'
+# Output: apple banana cherry
+
+# AWK automatically splits lines into fields
+echo "apple banana cherry" | awk '{ print $1 }'  # apple
+echo "apple banana cherry" | awk '{ print $2 }'  # banana
+echo "apple banana cherry" | awk '{ print $3 }'  # cherry
+echo "apple banana cherry" | awk '{ print $0 }'  # entire line
+
+
+======================================================================
+
+
+# Print specific fields
+echo "John Doe 25 Engineer" | awk '{ print $1, $4 }'
+# Output: John Engineer
+
+# Number of fields
+echo "one two three four" | awk '{ print NF }'
+# Output: 4
+
+# Last field (using NF)
+echo "one two three four" | awk '{ print $NF }'
+# Output: four
+
+
+======================================================================
+
+
+# NR = Number of Records (line number)
+awk '{ print NR, $0 }' file.txt
+
+# NF = Number of Fields
+awk '{ print "Line", NR, "has", NF, "fields" }' file.txt
+
+# FS = Field Separator (default: space/tab)
+echo "a,b,c" | awk -F, '{ print $2 }'  # b
+echo "a:b:c" | awk -F: '{ print $3 }'  # c
+
+
+
+
+########################################################################################
+########################################################################################
+###############################      SED     ###########################################
+########################################################################################
+########################################################################################
+
+# Replace first "cat" with "dog" on each line
+echo "cat cat cat" | sed 's/cat/dog/'
+# Output: dog cat cat
+
+# From file
+sed 's/old/new/‘ file.txt
+
+==========================================================================================
+
+# Replace ALL occurrences with 'g' flag
+echo "cat cat cat" | sed 's/cat/dog/g'
+# Output: dog dog dog
+
+# Replace all "http" with "https"
+sed 's/http/https/g’ urls.txt
+
+
+# Replace only on line 3
+sed '3s/old/new/' file.txt
+
+# Replace on lines 2-4
+sed '2,4s/old/new/' file.txt
+
+# Replace on last line
+sed '$s/old/new/‘ file.txt
+
+==========================================================================================
+
+
+# Print line 5
+sed -n '5p' file.txt
+
+# Print lines 10-20
+sed -n '10,20p' file.txt
+
+# Print last line
+sed -n '$p’ file.txt
+
+==========================================================================================
+
+# Delete line 3
+sed '3d' file.txt
+
+# Delete lines 5-10
+sed '5,10d' file.txt
+
+# Delete last line
+sed '$d' file.txt
+
+# Delete empty lines
+sed '/^$/d' file.txt
+
+# Delete lines containing "error"
+sed '/error/d' file.txt
