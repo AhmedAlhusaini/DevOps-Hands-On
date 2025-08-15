@@ -118,6 +118,8 @@ sudo ufw allow 888/tcp
 ```
 ![CustomPageNginx](../../Assets/CustomPageNginx.png)
 
+![Config Local Host File](../../Assets/ConfigLocalHost.png)
+
 ## 🔎 Verification / Expected Output
 
 * Browser displays the custom HTML page instead of the default Nginx welcome page.
