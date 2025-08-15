@@ -58,6 +58,10 @@ sudo systemctl reload nginx
 ```
 ![MyVirtualHost1](../../Assets/StaticWebSite-Content.png)
 
+![Config Local Host File](../../Assets/ConfigLocalHost.png)
+
+
+
 ---
 
 ## 🔎 Verification / Expected Output
