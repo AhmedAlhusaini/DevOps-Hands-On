@@ -36,10 +36,12 @@ Wish me all the best as I grow through these exciting journeys! 💪
 
 A modular series of hands-on labs:
 
+- **00-Introduction Cloud & DevOps** –  Introduction To Cloud , Agile , DevOps , Ops Team , IT Delivery , Network , Database & Security.  
 - **01-linux** – Basic shell commands, permissions, and filesystem operations  
 - **02-bash-scripting** – Variables, loops, conditionals, input/output, automation  
 - **03-git** – Git setup, version control, branching, resolving conflicts  
 - **04-webservers** – NGINX basics, serving static content, reverse proxy setup  
+- **05-GIt-GITHUB** – Version Control basics, GitHub setup, branching, merging, Collaboration & Project Organizations. 
 - **...More Coming Soon** – Docker, Kubernetes, CI/CD, Terraform, Monitoring  
 
 ⏳ **This repo evolves as I progress. Stay tuned for more!** 🧗‍♂️
