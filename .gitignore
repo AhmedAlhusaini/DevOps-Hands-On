@@ -1,0 +1,20 @@
+#DEPI Files
+
+*.pdf
+*.pem
+*.ppk
+*.key
+#*.pptx
+#*.docx
+*.xlsx
+*.pub
+*.csv
+*.log
+
+#Folder Exclusions
+/0Intro_And_Tools/Tools/
+/*/Please StudyMe
+/0Intro_And_Tools/Assests/AWSInstances/
+/0Intro_And_Tools/Assests/Dumps/
+.git-BK/
+
