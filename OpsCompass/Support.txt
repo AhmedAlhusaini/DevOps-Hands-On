@@ -1,0 +1,512 @@
+
+Steps to Add a New Folder as a New Project to an Existing GitHub Repository
+=============================
+1. Navigate to Your Existing Repository
+Open your terminal.
+	Navigate to the directory of your repository (the one that contains the .git folder):
+	
+			cd /path/to/existing-repo
+2. Create the New Folder
+Inside your repository, create the new folder for your project:	
+	mkdir new-folder-name
+
+Add content (files) to the new folder as required.
+
+3. Stage and Commit Changes
+Check the current status of your repository to see the untracked changes:
+
+	git status
+
+Stage the new folder and its contents:
+	git add new-folder-name
+
+Commit the changes with a descriptive message:
+
+	git commit -m "Add new project folder: new-folder-name"
+
+4. Push Changes to the Remote Repository
+
+Ensure your remote repository is set up. Check the remote URL:
+
+	git remote -v
+
+If the remote is not set up, add your GitHub repository URL:
+
+	git remote add origin https://github.com/your-username/your-repo.git
+
+Push the changes to the remote repository:
+
+	git push origin main
+(Replace main with your branch name if it's different, e.g., master.)
+
+
+=============================Huge Changes are made;  How to publish public Changes ?
+To publish all the changes, including renamed files and updated content, you can follow these steps to ensure everything is properly staged and committed:
+
+Stage All Changes:
+	Add all changes, including renamed files and updated content, to the staging area:
+		git add -A
+
+Commit the Changes:
+	Commit all the staged changes with a descriptive message:
+		git commit -m "Update project with renamed files and updated content"
+
+Push the Changes to GitHub:
+	Push your changes to the remote repository:
+		git push origin main
+
+These commands will stage all changes, commit them, and push the updated version of your project to GitHub.
+
+
+
+
+Deleting a File
+*********************
+git rm <file_name>
+	This command removes the specified file from your local repository || Remote Repo if you already change what is in local.
+git commit -m "Delete <file_name>"
+git push origin main
+
+Renaming a File
+*********************
+git mv <old_file_name> <new_file_name>
+git commit -m "Rename <old_file_name> to <new_file_name>"
+git push origin main
+
+
+Updating the Commit Message
+*********************
+You can update a commit message in several ways, but the simplest method is:
+cd path/to/your/repository
+git add <file_name>
+git commit --amend
+git push --force origin main
+
+
+Alternative Method: Interactive Rebase
+git log
+	Count the Number of Commits: Count the number of commits from the top to the commit you want to update. For example, if it’s the third commit from the top, the number is 3.
+git rebase -i HEAD~3
+	Change pick to reword next to the commit you want to update. Save and close the editor.
+git push --force origin main
+
+
+
+==============================
+Adding Multiple files 
+* git add .
+* or 
+git add "9Financial Networking/0 Studying Case Study.txt" \
+        "9Financial Networking/1 All Devices Basic Settings.txt" \
+        "9Financial Networking/10 DHCP Config.txt" \
+        "9Financial Networking/11 InterVlan Routing DHCP-Helper.txt" \
+        "9Financial Networking/12 telephony-service .txt" \
+        "9Financial Networking/13 Standard ACL For SSH.txt" \
+        "9Financial Networking/14 NAT & PAT.txt" \
+        "9Financial Networking/15 IPsec Tunnel VPN.txt" \
+        "9Financial Networking/2 Router+MLS Basic Commands & SSH.txt" \
+        "9Financial Networking/3 Config VTP.txt" \
+        "9Financial Networking/3 Voice & Data VLANs.txt" \
+        "9Financial Networking/4 MLSes.txt" \
+        "9Financial Networking/5 ServerSide Security Config.txt" \
+        "9Financial Networking/7 HQ Subnetting & IPs.png" \
+        "9Financial Networking/7 RouterToMLS Subnetting&IPs.png" \
+        "9Financial Networking/7 ServerSide Subnetting&IPs.png" \
+        "9Financial Networking/7Subnetting & IP addresses.txt" \
+        "9Financial Networking/8 HSRP.txt" \
+        "9Financial Networking/9 Routing Protocols.txt" \
+        "9Financial Networking/Config.png" \
+        "9Financial Networking/Financial System Networking.mhtml" \
+        "9Financial Networking/Finanical Network Project.pkt"
+
+
+
+
+
+
+
+====================================
+Make CoPilt Create Iteration for each files 
+
+
+git add "1LinuxLabs/0Lab Template.md"
+git commit -m "Lab Task MD Template"
+
+git add "1LinuxLabs/1Lab_BasicNavigation.md"
+git commit -m "Add 1Lab Basic Navigation description"
+
+git add "1LinuxLabs/1Lab_Script.sh"
+git commit -m "Add 1Lab Basic Navigation script"
+
+git add "1LinuxLabs/2Lab_CreatingFiles&Directories.md"
+git commit -m "Add 2Lab Creating Files & Directories description"
+
+git add "1LinuxLabs/2Lab_CreatingFiles&Directories.sh"
+git commit -m "Add 2Lab Creating Files & Directories script"
+
+git add "1LinuxLabs/3Lab_WorkingWithFileContent.md"
+git commit -m "Add 3Lab Working With File Content description"
+
+git add "1LinuxLabs/3Lab_WorkingWithFileContent.sh"
+git commit -m "Add 3Lab Working With File Content script"
+
+git add "1LinuxLabs/4Lab_FilePermissions.md"
+git commit -m "Add 4Lab File Permissions description"
+
+git add "1LinuxLabs/4Lab_FilePermissions.sh"
+git commit -m "Add 4Lab File Permissions script"
+
+git add "1LinuxLabs/5Lab_FindingSystemInfo.md"
+git commit -m "Add 5Lab Finding System Info description"
+
+git add "1LinuxLabs/5Lab_FindingSystemInfo.sh"
+git commit -m "Add 5Lab Finding System Info script"
+
+git add "1LinuxLabs/6Lab_ProcessManagment.md"
+git commit -m "Add 6Lab Process Management description"
+
+git add "1LinuxLabs/6Lab_ProcessManagment.sh"
+git commit -m "Add 6Lab Process Management script"
+
+git add "1LinuxLabs/7Lab_TextEditingChallenge.md"
+git commit -m "Add 7Lab Text Editing Challenge description"
+
+git add "1LinuxLabs/7Lab_TextEditingChallenge.sh"
+git commit -m "Add 7Lab Text Editing Challenge script"
+
+git add "1LinuxLabs/8Lab_PackageManagment.md"
+git commit -m "Add 8Lab Package Management description"
+
+git add "1LinuxLabs/8Lab_PackageManagment.sh"
+git commit -m "Add 8Lab Package Management script"
+
+git add "1LinuxLabs/9Lab_NetworkExploration.md"
+git commit -m "Add 9Lab Network Exploration description"
+
+git add "1LinuxLabs/9Lab_NetworkExploration.sh"
+git commit -m "Add 9Lab Network Exploration script"
+
+git add "1LinuxLabs/10Lab_DiskUsageAnalysis.md"
+git commit -m "Add 10Lab Disk Usage Analysis description"
+
+git add "1LinuxLabs/10Lab_DiskUsageAnalysis.sh"
+git commit -m "Add 10Lab Disk Usage Analysis script"
+
+git add "1LinuxLabs/11Lab_ServiceManagment.md"
+git commit -m "Add 11Lab Service Management description"
+
+git add "1LinuxLabs/11Lab_ServiceManagment.sh"
+git commit -m "Add 11Lab Service Management script"
+
+git add "1LinuxLabs/12Lab_AdvancedFileOperations.md"
+git commit -m "Add 12Lab Advanced File Operations description"
+
+git add "1LinuxLabs/12Lab_AdvancedFileOperations.sh"
+git commit -m "Add 12Lab Advanced File Operations script"
+
+git add "1LinuxLabs/13Lab_UserAndGroupManagment.md"
+git commit -m "Add 13Lab User And Group Management description"
+
+git add "1LinuxLabs/13Lab_UserAndGroupManagment.sh"
+git commit -m "Add 13Lab User And Group Management script"
+
+git add "1LinuxLabs/14Lab_SystemMonitering.md"
+git commit -m "Add 14Lab System Monitoring description"
+
+git add "1LinuxLabs/14Lab_SystemMonitering.sh"
+git commit -m "Add 14Lab System Monitoring script"
+
+git add "1LinuxLabs/15Lab_SystemInfoScript.md"
+git commit -m "Add 15Lab System Info Script description"
+
+git add "1LinuxLabs/15Lab_SystemInfoScript.sh"
+git commit -m "Add 15Lab System Info Script"
+
+git add "1LinuxLabs/16Lab_FileBackupPractice.md"
+git commit -m "Add 16Lab File Backup Practice description"
+
+git add "1LinuxLabs/16Lab_FileBackupPractice.sh"
+git commit -m "Add 16Lab File Backup Practice script"
+
+git add "1LinuxLabs/17Lab_NetworkFileTransfer.md"
+git commit -m "Add 17Lab Network File Transfer description"
+
+git add "1LinuxLabs/17Lab_NetworkFileTransfer.sh"
+git commit -m "Add 17Lab Network File Transfer script"
+
+git add "1LinuxLabs/18Lab_LogAnalysis.md"
+git commit -m "Add 18Lab Log Analysis description"
+
+git add "1LinuxLabs/18Lab_LogAnalysis.sh"
+git commit -m "Add 18Lab Log Analysis script"
+
+git add "1LinuxLabs/19Lab_EnvironmentCustomization.md"
+git commit -m "Add 19Lab Environment Customization description"
+
+git add "1LinuxLabs/19Lab_EnvironmentCustomization.sh"
+git commit -m "Add 19Lab Environment Customization script"
+
+git add "1LinuxLabs/20Lab_FinalChallengeProject.md"
+git commit -m "Add 20Lab Final Challenge Project description"
+
+git add "1LinuxLabs/20Lab_FinalChallengeProject.sh"
+git commit -m "Add 20Lab Final Challenge Project script"
+
+git add "1LinuxLabs/CommonCommands.txt"
+git commit -m "Add Common Commands reference"
+
+git add "1LinuxLabs/20Lab_FinalProject_Assets/README.md"
+git commit -m "Add Final Project Assets README"
+
+git add "1LinuxLabs/20Lab_FinalProject_Assets/backup/web_project_20250725_1540.tar.gz"
+git commit -m "Add Final Project backup archive"
+
+git add "1LinuxLabs/20Lab_FinalProject_Assets/html/index.html"
+git commit -m "Add Final Project HTML index file"
+
+git add "1LinuxLabs/20Lab_FinalProject_Assets/scripts/backup.sh"
+git commit -m "Add Final Project backup script"
+
+
+echo "# DevOps-Hands-On" >> README.md
+git init
+git add README.md
+git commit -m "first commit"
+git branch -M main
+git remote add origin https://github.com/AhmedAlhusaini/DevOps-Hands-On.git
+git push -u origin main
+
+git remote add origin https://github.com/AhmedAlhusaini/DevOps-Hands-On.git
+git branch -M main
+git push -u origin main
+
+
+
+git add "2BashScripting/Codes/00-Learning Basics.sh"
+git commit -m "Add Bash basics script"
+
+git add "2BashScripting/Codes/01- create file.yaml"
+git commit -m "Add file creation example"
+
+git add "2BashScripting/Codes/02- Local Variable.yaml"
+git commit -m "Add local variable guide"
+
+git add "2BashScripting/Codes/03- Envirment Variable.yaml"
+git commit -m "Add environment variables doc"
+
+git add "2BashScripting/Codes/04- Exit status.yaml"
+git commit -m "Add exit status notes"
+
+git add "2BashScripting/Codes/05- Specific (Predefined) Variables.yaml"
+git commit -m "Add predefined vars list"
+
+git add "2BashScripting/Codes/06- Arithmetic Operations.yaml"
+git commit -m "Add arithmetic examples"
+
+git add "2BashScripting/Codes/07- Command Substitution.yaml"
+git commit -m "Add command substitution"
+
+git add "2BashScripting/Codes/08- Brace Expansion.yaml"
+git commit -m "Add brace expansion notes"
+
+git add "2BashScripting/Codes/09- Read User Input.yaml"
+git commit -m "Add read user input demo"
+
+git add "2BashScripting/Codes/10- Conditional Operators.yaml"
+git commit -m "Add conditional operators"
+
+git add "2BashScripting/Codes/11- if statement.yaml"
+git commit -m "Add if statement doc"
+
+git add "2BashScripting/Codes/12- if statment using File Operators.yaml"
+git commit -m "Add file test with if"
+
+git add "2BashScripting/Codes/13- Regular Expressions.yaml"
+git commit -m "Add regex in Bash"
+
+git add "2BashScripting/Codes/14- Case Statement.yaml"
+git commit -m "Add case statement guide"
+
+git add "2BashScripting/Codes/15- Array.yaml"
+git commit -m "Add Bash arrays"
+
+git add "2BashScripting/Codes/16- For Loop.yaml"
+git commit -m "Add for loop example"
+
+git add "2BashScripting/Codes/17- Continue And Break.yaml"
+git commit -m "Add continue/break usage"
+
+git add "2BashScripting/Codes/18- Select Command.yaml"
+git commit -m "Add select command demo"
+
+git add "2BashScripting/Codes/19- While Loop.yaml"
+git commit -m "Add while loop doc"
+
+git add "2BashScripting/Codes/20- Shift Command.yaml"
+git commit -m "Add shift command notes"
+
+git add "2BashScripting/Codes/21- Read Line By line.yaml"
+git commit -m "Add line reading script"
+
+git add "2BashScripting/Codes/22- Until Loop.yaml"
+git commit -m "Add until loop example"
+
+git add "2BashScripting/Codes/23- Functions.yaml"
+git commit -m "Add Bash functions"
+
+git add "2BashScripting/Codes/24- Source command.yaml"
+git commit -m "Add source command usage"
+
+git add "2BashScripting/Codes/25- Sed.yaml"
+git commit -m "Add sed basics"
+
+git add "2BashScripting/Codes/26- Addressing.yaml"
+git commit -m "Add sed addressing"
+
+git add "2BashScripting/Codes/27- SED Operator.yaml"
+git commit -m "Add sed operators"
+
+git add "2BashScripting/Codes/28- Scripts with SED.yaml"
+git commit -m "Add sed scripts"
+
+git add "2BashScripting/Codes/29- Explain AWK.yaml"
+git commit -m "Add AWK intro"
+
+git add "2BashScripting/Codes/30- AWK Variables.yaml"
+git commit -m "Add AWK variables"
+
+git add "2BashScripting/Codes/31- Opreatins in AWK.yaml"
+git commit -m "Add AWK operations"
+
+git add "2BashScripting/Codes/32- If statement in Awk.yaml"
+git commit -m "Add AWK if usage"
+
+git add "2BashScripting/Codes/33- For Loop in AWK.yaml"
+git commit -m "Add AWK for loop"
+
+git add "2BashScripting/Codes/34- at command.yaml"
+git commit -m "Add at command demo"
+
+git add "2BashScripting/Codes/35- Crontab.yaml"
+git commit -m "Add crontab setup"
+
+
+
+
+Renaming your `linuxLabs` folder to `Linux` is a simple and smooth process—no drama, no cleanup required if you do it the Git-friendly way:
+
+---
+
+## ✅ Step-by-Step Rename
+
+### 1. **Rename the folder locally**
+Use your terminal or file explorer:
+
+```bash
+mv linuxLabs Linux
+```
+
+> This updates the folder name on your local filesystem.
+
+---
+
+### 2. **Stage the rename in Git**
+Git treats this as a move:
+
+```bash
+git add -A
+```
+
+> This stages the deletion of `linuxLabs` and addition of `Linux` as a single tracked change.
+
+---
+
+### 3. **Commit the change**
+Use a short and clear commit message:
+
+```bash
+git commit -m "Rename folder linuxLabs to Linux"
+```
+
+---
+
+### 4. **Push to remote**
+Finish with:
+
+```bash
+git push origin main
+```
+
+---
+
+## 🧠 Extra Tips (Optional but Useful)
+
+- If the folder contains many files, Git will detect all moves and retain history.
+- To verify the rename detection:
+  ```bash
+  git log --follow Linux/
+  ```
+- If other branches or collaborators depend on `linuxLabs`, communicate the change before pushing.
+
+---
+
+Let me know if you'd like a Git alias like `git rename-folder` or want to reflect this change in your repo's README automatically—I can generate that update too!
+
+
+
+
+
+
+
+
+
+
+
+
+git add "2BashScripting/Labs/0Lab Template.md"
+git commit -m "Add 0Lab Template"
+
+git add "2BashScripting/Labs/1Lab_ScriptingBasicsAndEnvironment.md" "2BashScripting/Labs/1Lab_ScriptingBasicsAndEnvironment.sh"
+git commit -m "Add 1Lab_ScriptingBasicsAndEnvironment"
+
+git add "2BashScripting/Labs/2Lab_VariablesAndDataTypes.md" "2BashScripting/Labs/2Lab_VariablesAndDataTypes.sh"
+git commit -m "Add 2Lab_VariablesAndDataTypes"
+
+git add "2BashScripting/Labs/3Lab_UserInputAndOutput.md" "2BashScripting/Labs/3Lab_UserInputAndOutput.sh"
+git commit -m "Add 3Lab_UserInputAndOutput"
+
+git add "2BashScripting/Labs/4Lab_ConditionalStatments.md" "2BashScripting/Labs/4Lab_ConditionalStatments.sh"
+git commit -m "Add 4Lab_ConditionalStatments"
+
+git add "2BashScripting/Labs/5Lab_Loops.md" "2BashScripting/Labs/5Lab_Loops.sh"
+git commit -m "Add 5Lab_Loops"
+
+git add "2BashScripting/Labs/6Lab_ArrayOperations.md" "2BashScripting/Labs/6Lab_ArrayOperations.sh"
+git commit -m "Add 6Lab_ArrayOperations"
+
+git add "2BashScripting/Labs/7Lab_StringManipulation.md" "2BashScripting/Labs/7Lab_StringManipulation.sh"
+git commit -m "Add 7Lab_StringManipulation"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

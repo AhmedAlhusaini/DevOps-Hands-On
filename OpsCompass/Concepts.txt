@@ -1,0 +1,16 @@
+What is Bash 
+Scripting Vs Programing 
+	- Scope & Performance 
+	- High Level Vs Low Level
+	- OOP Vs Porcedural Programming ; Scripting  
+Bash Vs Powershell 
+How To run Bash Into Windows 
+Differences between Bash & Powershell in syntaxes or logic and features.
+umask vs ll ( ls -l)
+code structure and best practices 
+monolithic vs microservices applications 
+how to run code bash in windows 
+git bash in full details 
+Variables Scope 
+	- Gloabl 
+	- Terminals Vs Shells --> ps -p $$ 
