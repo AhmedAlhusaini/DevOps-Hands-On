@@ -25,5 +25,6 @@ Assets/TechworldWithNana2024/
 0SoftSkills/
 7Terraform/getstarted/task-13-terraform-security-vault/terraform_vault/*
 7Terraform/providers/aws/aws_shared_credentials_files/
+7Terraform/providers/aws/aws_shared_config_files/
 8Ansible/Notes.txt
 9Docker/DolfinED/
