@@ -1,0 +1,5 @@
+https://hub.docker.com/r/hashicorp/terraform/
+docker pull hashicorp/terraform:1.4
+docker run --rm -it hashicorp/terraform:1.4 version
+docker run --rm -it hashicorp/terraform:1.4 init
+docker run --rm -it -v $PWD:/data -w /data hashicorp/terraform:1.4 init
