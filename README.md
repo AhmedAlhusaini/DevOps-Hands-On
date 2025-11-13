@@ -42,7 +42,12 @@ A modular series of hands-on labs:
 - **03-git** – Git setup, version control, branching, resolving conflicts  
 - **04-webservers** – NGINX basics, serving static content, reverse proxy setup  
 - **05-GIt-GITHUB** – Version Control basics, GitHub setup, branching, merging, Collaboration & Project Organizations. 
-- **...More Coming Soon** – Docker, Kubernetes, CI/CD, Terraform, Monitoring  
+- **06-Terraform** – Infrastructure as Code labs (completed)  
+- **07-Ansible** – Configuration management labs (completed)  
+- **08-Docker** – Containerization labs (completed)  
+- **09-Kubernetes** – Container orchestration labs (completed)  
+- **10-Jenkins** – CI/CD automation labs (currently in progress 🚀)  
+- **...More Coming Soon** – Monitoring, Prometheus, and advanced DevOps practices
 
 ⏳ **This repo evolves as I progress. Stay tuned for more!** 🧗‍♂️
 
