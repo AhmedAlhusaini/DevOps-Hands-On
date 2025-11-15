@@ -12,11 +12,11 @@
 *.log
 
 #Folder Exclusions
+
 /0Intro_And_Tools/Tools/
 /*/Please StudyMe*
 /0Intro_And_Tools/Assests/AWSInstances/
 /0Intro_And_Tools/Assests/Dumps/
-.git-BK/
 */StudyMe/*
 /6AWS-Azure/*
 Assets/TechworldWithNana2024/
@@ -26,5 +26,4 @@ Assets/TechworldWithNana2024/
 7Terraform/getstarted/task-13-terraform-security-vault/terraform_vault/*
 7Terraform/providers/aws/aws_shared_credentials_files/
 7Terraform/providers/aws/aws_shared_config_files/
-8Ansible/Notes.txt
-9Docker/DolfinED/
+0BussinessEnglish/
