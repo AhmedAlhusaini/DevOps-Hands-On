@@ -47,8 +47,8 @@ vault kv put /secret/app phone_number=867-5309
 # vault server -dev 
 # 	-> you will get Env vault path 
 # 	-> Use Token
-# 		- Unseal Key: ""
-# 		- Root Token: ""
+# 		- Unseal Key: 0NgYw4ZtS6UBcZGdasM3IcOwW+AkDDzFyimlGM0hTjU=
+# 		- Root Token: hvs.Z9Do9LtsXmMEHyeyl0dwGgdf
 
 
 provider "vault" {

@@ -17,13 +17,22 @@
 /*/Please StudyMe*
 /0Intro_And_Tools/Assests/AWSInstances/
 /0Intro_And_Tools/Assests/Dumps/
-*/StudyMe/*
-/6AWS-Azure/*
+.git-BK/
+
+7Terraform/providers/aws/aws_shared_credentials_files/creds
+ 7Terraform/providers/
 Assets/TechworldWithNana2024/
+0SoftSkills/
+0DEPI-DevOpsNinjas-Project/
 0Intro_And_Tools/Database/
 0Intro_And_Tools/IntroDevOpsAndCloud/
-0SoftSkills/
-7Terraform/getstarted/task-13-terraform-security-vault/terraform_vault/*
-7Terraform/providers/aws/aws_shared_credentials_files/
-7Terraform/providers/aws/aws_shared_config_files/
-0BussinessEnglish/
+10Kubernates/Notes.txt
+10Kubernates/wYUCZDIRGCeOqJyKQTXQ_VS Code HF Published.zip
+6AWS-Azure/AWS - CCP/
+6AWS-Azure/AWS - SAA/
+6AWS-Azure/DEPI Please StudyMe/
+7Terraform/StudyMe/
+7Terraform/getstarted/task-09-modules-locals-and-workspaces/workspace.tf
+7Terraform/providers/
+8Ansible/Notes.txt
+9Docker/DolfinED/

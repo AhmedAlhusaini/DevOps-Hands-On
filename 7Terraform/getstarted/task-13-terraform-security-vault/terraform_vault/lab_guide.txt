@@ -37,3 +37,5 @@ vault server -dev
 set VAULT_ADDR="http://127.0.0.1:8200"
 vault login <root token>
 vault kv put /secret/app phone_number=867-5309
+
+After
