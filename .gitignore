@@ -19,20 +19,14 @@
 /0Intro_And_Tools/Assests/Dumps/
 .git-BK/
 
-7Terraform/providers/aws/aws_shared_credentials_files/creds
- 7Terraform/providers/
+0SoftSkills/*
+0DEPI-DevOpsNinjas-Project/*
+
+7Terraform/providers/*
 Assets/TechworldWithNana2024/
-0SoftSkills/
-0DEPI-DevOpsNinjas-Project/
-0Intro_And_Tools/Database/
-0Intro_And_Tools/IntroDevOpsAndCloud/
-10Kubernates/Notes.txt
-10Kubernates/wYUCZDIRGCeOqJyKQTXQ_VS Code HF Published.zip
-6AWS-Azure/AWS - CCP/
-6AWS-Azure/AWS - SAA/
-6AWS-Azure/DEPI Please StudyMe/
+0Intro_And_Tools/*
+6AWS-Azure/*
 7Terraform/StudyMe/
-7Terraform/getstarted/task-09-modules-locals-and-workspaces/workspace.tf
-7Terraform/providers/
-8Ansible/Notes.txt
-9Docker/DolfinED/
+8Ansible/*
+9Docker/*
+10Kubernates/*
