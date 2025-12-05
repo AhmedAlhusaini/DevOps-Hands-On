@@ -1,0 +1,19 @@
+---
+- name: Format ext4 filesystem
+  filesystem:
+    fstype: ext4
+    dev: "{{device_path}}{{partition_number}}"
+- name: Get UUID
+  shell: 'lsblk {{device_path}}{{partition_number}} -no uuid'
+  register: uuid
+- name: Create Mount point
+  file:
+    path: "{{mount_point}}"
+    state: directory
+- name: permament mount to {{mount_point}}
+  mount:
+    path: "{{mount_point}}"
+    src: "UUID={{uuid['stdout']}}"
+    fstype: ext4
+    state: present
+

@@ -1,0 +1,10 @@
+---
+- name: Installing 2 packages based on the variables scope
+  hosts: production
+  tasks:
+    - name: Using YUM to install variable packages
+      yum:
+        name:
+          - "{{first_package}}"
+          - "{{second_package}}"
+        state: absent

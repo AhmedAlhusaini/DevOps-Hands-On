@@ -1,0 +1,18 @@
+---
+- name: Play to setup networking on managednode1
+  hosts: managednode1
+  tasks:
+    - name: Using Network Manager
+      nmcli:
+        conn_name: lab
+        ifname: enp0s9
+        type: ethernet
+        ip4: 53.0.35.99/24,192.168.1.18/24
+        gw4: 53.0.35.254
+        dns4: 53.0.34.50
+        autoconnect: yes
+        state: present
+    - name: Setting hostname
+      hostname:
+        name: node1.ansible.dolfined.com
+

@@ -1,0 +1,9 @@
+---
+- name: Play to instant reboot 
+  hosts: managednode2
+  tasks:
+    - name: Reboot and wait for some time
+      reboot:
+        reboot_timeout: 10
+- import_playbook: blockplaybook.yml
+

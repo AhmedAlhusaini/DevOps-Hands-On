@@ -1,0 +1,5 @@
+---
+- name: First play for conditional
+  import_playbook: conditionalplaybook.yml
+- name: Second Play for block
+  import_playbook: blockplaybook.yml

@@ -1,0 +1,54 @@
+# ---
+# - name: First play to create a user
+#   hosts: all
+#   gather_facts : false
+  
+  ####################### Variables Section ########################
+  # vars_files:
+  # - ansible-vars.yml
+  # vars:
+  #   user1: "Ahmed"
+  #   user2: "Reham"
+  #   user3: "Zain"
+  #   family:
+  #     name: Hamada
+  #     group: admin
+  #     uid: 2050
+  # tasks:
+  #   - name: Creating user {{user1}}
+  #     user:
+  #       name: "{{user1}}"
+  #       state: present
+  #     register: user_results
+  #   - debug: var=user_results
+  #   - name: Creating user {{user2}}
+  #     user:
+  #       name: "{{user2}}"
+  #       state: present
+  #     register: user_results
+  #   - debug: var=user_results
+  #   - name: Creating user {{user3}}
+  #     user:
+  #       name: "{{user3}}"
+  #       state: present
+  #     register: user_results
+  #   - debug: var=user_results
+  #   
+  #   - name: Ensure group {{family.group}} exists
+  #     ansible.builtin.group:
+  #       name: "{{family.group}}"
+  #       state: present
+  #     register: group_results
+  # #   - debug: var=group_results
+  #   
+  #   - name: Creating user {{family.name}}
+  #     user:
+  #       name: "{{family.name}}"
+  #       group: "{{family.group}}"
+  #       uid: "{{family.uid}}" 
+  #       state: present
+  #     register: user_results
+  #   - debug: var=user_results
+  
+  ########################
+ 

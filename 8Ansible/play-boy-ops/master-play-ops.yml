@@ -1,0 +1,415 @@
+---
+
+# - name: Teach Ansible To Enterprise Team , Showing How to convert Modules and implement it like play 
+#   hosts: AWS 
+#   gather_facts: no
+#   tasks:
+#   - name: Do The Ping Google For Me
+#     command: ping -c 4 google.com
+#   - name: Show Me The Date On Remote Machine
+#     command: date
+# 
+# - name: Show Me The Uptime On Remote Machine
+#   hosts: AWS
+#   gather_facts: no
+#   tasks:
+#   - name: Uptime On Remote Machine
+#     command: uptime
+#     register: uptime_result
+#   - name: Show Me The Uptime Result
+#     debug:
+#       var: uptime_result
+# - name: create User 
+#   hosts: AWS
+#   gather_facts: no
+#   # vars:
+#   #   username: "ansible-user"
+#   #   uid: "1045"
+#   tasks:
+#   - name: Create A User On Remote Machine --> {{ vars['username'] }} 
+#     user:
+#       name: "{{ vars['username'] }}"
+#       # uid: "{{ vars['uid'] }}"
+#       state: absent
+#       shell: /bin/bash
+#     register: user_creation_result
+# 
+#   - name: Show registered output
+#     debug:
+#       # msg: "User creation result is --> {{ user_creation_result }}"
+#       var: user_creation_result
+      
+# - name: First play to create a user
+#   hosts: all
+#   gather_facts : false
+
+  ####################### Variables Section ########################
+  # vars_files:
+  # - ansible-vars.yml
+  # vars:
+  #   user1: "Ahmed"
+  #   user2: "Reham"
+  #   user3: "Zain"
+  #   family:
+  #     name: Hamada
+  #     group: admin
+  #     uid: 2050
+  # tasks:
+  #   - name: Creating user {{user1}}
+  #     user:
+  #       name: "{{user1}}"
+  #       state: present
+  #     register: user_results
+  #   - debug: var=user_results
+  #   - name: Creating user {{user2}}
+  #     user:
+  #       name: "{{user2}}"
+  #       state: present
+  #     register: user_results
+  #   - debug: var=user_results
+  #   - name: Creating user {{user3}}
+  #     user:
+  #       name: "{{user3}}"
+  #       state: present
+  #     register: user_results
+  #   - debug: var=user_results
+  #   
+  #   - name: Ensure group {{family.group}} exists
+  #     ansible.builtin.group:
+  #       name: "{{family.group}}"
+  #       state: present
+  #     register: group_results
+  # #   - debug: var=group_results
+  #   
+  #   - name: Creating user {{family.name}}
+  #     user:
+  #       name: "{{family.name}}"
+  #       group: "{{family.group}}"
+  #       uid: "{{family.uid}}" 
+  #       state: present
+  #     register: user_results
+  #   - debug: var=user_results
+  
+  ########################
+#  
+# - name: Using & Testing J2
+#   gather_facts: false  
+#   hosts: AWS
+#   tasks:
+#     - name: Ensure destination directory exists
+#       ansible.builtin.file:
+#         path: "/home/ansible/play-boy-ops"
+#         state: directory
+#         mode: '0755'
+#     - name: Create A File From J2 Template
+#       template:
+#         src: "/home/ansible/play-boy-ops/templates/hello.j2"
+#         dest: "/home/ansible/play-boy-ops/playboyops.txt"
+#     - name: Show Me The Created File Content
+#       command: cat /home/ansible/play-boy-ops/playboyops.txt
+#       register: show_created_file
+#     - name: Display The File Content
+#       debug:
+#         var: show_created_file
+
+
+##### Roles 
+
+# 
+# # kubeadm-aws-single.yml
+# # Usage:
+# # 1. Create inventory with group 'AWS' and your host(s).
+# # 2. ansible-playbook -i inventory.ini kubeadm-aws-single.yml
+# #
+# # The playbook assumes Ubuntu 22.04-like environment and SSH access as the user specified in inventory.
+# 
+# - hosts: AWS
+#   become: yes
+#   roles:
+#     - darkwizard242.kubeadm
+# 
+#   vars:
+#     # Kubernetes version to install (adjust to match your apt repo or desired line)
+#     k8s_version: "1.30.14"
+#     # Pod network CIDR for Flannel
+#     pod_network_cidr: "10.244.0.0/16"
+#     # Flannel manifest URL
+#     flannel_manifest: "https://raw.githubusercontent.com/flannel-io/flannel/master/Documentation/kube-flannel.yml"
+#     # kubeconfig path on control plane
+#     admin_conf: /etc/kubernetes/admin.conf
+#     # User on the remote host to copy kubeconfig to (adjust if not ubuntu)
+#     remote_user: ubuntu
+#     # kubeadm init extra args (if needed)
+#     kubeadm_init_extra_args: ""
+#     # Demo nginx image and name
+#     demo_name: demo-nginx
+#     demo_image: nginx:1.25
+# 
+#   handlers:
+#     - name: restart containerd
+#       systemd:
+#         name: containerd
+#         state: restarted
+#         enabled: yes
+# 
+#     - name: restart kubelet
+#       systemd:
+#         name: kubelet
+#         state: restarted
+#         enabled: yes
+# 
+#   tasks:
+#     - name: Ensure apt cache is up to date
+#       apt:
+#         update_cache: yes
+#         cache_valid_time: 3600
+# 
+#     - name: Disable swap at runtime
+#       ansible.builtin.command: swapoff -a
+# 
+# 
+#     - name: Comment out swap in /etc/fstab
+#       replace:
+#         path: /etc/fstab
+#         regexp: '(^.*\sswap\s.*$)'
+#         replace: '# \1'
+#       register: fstab_swap_change
+# 
+#     - name: Load required kernel modules
+#       modprobe:
+#         name: "{{ item }}"
+#         state: present
+#       loop:
+#         - overlay
+#         - br_netfilter
+# 
+#     - name: Ensure sysctl params for Kubernetes
+#       copy:
+#         dest: /etc/sysctl.d/k8s.conf
+#         content: |
+#           net.bridge.bridge-nf-call-iptables  = 1
+#           net.ipv4.ip_forward                 = 1
+#           net.bridge.bridge-nf-call-ip6tables = 1
+#         mode: '0644'
+# 
+#     - name: Apply sysctl params
+#       command: sysctl --system
+#       changed_when: false
+# 
+#     - name: Install prerequisites for containerd and apt over HTTPS
+#       apt:
+#         name:
+#           - ca-certificates
+#           - curl
+#           - gnupg
+#           - lsb-release
+#           - apt-transport-https
+#         state: present
+#         update_cache: yes
+# 
+#     - name: Add Docker apt keyring (for containerd)
+#       shell: |
+#         mkdir -p /etc/apt/keyrings
+#         curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+#       args:
+#         creates: /etc/apt/keyrings/docker.gpg
+# 
+#     - name: Add Docker apt repository
+#       apt_repository:
+#         repo: "deb [arch={{ ansible_architecture }} signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu {{ ansible_lsb.codename }} stable"
+#         state: present
+#         filename: docker
+# 
+#     - name: Update apt cache
+#       ansible.builtin.apt:
+#         update_cache: yes
+#         cache_valid_time: 3600
+# 
+#     - name: Install distro containerd package
+#       ansible.builtin.apt:
+#         name: containerd
+#         state: present
+#     
+#     - name: Ensure /etc/containerd exists
+#       file:
+#         path: /etc/containerd
+#         state: directory
+#         mode: '0755'
+# 
+#     - name: Generate default containerd config
+#       command: containerd config default
+#       register: containerd_default_config
+#       changed_when: false
+# 
+#     - name: Write containerd config with systemd cgroup enabled
+#       copy:
+#         dest: /etc/containerd/config.toml
+#         content: "{{ containerd_default_config.stdout | regex_replace('SystemdCgroup = false', 'SystemdCgroup = true') }}"
+#       notify: restart containerd
+# 
+#     - name: Ensure containerd is enabled and running
+#       systemd:
+#         name: containerd
+#         enabled: yes
+#         state: started
+# 
+#     - name: Add Kubernetes apt keyring for chosen version line
+#       shell: |
+#         mkdir -p /etc/apt/keyrings
+#         curl -fsSL https://pkgs.k8s.io/core:/stable:/v{{ k8s_version.split('.')[0] }}.{{ k8s_version.split('.')[1] }}/deb/Release.key | gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+#       args:
+#         creates: /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+# 
+#     - name: Add Kubernetes apt repository for chosen version line
+#       apt_repository:
+#         filename: kubernetes
+#         repo: "deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v{{ k8s_version.split('.')[0] }}.{{ k8s_version.split('.')[1] }}/deb/ /"
+#         state: present
+# 
+#     - name: Update apt cache after adding k8s repo
+#       apt:
+#         update_cache: yes
+# 
+#     - name: Install kubelet, kubeadm and kubectl (specific version)
+#       apt:
+#         name:
+#           - "kubelet={{ k8s_version }}-1.1"
+#           - "kubeadm={{ k8s_version }}-1.1"
+#           - "kubectl={{ k8s_version }}-1.1"
+#         state: present
+#         update_cache: yes
+#       register: k8s_install
+#       failed_when: k8s_install is failed and "'is not available' not in k8s_install.msg"
+# 
+#     # - name: Hold kubelet, kubeadm and kubectl packages to prevent accidental upgrades
+#     #   ansible.builtin.apt:
+#     #     name:
+#     #       - kubelet
+#     #       - kubeadm
+#     #       - kubectl
+#     #     state: present
+#     #     hold: yes
+#     
+#     # sudo apt-get update
+#     # sudo apt-get install -y kubeadm=1.30.14-1.1 kubectl=1.30.14-1.1
+#     # sudo systemctl daemon-reload
+#     # sudo systemctl restart kubelet
+#     # sudo kubeadm init --pod-network-cidr=10.244.0.0/16
+# 
+# 
+#     - name: Ensure kubelet is enabled and started
+#       systemd:
+#         name: kubelet
+#         enabled: yes
+#         state: started
+#       notify: restart kubelet
+# 
+#     - name: Check if cluster is already initialized (admin.conf exists)
+#       stat:
+#         path: "{{ admin_conf }}"
+#       register: admin_conf_stat
+# 
+# 
+# 
+#     - name: Initialize Kubernetes control plane with kubeadm (only if not initialized)
+#       ansible.builtin.shell: |
+#         #!/bin/sh
+#         # get kubelet major.minor (e.g., "1.30")
+#         kubelet_ver=$(kubelet --version 2>/dev/null | grep -oE 'v?[0-9]+\.[0-9]+' | sed 's/^v//')
+#         desired="{{ k8s_version.split('.')[:2] | join('.') }}"
+#         if [ -z "$kubelet_ver" ]; then
+#           echo "kubelet not found, proceeding with kubeadm init"
+#         else
+#           # compare major.minor using dpkg --compare-versions
+#           if dpkg --compare-versions "$kubelet_ver" lt "$desired"; then
+#             echo "KUBELET_INCOMPATIBLE: kubelet $kubelet_ver is older than desired $desired" >&2
+#             exit 2
+#           fi
+#           if dpkg --compare-versions "$kubelet_ver" gt "$desired"; then
+#             echo "KUBELET_INCOMPATIBLE: kubelet $kubelet_ver is newer than desired $desired" >&2
+#             exit 2
+#           fi
+#         fi
+#         kubeadm init --pod-network-cidr={{ pod_network_cidr }} {{ kubeadm_init_extra_args }}
+#       args:
+#         creates: "{{ admin_conf }}"
+#       when: not admin_conf_stat.stat.exists
+#       register: kubeadm_init
+#       failed_when: kubeadm_init.rc != 0 and 'already initialized' not in (kubeadm_init.stderr | default(''))
+# 
+# 
+#     - name: Ensure .kube directory exists for remote user
+#       file:
+#         path: "/home/{{ remote_user }}/.kube"
+#         state: directory
+#         owner: "{{ remote_user }}"
+#         group: "{{ remote_user }}"
+#         mode: '0755'
+# 
+#     - name: Copy admin.conf to remote user's kubeconfig
+#       copy:
+#         src: "{{ admin_conf }}"
+#         dest: "/home/{{ remote_user }}/.kube/config"
+#         owner: "{{ remote_user }}"
+#         group: "{{ remote_user }}"
+#         mode: '0644'
+#       when: admin_conf_stat.stat.exists
+# 
+#     - name: Wait for kube-apiserver to be responsive
+#       shell: |
+#         kubectl --kubeconfig={{ admin_conf }} get componentstatuses || true
+#       register: apiserver_check
+#       retries: 12
+#       delay: 6
+#       until: apiserver_check.rc == 0
+# 
+#     - name: Apply Flannel CNI manifest
+#       command: kubectl --kubeconfig={{ admin_conf }} apply -f {{ flannel_manifest }}
+#       register: flannel_apply
+#       changed_when: flannel_apply.rc == 0
+# 
+#     - name: Wait for kube-flannel pods to be running
+#       shell: kubectl --kubeconfig={{ admin_conf }} -n kube-flannel get pods --no-headers
+#       register: flannel_pods
+#       retries: 18
+#       delay: 10
+#       until: flannel_pods.stdout.find("Running") != -1
+# 
+#     - name: Remove control-plane taint so pods can be scheduled on single node
+#       shell: kubectl --kubeconfig={{ admin_conf }} taint nodes --all node-role.kubernetes.io/control-plane- || true
+#       changed_when: false
+# 
+#     - name: Deploy demo nginx deployment if not present
+#       shell: |
+#         kubectl --kubeconfig={{ admin_conf }} get deployment {{ demo_name }} -o name || \
+#         kubectl --kubeconfig={{ admin_conf }} create deployment {{ demo_name }} --image={{ demo_image }}
+#       register: create_demo
+#       changed_when: "'created' in create_demo.stdout or 'deployment.apps/{{ demo_name }}' in create_demo.stdout"
+# 
+#     - name: Expose demo nginx as NodePort if service not present
+#       shell: |
+#         kubectl --kubeconfig={{ admin_conf }} get svc {{ demo_name }} -o name || \
+#         kubectl --kubeconfig={{ admin_conf }} expose deployment {{ demo_name }} --port=80 --type=NodePort
+#       register: expose_demo
+#       changed_when: "'exposed' in expose_demo.stdout or 'service/{{ demo_name }}' in expose_demo.stdout"
+# 
+#     - name: Retrieve NodePort for demo service
+#       shell: kubectl --kubeconfig={{ admin_conf }} get svc {{ demo_name }} -o jsonpath='{.spec.ports[0].nodePort}'
+#       register: demo_nodeport
+#       changed_when: false
+# 
+#     - name: Show node and pod status (informational)
+#       shell: |
+#         kubectl --kubeconfig={{ admin_conf }} get nodes -o wide
+#         kubectl --kubeconfig={{ admin_conf }} get pods -A
+#       register: cluster_status
+#       changed_when: false
+# 
+#     - name: Print final access info
+#       debug:
+#         msg:
+#           - "Node(s): {{ cluster_status.stdout_lines[0] | default('see above') }}"
+#           - "Demo service NodePort: {{ demo_nodeport.stdout | default('unknown') }}"
+#           - "To access from outside, open the NodePort in your EC2 security group and visit http://<EC2_PUBLIC_IP>:{{ demo_nodeport.stdout | default('NODEPORT') }}"
+# 
+# 

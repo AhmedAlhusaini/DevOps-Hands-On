@@ -1,0 +1,10 @@
+---
+- name: Play to practice daemons
+  hosts: all
+  tasks:
+    - name: Reloading a deamon
+      systemd:
+        name: firewalld
+        state: reloaded
+        daemon-reload: yes
+

@@ -1,0 +1,12 @@
+---
+- name: Play to check managed node system requirments
+  hosts: production
+  vars_files:
+    - vars.yml 
+  tasks:
+    - name: Using Fail Module to throw a failure message if requirments are not met
+      fail:
+        msg: "The {{inventory_hostname}} does not meet minimum requirments"
+      when:
+        - ansible_facts['distribution'] != "Rocky" or ansible_facts['distribution'] != "RedHat"
+        - ansible_facts['memtotal_mb'] < min_ram_mb

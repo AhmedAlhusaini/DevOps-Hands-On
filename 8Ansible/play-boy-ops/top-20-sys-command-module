@@ -1,0 +1,189 @@
+# 1. Check system uptime
+ansible all -m command -a "uptime"
+
+# 2. Show current date/time
+ansible all -m command -a "date"
+
+# 3. Display hostname
+ansible all -m command -a "hostname"
+
+# 4. Check memory usage
+ansible all -m command -a "free -m"
+
+# 5. Show CPU info
+ansible all -m command -a "lscpu"
+
+# 6. Show disk usage
+ansible all -m command -a "df -h"
+
+# 7. List running processes
+ansible all -m command -a "ps aux"
+
+# 8. Show top 10 CPU-consuming processes
+ansible all -m command -a "ps -eo pid,comm,%cpu --sort=-%cpu | head"
+
+# 9. Show top 10 memory-consuming processes
+ansible all -m command -a "ps -eo pid,comm,%mem --sort=-%mem | head"
+
+# 10. Show logged-in users
+ansible all -m command -a "who"
+
+# 11. Show last reboot time
+ansible all -m command -a "last reboot"
+
+# 12. Show kernel version
+ansible all -m command -a "uname -r"
+
+# 13. Show OS release info
+ansible all -m command -a "cat /etc/os-release"
+
+# 14. Show network interfaces
+ansible all -m command -a "ip addr"
+
+# 15. Show routing table
+ansible all -m command -a "ip route"
+
+# 16. Test connectivity (ping Google DNS)
+ansible all -m command -a "ping -c 4 8.8.8.8"
+
+# 17. Show listening ports
+ansible all -m command -a "netstat -tulnp"
+
+# 18. Show firewall rules
+ansible all -m command -a "iptables -L"
+
+# 19. List installed packages (Debian/Ubuntu)
+ansible all -m command -a "dpkg -l"
+
+# 20. List installed packages (RHEL/CentOS)
+ansible all -m command -a "rpm -qa"
+
+
+# 21. Show system load averages
+ansible all -m command -a "cat /proc/loadavg"
+
+# 22. Show current system users and groups
+ansible all -m command -a "cat /etc/passwd"
+
+# 23. Show group definitions
+ansible all -m command -a "cat /etc/group"
+
+# 24. Check running services (summary)
+ansible all -m command -a "service --status-all"
+
+# 25. Show open files (useful for troubleshooting)
+ansible all -m command -a "lsof -n | head"
+
+# 26. Show system journal logs (last 20 lines)
+ansible all -m command -a "journalctl -n 20"
+
+# 27. Show cron jobs for root
+ansible all -m command -a "crontab -l"
+
+# 28. Show environment variables
+ansible all -m command -a "printenv"
+
+# 29. Show hardware block devices
+ansible all -m command -a "lsblk"
+
+# 30. Show PCI devices (hardware overview)
+ansible all -m command -a "lspci"
+
+# 1. Set hostname
+ansible all -m command -a "hostnamectl set-hostname new-server-name"
+
+# 2. Install a package (Debian/Ubuntu)
+ansible all -m command -a "apt-get install -y curl"
+
+# 3. Install a package (RHEL/CentOS)
+ansible all -m command -a "yum install -y httpd"
+ansible all -m command -a "dnf install -y httpd"
+ansible all -m command -a "dnf install -y curl"
+ansible all -m command -a "dnf install -y nginx"
+ansible all -m command -a "systemctl status nginx"
+ansible all -m command -a "systemctl start nginx"
+ansible all -m command -a "systemctl enable nginx"
+ansible all -m command -a "dnf remove -y nginx"
+
+
+
+# 4. Start a service
+ansible all -m command -a "systemctl start nginx"
+
+# 5. Enable a service at boot
+ansible all -m command -a "systemctl enable nginx"
+
+# 6. Restart a service
+ansible all -m command -a "systemctl restart sshd"
+
+# 7. Stop a service
+ansible all -m command -a "systemctl stop firewalld"
+
+# 8. Update package index (Debian/Ubuntu)
+ansible all -m command -a "apt-get update"
+
+# 9. Update all packages (RHEL/CentOS)
+ansible all -m command -a "yum update -y"
+
+# 10. Create a new user
+ansible all -m command -a "useradd devops_ninja"
+
+# 31. Install Python 3 (Amazon Linux / RHEL)
+ansible all -m command -a "dnf install -y python3"
+
+# 32. Install Python 3 (Ubuntu/Debian)
+ansible all -m command -a "apt-get install -y python3"
+
+# 33. Install pip (Amazon Linux / RHEL)
+ansible all -m command -a "dnf install -y python3-pip"
+
+# 34. Install pip (Ubuntu/Debian)
+ansible all -m command -a "apt-get install -y python3-pip"
+
+# 35. Upgrade pip
+ansible all -m command -a "pip3 install --upgrade pip"
+
+# 36. Install a Python package with pip
+ansible all -m command -a "pip3 install requests"
+
+# 37. List installed pip packages
+ansible all -m command -a "pip3 list"
+
+# 38. Show cron jobs for root
+ansible all -m command -a "crontab -l"
+
+# 39. Add a new cron job (example: run backup.sh daily at midnight)
+ansible all -m command -a "echo '0 0 * * * /usr/local/bin/backup.sh' | crontab -"
+
+# 40. Remove all cron jobs for root
+ansible all -m command -a "crontab -r"
+
+# 41. Check Python version
+ansible all -m command -a "python3 --version"
+
+# 42. Run a Python one-liner (example: print hello)
+ansible all -m command -a "python3 -c 'print(\"Hello from Python\")'"
+
+# 43. Install virtualenv
+ansible all -m command -a "pip3 install virtualenv"
+
+# 44. Create a virtual environment
+ansible all -m command -a "python3 -m venv /opt/myenv"
+
+# 45. Show cron service status
+ansible all -m command -a "systemctl status crond"
+
+# 46. Restart cron service
+ansible all -m command -a "systemctl restart crond"
+
+# 47. Check scheduled jobs (system-wide)
+ansible all -m command -a "ls /etc/cron.*"
+
+# 48. Install development tools (Amazon Linux / RHEL)
+ansible all -m command -a "dnf groupinstall -y 'Development Tools'"
+
+# 49. Install build-essential (Ubuntu/Debian)
+ansible all -m command -a "apt-get install -y build-essential"
+
+# 50. Verify Python path used by Ansible
+ansible all -m command -a "which python3"

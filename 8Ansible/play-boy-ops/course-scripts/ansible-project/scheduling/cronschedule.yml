@@ -1,0 +1,12 @@
+---
+- name: Play to schedule recurring task
+  hosts: all
+  tasks:
+    - name: Backup of /etc at 11:30 pm everyday
+      cron:
+        name: "Daily /etc/backup"
+        user: "root"
+        minute: 30
+        hour: 23
+        job: "/usr/bin/tar -cf /tmp/dailybackup /etc"
+

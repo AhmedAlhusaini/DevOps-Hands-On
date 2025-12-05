@@ -1,0 +1,54 @@
+---
+- name: Play to create LVM
+  hosts: all
+  vars:
+    - device_path: /dev/sdc
+    - mount_point: /rnt/myvg
+    - vgcontainer: vgcontainer
+    - lvname: lvdolfinlab
+  tasks:
+    - name: Creating 2 partitions
+      parted:
+        device: "{{device_path}}"
+        number: "{{item['partition_number']}}"
+        state: present
+        part_start: "{{item['part_start']}}"
+        part_end: "{{item['partition_size']}}"
+        fs_type: ext4
+
+      loop:
+        - partition_number: 1
+          part_start: 1MB
+          partition_size: 1GB
+        - partition_number: 2
+          part_start: 1GB
+          partition_size: 2GB
+    - name: Create volume group of 2 partitions
+      lvg:
+        vg: "{{vgcontainer}}"
+        pvs: /dev/sdc1,/dev/sdc2
+        pesize: 10MB
+        force: yes
+    - name: Create logical volume of 500MB
+      lvol:
+        vg: "{{vgcontainer}}"
+        lv: "{{lvname}}"
+        size: 400m
+    - name: formatting xfs filesystem
+      filesystem:
+        fstype: xfs
+        dev: "/dev/{{vgcontainer}}/{{lvname}}"
+    - name: Get UUID
+      shell: 'lsblk /dev/mapper/{{vgcontainer}}-{{lvname}} -no uuid'
+      register: uuid
+    - name: Creating Mount point
+      file:
+        path: "{{mount_point}}"
+        state: directory
+    - name: permanent mount to {{mount_point}}
+      mount:
+        path: "{{mount_point}}"
+        src: "UUID={{uuid['stdout']}}"
+        fstype: xfs
+        state: present
+

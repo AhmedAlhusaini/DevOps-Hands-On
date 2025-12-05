@@ -1,0 +1,11 @@
+---
+- name: Play to practice jinja2 template
+  hosts: all
+  vars:
+    playbook_variable: 100
+  tasks:
+    - name: Creating a different template (file) for each host
+      template:
+        src: "/home/admin/ansible-project/sourcetemplate.j2"
+        dest: "/tmp/mytemplate"
+

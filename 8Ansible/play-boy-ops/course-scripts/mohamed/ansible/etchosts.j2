@@ -1,0 +1,12 @@
+{{ansible_managed}}
+
+#IP FQDN HOSTNAME
+
+{% for host in groups['all']  %}
+
+{{hostvars[host]['ansible_facts']['enp0s8']['ipv4']['address']}} {{hostvars[host]['ansible_facts']['fqdn']}} {{hostvars[host]['ansible_facts']['hostname']}} 
+
+{% endfor %}
+
+
+

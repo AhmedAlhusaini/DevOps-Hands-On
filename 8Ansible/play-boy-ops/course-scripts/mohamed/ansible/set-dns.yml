@@ -1,0 +1,8 @@
+---
+- name: Play to set /etc/hosts file
+  hosts: all
+  tasks:
+    - name: using j2 template to set /etc/hosts file
+      template:
+        src: etchosts.j2
+        dest: /etc/hosts.backup

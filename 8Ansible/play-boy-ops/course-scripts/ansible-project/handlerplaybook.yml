@@ -1,0 +1,14 @@
+---
+- name: Play to practice handlers
+  hosts: all
+  tasks:
+    - name: Disabling password authentication
+      copy:
+        src: "/etc/ssh/sshd_config"
+        dest: "/etc/ssh/sshd_config"
+      notify: restart_sshd
+  handlers:
+    - name: restart_sshd
+      service:
+        name: sshd
+        state: restarted

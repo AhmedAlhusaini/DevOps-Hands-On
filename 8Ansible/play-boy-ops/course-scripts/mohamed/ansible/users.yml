@@ -1,0 +1,35 @@
+---
+- name: Play to create a group of users
+  hosts: all
+  vars_files:
+    - locker.yml
+  tasks:
+    - name: group module to create 2 groups
+      group:
+        name: "{{item}}"
+        state: present
+      loop:
+        - administrators
+        - developers
+    - name: user module with loop to create some users
+      user:
+        name: "{{item['name']}}"
+        uid:  "{{item['uid']}}"
+        groups:  "{{item['group']}}"
+        password:  "{{password|password_hash('sha512')}}"
+      loop:
+        - name: yumna
+          uid: 9001
+          group: administrators
+        - name: amr
+          uid: 9002
+          group: administrators
+        - name: ahmed
+          uid: 9003
+          group: developers
+        - name: salah
+          uid: 9004
+          group: developers
+
+
+

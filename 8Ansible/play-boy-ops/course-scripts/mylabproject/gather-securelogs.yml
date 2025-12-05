@@ -1,0 +1,8 @@
+---
+- name: Gathering logs from several host 
+  hosts: production
+  tasks:
+    - name: Collecting secure logs from each managed node using Fetch
+      fetch:
+        src: /var/log/secure
+        dest: /home/admin/mylabproject/Remotelogs

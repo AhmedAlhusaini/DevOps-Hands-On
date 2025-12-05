@@ -1,0 +1,9 @@
+---
+- name: Play to compare conditionals between import and include
+  hosts: production
+  tasks:
+    - include_tasks: tasks/install-and-setup.yml
+      vars:
+        - package: httpd
+        - service: httpd
+      when: ansible_facts['distribution'] == "RedHat"

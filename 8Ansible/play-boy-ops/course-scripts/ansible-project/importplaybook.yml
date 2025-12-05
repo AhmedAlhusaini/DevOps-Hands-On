@@ -1,0 +1,8 @@
+---
+- name: Play to import task
+  hosts: all
+  tasks:
+    - name: Importing a task
+      import_tasks: Simpletask.yml
+      vars:
+        var: "VariableFromSimpleTask"

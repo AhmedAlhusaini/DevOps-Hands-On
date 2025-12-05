@@ -1,0 +1,5 @@
+---
+- name: Deploying MySQL
+  hosts: test
+  roles:
+    - geerlingguy.mysql

@@ -1,0 +1,21 @@
+---
+- name: Play to schedule 2 jobs with at
+  hosts: all
+  tasks:
+    - name: using at module with loop
+      at:
+        command: "{{item['command']}}"
+        units: "{{item['units']}}"
+        count: "{{item['count']}}"
+        state: "{{item['state']}}"
+        
+      loop:
+        - command: "logger 'coming from control at'"
+          units: minutes
+          count: 5
+          state: present
+        - command: "touch at_file"
+          units: days
+          count: 30
+          state: present
+

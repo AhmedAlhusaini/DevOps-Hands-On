@@ -1,0 +1,12 @@
+---
+- name: First play to create a user
+  hosts: all
+  #vars_files:
+  # - users.yml
+  tasks:
+    - name: Creating user {{user}}
+      user:
+        name: "{{user}}"
+        state: present
+      register: user_results
+    - debug: var=user_results

@@ -1,0 +1,7 @@
+---
+- name: Install, start and enable a service
+  hosts: production
+  vars:
+    - package: httpd
+    - service: httpd
+  tasks:

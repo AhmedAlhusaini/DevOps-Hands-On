@@ -1,0 +1,27 @@
+---
+- name: Play to install php and mariadb on production and DR
+  hosts: 
+    - dev
+    - test
+  tasks:
+    - name: Installing mariadb and production
+      yum:
+        name:
+          - php
+          - mariadb
+        state: present
+
+- name: play to install Development tool on production
+  hosts: dev
+  tasks:
+    - name: Installing production tools
+      yum:
+        name: '@Development Tools'
+        state: present
+- name: play to update kernel on DR group
+  hosts: test
+  tasks:
+    - name: update kernel
+      yum:
+        name: '*'
+        state: latest

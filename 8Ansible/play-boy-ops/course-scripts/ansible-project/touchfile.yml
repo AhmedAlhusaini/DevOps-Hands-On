@@ -1,0 +1,8 @@
+---
+- name: Play to convert Ad-hoc command to playbook Example
+  hosts: managednode1
+  tasks:
+    - name: First task is to touch a file
+      file:
+        path: "/home/admin/myfile"
+        state: touch

@@ -1,0 +1,10 @@
+---
+- name: Installing http based on state variable
+  hosts: production
+  tasks:
+    - name: Using yum module if state variable is defined
+      yum:
+        name: httpd
+        state: latest
+      when: state is defined
+

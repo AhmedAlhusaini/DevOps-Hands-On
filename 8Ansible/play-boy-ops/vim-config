@@ -1,0 +1,20 @@
+" Enable YAML syntax highlighting
+autocmd BufNewFile,BufRead *.yml,*.yaml set filetype=yaml
+
+" Indentation for YAML (spaces, not tabs)
+autocmd FileType yaml setlocal ts=2 sts=2 sw=2 expandtab
+
+" Highlight trailing whitespace (helps with Ansible errors)
+highlight ExtraWhitespace ctermbg=red guibg=red
+match ExtraWhitespace /\s\+$/
+
+" Show line numbers
+set number
+
+" Enable syntax highlighting
+syntax on
+
+" Optional: Install ansible-vim plugin for advanced highlighting
+" Plug 'pearofducks/ansible-vim'
+
+##Use .vimrc tweaks (or plugins like ansible-vim) to make Vim a powerful editor for playbooks.

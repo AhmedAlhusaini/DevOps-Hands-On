@@ -1,0 +1,449 @@
+Jul 25 21:52:18 managednode2 polkitd[885]: Loading rules from directory /etc/polkit-1/rules.d
+Jul 25 21:52:18 managednode2 polkitd[885]: Loading rules from directory /usr/share/polkit-1/rules.d
+Jul 25 21:52:18 managednode2 polkitd[885]: Finished loading, compiling and executing 11 rules
+Jul 25 21:52:18 managednode2 polkitd[885]: Acquired the name org.freedesktop.PolicyKit1 on the system bus
+Jul 25 21:52:21 managednode2 sshd[1037]: Server listening on 0.0.0.0 port 22.
+Jul 25 21:52:21 managednode2 sshd[1037]: Server listening on :: port 22.
+Jul 25 21:52:29 managednode2 useradd[1781]: failed adding user 'vboxadd', exit code: 9
+Jul 25 21:52:29 managednode2 useradd[1782]: failed adding user 'vboxadd', exit code: 9
+Jul 25 21:52:31 managednode2 systemd[1887]: pam_unix(systemd-user:session): session opened for user gdm by (uid=0)
+Jul 25 21:52:31 managednode2 gdm-launch-environment][1882]: pam_unix(gdm-launch-environment:session): session opened for user gdm by (uid=0)
+Jul 25 21:52:33 managednode2 polkitd[885]: Registered Authentication Agent for unix-session:c1 (system bus name :1.96 [/usr/bin/gnome-shell], object path /org/freedesktop/PolicyKit1/AuthenticationAgent, locale en_US.UTF-8)
+Jul 25 22:03:01 managednode2 systemd[2332]: pam_unix(systemd-user:session): session opened for user admin by (uid=0)
+Jul 25 22:03:02 managednode2 gdm-password][2209]: pam_unix(gdm-password:session): session opened for user admin by (uid=0)
+Jul 25 22:03:04 managednode2 polkitd[885]: Registered Authentication Agent for unix-session:2 (system bus name :1.266 [/usr/bin/gnome-shell], object path /org/freedesktop/PolicyKit1/AuthenticationAgent, locale en_US.UTF-8)
+Jul 25 22:03:12 managednode2 polkitd[885]: Unregistered Authentication Agent for unix-session:c1 (system bus name :1.96, object path /org/freedesktop/PolicyKit1/AuthenticationAgent, locale en_US.UTF-8) (disconnected from bus)
+Jul 25 22:03:12 managednode2 gdm-launch-environment][1882]: pam_unix(gdm-launch-environment:session): session closed for user gdm
+Jul 25 22:03:22 managednode2 systemd[1891]: pam_unix(systemd-user:session): session closed for user gdm
+Jul 25 22:03:55 managednode2 sshd[3180]: Accepted publickey for admin from 51.0.6.1 port 38334 ssh2: RSA SHA256:7caVHyig9u/OCljihnANPndMtyeF2pR6bft6KiAIg8c
+Jul 25 22:03:55 managednode2 sshd[3180]: pam_unix(sshd:session): session opened for user admin by (uid=0)
+Jul 25 22:03:55 managednode2 sudo[3369]:   admin : TTY=pts/0 ; PWD=/home/admin ; USER=root ; COMMAND=/bin/sh -c echo BECOME-SUCCESS-jeqfzokxkzaxjgecatzmgcrguuqutkvx ; /usr/libexec/platform-python /home/admin/.ansible/tmp/ansible-tmp-1658779434.5821974-3287-9401225163367/AnsiballZ_ping.py
+Jul 25 22:03:55 managednode2 sudo[3369]: pam_systemd(sudo:session): Cannot create session: Already running in a session or user slice
+Jul 25 22:03:55 managednode2 sudo[3369]: pam_unix(sudo:session): session opened for user root by admin(uid=0)
+Jul 25 22:03:55 managednode2 sudo[3369]: pam_unix(sudo:session): session closed for user root
+Jul 25 22:04:34 managednode2 su[3521]: pam_systemd(su:session): Cannot create session: Already running in a session or user slice
+Jul 25 22:04:34 managednode2 su[3521]: pam_unix(su:session): session opened for user root by (uid=1000)
+Jul 25 22:04:47 managednode2 sudo[3755]:   admin : TTY=pts/1 ; PWD=/home/admin ; USER=root ; COMMAND=/bin/sh -c echo BECOME-SUCCESS-adzjdqexdwmusoiyfohdkxdsualtxuyv ; /usr/libexec/platform-python /home/admin/.ansible/tmp/ansible-tmp-1658779486.450292-3494-195428608626655/AnsiballZ_ping.py
+Jul 25 22:04:47 managednode2 sudo[3755]: pam_systemd(sudo:session): Cannot create session: Already running in a session or user slice
+Jul 25 22:04:47 managednode2 sudo[3755]: pam_unix(sudo:session): session opened for user root by admin(uid=0)
+Jul 25 22:04:47 managednode2 sudo[3755]: pam_unix(sudo:session): session closed for user root
+Jul 25 22:05:47 managednode2 sshd[3183]: Received disconnect from 51.0.6.1 port 38334:11: disconnected by user
+Jul 25 22:05:47 managednode2 sshd[3183]: Disconnected from user admin 51.0.6.1 port 38334
+Jul 25 22:05:47 managednode2 sshd[3180]: pam_unix(sshd:session): session closed for user admin
+Jul 25 22:21:47 managednode2 sshd[4094]: Accepted publickey for root from 51.0.6.1 port 38412 ssh2: RSA SHA256:7caVHyig9u/OCljihnANPndMtyeF2pR6bft6KiAIg8c
+Jul 25 22:21:47 managednode2 systemd[4101]: pam_unix(systemd-user:session): session opened for user root by (uid=0)
+Jul 25 22:21:47 managednode2 sshd[4094]: pam_unix(sshd:session): session opened for user root by (uid=0)
+Jul 25 22:22:48 managednode2 sshd[4127]: Received disconnect from 51.0.6.1 port 38412:11: disconnected by user
+Jul 25 22:22:48 managednode2 sshd[4127]: Disconnected from user root 51.0.6.1 port 38412
+Jul 25 22:22:48 managednode2 sshd[4094]: pam_unix(sshd:session): session closed for user root
+Jul 25 22:22:54 managednode2 sshd[4345]: Accepted publickey for root from 51.0.6.1 port 38416 ssh2: RSA SHA256:7caVHyig9u/OCljihnANPndMtyeF2pR6bft6KiAIg8c
+Jul 25 22:22:54 managednode2 sshd[4345]: pam_unix(sshd:session): session opened for user root by (uid=0)
+Jul 25 22:22:54 managednode2 useradd[4510]: new group: name=devops, GID=1001
+Jul 25 22:22:54 managednode2 useradd[4510]: new user: name=devops, UID=1001, GID=1001, home=/home/devops, shell=/bin/bash
+Jul 25 22:24:31 managednode2 sshd[4350]: Received disconnect from 51.0.6.1 port 38416:11: disconnected by user
+Jul 25 22:24:31 managednode2 sshd[4350]: Disconnected from user root 51.0.6.1 port 38416
+Jul 25 22:24:31 managednode2 sshd[4345]: pam_unix(sshd:session): session closed for user root
+Jul 25 22:24:43 managednode2 sshd[4777]: Accepted publickey for root from 51.0.6.1 port 38418 ssh2: RSA SHA256:7caVHyig9u/OCljihnANPndMtyeF2pR6bft6KiAIg8c
+Jul 25 22:24:43 managednode2 systemd[4783]: pam_unix(systemd-user:session): session opened for user root by (uid=0)
+Jul 25 22:24:43 managednode2 sshd[4777]: pam_unix(sshd:session): session opened for user root by (uid=0)
+Jul 25 22:24:44 managednode2 usermod[4973]: change user 'devops' password
+Jul 25 22:25:44 managednode2 sshd[4808]: Received disconnect from 51.0.6.1 port 38418:11: disconnected by user
+Jul 25 22:25:44 managednode2 sshd[4808]: Disconnected from user root 51.0.6.1 port 38418
+Jul 25 22:25:44 managednode2 sshd[4777]: pam_unix(sshd:session): session closed for user root
+Jul 25 22:26:14 managednode2 sshd[5047]: Accepted publickey for root from 51.0.6.1 port 38424 ssh2: RSA SHA256:7caVHyig9u/OCljihnANPndMtyeF2pR6bft6KiAIg8c
+Jul 25 22:26:14 managednode2 systemd[5053]: pam_unix(systemd-user:session): session opened for user root by (uid=0)
+Jul 25 22:26:14 managednode2 sshd[5047]: pam_unix(sshd:session): session opened for user root by (uid=0)
+Jul 25 22:26:14 managednode2 usermod[5243]: change user 'devops' password
+Jul 25 22:27:15 managednode2 sshd[5076]: Received disconnect from 51.0.6.1 port 38424:11: disconnected by user
+Jul 25 22:27:15 managednode2 sshd[5076]: Disconnected from user root 51.0.6.1 port 38424
+Jul 25 22:27:15 managednode2 sshd[5047]: pam_unix(sshd:session): session closed for user root
+Jul 25 22:34:48 managednode2 sshd[5383]: Accepted publickey for root from 51.0.6.1 port 38436 ssh2: RSA SHA256:7caVHyig9u/OCljihnANPndMtyeF2pR6bft6KiAIg8c
+Jul 25 22:34:48 managednode2 systemd[5390]: pam_unix(systemd-user:session): session opened for user root by (uid=0)
+Jul 25 22:34:48 managednode2 sshd[5383]: pam_unix(sshd:session): session opened for user root by (uid=0)
+Jul 25 22:34:49 managednode2 usermod[5580]: change user 'devops' password
+Jul 25 22:35:49 managednode2 sshd[5415]: Received disconnect from 51.0.6.1 port 38436:11: disconnected by user
+Jul 25 22:35:49 managednode2 sshd[5415]: Disconnected from user root 51.0.6.1 port 38436
+Jul 25 22:35:49 managednode2 sshd[5383]: pam_unix(sshd:session): session closed for user root
+Jul 25 22:37:05 managednode2 sshd[5662]: Accepted publickey for root from 51.0.6.1 port 38442 ssh2: RSA SHA256:7caVHyig9u/OCljihnANPndMtyeF2pR6bft6KiAIg8c
+Jul 25 22:37:05 managednode2 systemd[5668]: pam_unix(systemd-user:session): session opened for user root by (uid=0)
+Jul 25 22:37:05 managednode2 sshd[5662]: pam_unix(sshd:session): session opened for user root by (uid=0)
+Jul 25 22:38:06 managednode2 sshd[5693]: Received disconnect from 51.0.6.1 port 38442:11: disconnected by user
+Jul 25 22:38:06 managednode2 sshd[5693]: Disconnected from user root 51.0.6.1 port 38442
+Jul 25 22:38:06 managednode2 sshd[5662]: pam_unix(sshd:session): session closed for user root
+Jul 25 22:41:04 managednode2 sshd[5950]: Accepted publickey for root from 51.0.6.1 port 38446 ssh2: RSA SHA256:7caVHyig9u/OCljihnANPndMtyeF2pR6bft6KiAIg8c
+Jul 25 22:41:04 managednode2 systemd[5956]: pam_unix(systemd-user:session): session opened for user root by (uid=0)
+Jul 25 22:41:04 managednode2 sshd[5950]: pam_unix(sshd:session): session opened for user root by (uid=0)
+Jul 25 22:41:05 managednode2 usermod[6146]: change user 'devops' password
+Jul 25 22:42:05 managednode2 sshd[5981]: Received disconnect from 51.0.6.1 port 38446:11: disconnected by user
+Jul 25 22:42:05 managednode2 sshd[5981]: Disconnected from user root 51.0.6.1 port 38446
+Jul 25 22:42:05 managednode2 sshd[5950]: pam_unix(sshd:session): session closed for user root
+Jul 25 22:45:50 managednode2 sshd[6252]: Connection closed by authenticating user devops 51.0.6.1 port 38454 [preauth]
+Jul 25 22:45:50 managednode2 sshd[6254]: Connection closed by authenticating user devops 51.0.6.1 port 38456 [preauth]
+Jul 25 22:45:54 managednode2 sshd[6256]: Accepted password for devops from 51.0.6.1 port 38458 ssh2
+Jul 25 22:45:54 managednode2 systemd[6264]: pam_unix(systemd-user:session): session opened for user devops by (uid=0)
+Jul 25 22:45:55 managednode2 sshd[6256]: pam_unix(sshd:session): session opened for user devops by (uid=0)
+Jul 25 22:45:55 managednode2 sshd[6288]: Received disconnect from 51.0.6.1 port 38458:11: disconnected by user
+Jul 25 22:45:55 managednode2 sshd[6288]: Disconnected from user devops 51.0.6.1 port 38458
+Jul 25 22:45:55 managednode2 sshd[6256]: pam_unix(sshd:session): session closed for user devops
+Jul 25 22:46:05 managednode2 systemd[6272]: pam_unix(systemd-user:session): session closed for user devops
+Jul 25 22:47:10 managednode2 sshd[6413]: Accepted publickey for devops from 51.0.6.1 port 38462 ssh2: RSA SHA256:7caVHyig9u/OCljihnANPndMtyeF2pR6bft6KiAIg8c
+Jul 25 22:47:10 managednode2 systemd[6419]: pam_unix(systemd-user:session): session opened for user devops by (uid=0)
+Jul 25 22:47:10 managednode2 sshd[6413]: pam_unix(sshd:session): session opened for user devops by (uid=0)
+Jul 25 22:48:12 managednode2 sshd[6443]: Received disconnect from 51.0.6.1 port 38462:11: disconnected by user
+Jul 25 22:48:12 managednode2 sshd[6443]: Disconnected from user devops 51.0.6.1 port 38462
+Jul 25 22:48:12 managednode2 sshd[6413]: pam_unix(sshd:session): session closed for user devops
+Jul 25 22:48:22 managednode2 systemd[6427]: pam_unix(systemd-user:session): session closed for user devops
+Jul 25 22:48:33 managednode2 sshd[6750]: Accepted publickey for devops from 51.0.6.1 port 38484 ssh2: RSA SHA256:7caVHyig9u/OCljihnANPndMtyeF2pR6bft6KiAIg8c
+Jul 25 22:48:33 managednode2 systemd[6756]: pam_unix(systemd-user:session): session opened for user devops by (uid=0)
+Jul 25 22:48:33 managednode2 sshd[6750]: pam_unix(sshd:session): session opened for user devops by (uid=0)
+Jul 25 22:49:34 managednode2 sshd[6780]: Received disconnect from 51.0.6.1 port 38484:11: disconnected by user
+Jul 25 22:49:34 managednode2 sshd[6780]: Disconnected from user devops 51.0.6.1 port 38484
+Jul 25 22:49:34 managednode2 sshd[6750]: pam_unix(sshd:session): session closed for user devops
+Jul 25 22:49:44 managednode2 systemd[6764]: pam_unix(systemd-user:session): session closed for user devops
+Jul 25 22:53:56 managednode2 sshd[7112]: Accepted publickey for devops from 51.0.6.1 port 38532 ssh2: RSA SHA256:7caVHyig9u/OCljihnANPndMtyeF2pR6bft6KiAIg8c
+Jul 25 22:53:56 managednode2 systemd[7119]: pam_unix(systemd-user:session): session opened for user devops by (uid=0)
+Jul 25 22:53:56 managednode2 sshd[7112]: pam_unix(sshd:session): session opened for user devops by (uid=0)
+Jul 25 22:54:57 managednode2 sshd[7143]: Received disconnect from 51.0.6.1 port 38532:11: disconnected by user
+Jul 25 22:54:57 managednode2 sshd[7143]: Disconnected from user devops 51.0.6.1 port 38532
+Jul 25 22:54:57 managednode2 sshd[7112]: pam_unix(sshd:session): session closed for user devops
+Jul 25 22:55:08 managednode2 systemd[7127]: pam_unix(systemd-user:session): session closed for user devops
+Jul 25 22:57:45 managednode2 sshd[7443]: Accepted publickey for root from 51.0.6.1 port 38538 ssh2: RSA SHA256:7caVHyig9u/OCljihnANPndMtyeF2pR6bft6KiAIg8c
+Jul 25 22:57:45 managednode2 systemd[7449]: pam_unix(systemd-user:session): session opened for user root by (uid=0)
+Jul 25 22:57:45 managednode2 sshd[7443]: pam_unix(sshd:session): session opened for user root by (uid=0)
+Jul 25 22:58:46 managednode2 sshd[7474]: Received disconnect from 51.0.6.1 port 38538:11: disconnected by user
+Jul 25 22:58:46 managednode2 sshd[7474]: Disconnected from user root 51.0.6.1 port 38538
+Jul 25 22:58:46 managednode2 sshd[7443]: pam_unix(sshd:session): session closed for user root
+Jul 25 23:19:48 managednode2 sshd[7904]: Accepted publickey for devops from 51.0.6.1 port 38542 ssh2: RSA SHA256:7caVHyig9u/OCljihnANPndMtyeF2pR6bft6KiAIg8c
+Jul 25 23:19:48 managednode2 systemd[7911]: pam_unix(systemd-user:session): session opened for user devops by (uid=0)
+Jul 25 23:19:48 managednode2 sshd[7904]: pam_unix(sshd:session): session opened for user devops by (uid=0)
+Jul 25 23:19:50 managednode2 sudo[8161]:  devops : TTY=pts/1 ; PWD=/home/devops ; USER=root ; COMMAND=/bin/sh -c echo BECOME-SUCCESS-fxptsbvibgsavyyfeddrwyltcicdwkpb ; /usr/libexec/platform-python /home/devops/.ansible/tmp/ansible-tmp-1658783989.25663-37964-122993929145624/AnsiballZ_setup.py
+Jul 25 23:19:50 managednode2 sudo[8161]: pam_systemd(sudo:session): Cannot create session: Already running in a session or user slice
+Jul 25 23:19:50 managednode2 sudo[8161]: pam_unix(sudo:session): session opened for user root by devops(uid=0)
+Jul 25 23:19:50 managednode2 sudo[8161]: pam_unix(sudo:session): session closed for user root
+Jul 25 23:19:51 managednode2 sudo[8362]:  devops : TTY=pts/1 ; PWD=/home/devops ; USER=root ; COMMAND=/bin/sh -c echo BECOME-SUCCESS-qwzdkazflmhsjgwkyxufwhxavtfugfud ; /usr/libexec/platform-python /home/devops/.ansible/tmp/ansible-tmp-1658783990.8013296-37993-167068830945085/AnsiballZ_dnf.py
+Jul 25 23:19:51 managednode2 sudo[8362]: pam_systemd(sudo:session): Cannot create session: Already running in a session or user slice
+Jul 25 23:19:51 managednode2 sudo[8362]: pam_unix(sudo:session): session opened for user root by devops(uid=0)
+Jul 25 23:19:51 managednode2 sudo[8362]: pam_unix(sudo:session): session closed for user root
+Jul 25 23:19:52 managednode2 sudo[8520]:  devops : TTY=pts/1 ; PWD=/home/devops ; USER=root ; COMMAND=/bin/sh -c echo BECOME-SUCCESS-uuuwfpkcunhsovfvrkogsxrmloeyanav ; /usr/libexec/platform-python /home/devops/.ansible/tmp/ansible-tmp-1658783991.920117-38011-59717089503376/AnsiballZ_dnf.py
+Jul 25 23:19:52 managednode2 sudo[8520]: pam_systemd(sudo:session): Cannot create session: Already running in a session or user slice
+Jul 25 23:19:52 managednode2 sudo[8520]: pam_unix(sudo:session): session opened for user root by devops(uid=0)
+Jul 25 23:19:52 managednode2 sudo[8520]: pam_unix(sudo:session): session closed for user root
+Jul 25 23:19:53 managednode2 sudo[8678]:  devops : TTY=pts/1 ; PWD=/home/devops ; USER=root ; COMMAND=/bin/sh -c echo BECOME-SUCCESS-nqgtpljihudusmyhbnffcteqnwtainjl ; /usr/libexec/platform-python /home/devops/.ansible/tmp/ansible-tmp-1658783992.9277804-38029-133216413820458/AnsiballZ_systemd.py
+Jul 25 23:19:53 managednode2 sudo[8678]: pam_systemd(sudo:session): Cannot create session: Already running in a session or user slice
+Jul 25 23:19:53 managednode2 sudo[8678]: pam_unix(sudo:session): session opened for user root by devops(uid=0)
+Jul 25 23:19:53 managednode2 sudo[8678]: pam_unix(sudo:session): session closed for user root
+Jul 25 23:20:38 managednode2 sudo[8895]:  devops : TTY=pts/1 ; PWD=/home/devops ; USER=root ; COMMAND=/bin/sh -c echo BECOME-SUCCESS-qolesonnzqmpkuypibqavqccmoxslcts ; /usr/libexec/platform-python /home/devops/.ansible/tmp/ansible-tmp-1658784037.784207-38074-12836303043045/AnsiballZ_setup.py
+Jul 25 23:20:38 managednode2 sudo[8895]: pam_systemd(sudo:session): Cannot create session: Already running in a session or user slice
+Jul 25 23:20:38 managednode2 sudo[8895]: pam_unix(sudo:session): session opened for user root by devops(uid=0)
+Jul 25 23:20:38 managednode2 sudo[8895]: pam_unix(sudo:session): session closed for user root
+Jul 25 23:20:39 managednode2 sudo[9096]:  devops : TTY=pts/1 ; PWD=/home/devops ; USER=root ; COMMAND=/bin/sh -c echo BECOME-SUCCESS-vhnurvoodudrobmzhfyqpfxkabbbhvye ; /usr/libexec/platform-python /home/devops/.ansible/tmp/ansible-tmp-1658784038.8571723-38096-83150571878332/AnsiballZ_dnf.py
+Jul 25 23:20:39 managednode2 sudo[9096]: pam_systemd(sudo:session): Cannot create session: Already running in a session or user slice
+Jul 25 23:20:39 managednode2 sudo[9096]: pam_unix(sudo:session): session opened for user root by devops(uid=0)
+Jul 25 23:20:39 managednode2 sudo[9096]: pam_unix(sudo:session): session closed for user root
+Jul 25 23:20:40 managednode2 sudo[9254]:  devops : TTY=pts/1 ; PWD=/home/devops ; USER=root ; COMMAND=/bin/sh -c echo BECOME-SUCCESS-xuvvahrmawvgxgqihjejmqvrhngiflsw ; /usr/libexec/platform-python /home/devops/.ansible/tmp/ansible-tmp-1658784039.9402516-38114-135302150440492/AnsiballZ_dnf.py
+Jul 25 23:20:40 managednode2 sudo[9254]: pam_systemd(sudo:session): Cannot create session: Already running in a session or user slice
+Jul 25 23:20:40 managednode2 sudo[9254]: pam_unix(sudo:session): session opened for user root by devops(uid=0)
+Jul 25 23:20:40 managednode2 sudo[9254]: pam_unix(sudo:session): session closed for user root
+Jul 25 23:20:41 managednode2 sudo[9412]:  devops : TTY=pts/1 ; PWD=/home/devops ; USER=root ; COMMAND=/bin/sh -c echo BECOME-SUCCESS-takjrkexdlrbysxbogtfabtcwcwokzmr ; /usr/libexec/platform-python /home/devops/.ansible/tmp/ansible-tmp-1658784040.9222693-38132-252830298932413/AnsiballZ_systemd.py
+Jul 25 23:20:41 managednode2 sudo[9412]: pam_systemd(sudo:session): Cannot create session: Already running in a session or user slice
+Jul 25 23:20:41 managednode2 sudo[9412]: pam_unix(sudo:session): session opened for user root by devops(uid=0)
+Jul 25 23:20:41 managednode2 sudo[9412]: pam_unix(sudo:session): session closed for user root
+Jul 25 23:21:41 managednode2 sshd[7936]: Received disconnect from 51.0.6.1 port 38542:11: disconnected by user
+Jul 25 23:21:41 managednode2 sshd[7936]: Disconnected from user devops 51.0.6.1 port 38542
+Jul 25 23:21:41 managednode2 sshd[7904]: pam_unix(sshd:session): session closed for user devops
+Jul 25 23:21:51 managednode2 systemd[7920]: pam_unix(systemd-user:session): session closed for user devops
+Jul 25 23:22:33 managednode2 sshd[9504]: Accepted publickey for devops from 51.0.6.1 port 38546 ssh2: RSA SHA256:7caVHyig9u/OCljihnANPndMtyeF2pR6bft6KiAIg8c
+Jul 25 23:22:33 managednode2 systemd[9510]: pam_unix(systemd-user:session): session opened for user devops by (uid=0)
+Jul 25 23:22:33 managednode2 sshd[9504]: pam_unix(sshd:session): session opened for user devops by (uid=0)
+Jul 25 23:22:34 managednode2 sudo[9759]:  devops : TTY=pts/1 ; PWD=/home/devops ; USER=root ; COMMAND=/bin/sh -c echo BECOME-SUCCESS-wsmamoazatgabrrpejywwqbxqhttzzas ; /usr/libexec/platform-python /home/devops/.ansible/tmp/ansible-tmp-1658784153.949581-38213-45389346760850/AnsiballZ_setup.py
+Jul 25 23:22:34 managednode2 sudo[9759]: pam_systemd(sudo:session): Cannot create session: Already running in a session or user slice
+Jul 25 23:22:34 managednode2 sudo[9759]: pam_unix(sudo:session): session opened for user root by devops(uid=0)
+Jul 25 23:22:35 managednode2 sudo[9759]: pam_unix(sudo:session): session closed for user root
+Jul 25 23:22:35 managednode2 sudo[9960]:  devops : TTY=pts/1 ; PWD=/home/devops ; USER=root ; COMMAND=/bin/sh -c echo BECOME-SUCCESS-kjubnvbwmleamdrtxqmogrbgfanjrsxw ; /usr/libexec/platform-python /home/devops/.ansible/tmp/ansible-tmp-1658784155.2954612-38243-50003452362827/AnsiballZ_dnf.py
+Jul 25 23:22:35 managednode2 sudo[9960]: pam_systemd(sudo:session): Cannot create session: Already running in a session or user slice
+Jul 25 23:22:35 managednode2 sudo[9960]: pam_unix(sudo:session): session opened for user root by devops(uid=0)
+Jul 25 23:22:36 managednode2 sudo[9960]: pam_unix(sudo:session): session closed for user root
+Jul 25 23:22:36 managednode2 sudo[10118]:  devops : TTY=pts/1 ; PWD=/home/devops ; USER=root ; COMMAND=/bin/sh -c echo BECOME-SUCCESS-jxpklfemqdkxuhudreisqgvlcpephtqo ; /usr/libexec/platform-python /home/devops/.ansible/tmp/ansible-tmp-1658784156.3822663-38261-228829074852833/AnsiballZ_dnf.py
+Jul 25 23:22:36 managednode2 sudo[10118]: pam_systemd(sudo:session): Cannot create session: Already running in a session or user slice
+Jul 25 23:22:36 managednode2 sudo[10118]: pam_unix(sudo:session): session opened for user root by devops(uid=0)
+Jul 25 23:22:37 managednode2 sudo[10118]: pam_unix(sudo:session): session closed for user root
+Jul 25 23:22:37 managednode2 sudo[10276]:  devops : TTY=pts/1 ; PWD=/home/devops ; USER=root ; COMMAND=/bin/sh -c echo BECOME-SUCCESS-msnjhahdnhnrywyquailspljxmhzcffp ; /usr/libexec/platform-python /home/devops/.ansible/tmp/ansible-tmp-1658784157.373951-38279-135096292882974/AnsiballZ_systemd.py
+Jul 25 23:22:37 managednode2 sudo[10276]: pam_systemd(sudo:session): Cannot create session: Already running in a session or user slice
+Jul 25 23:22:37 managednode2 sudo[10276]: pam_unix(sudo:session): session opened for user root by devops(uid=0)
+Jul 25 23:22:37 managednode2 sudo[10276]: pam_unix(sudo:session): session closed for user root
+Jul 25 23:23:31 managednode2 sudo[10493]:  devops : TTY=pts/1 ; PWD=/home/devops ; USER=root ; COMMAND=/bin/sh -c echo BECOME-SUCCESS-jgirquybmwejofnnrglzmcelhcdkesij ; /usr/libexec/platform-python /home/devops/.ansible/tmp/ansible-tmp-1658784211.162623-38332-185847111017856/AnsiballZ_setup.py
+Jul 25 23:23:31 managednode2 sudo[10493]: pam_systemd(sudo:session): Cannot create session: Already running in a session or user slice
+Jul 25 23:23:31 managednode2 sudo[10493]: pam_unix(sudo:session): session opened for user root by devops(uid=0)
+Jul 25 23:23:32 managednode2 sudo[10493]: pam_unix(sudo:session): session closed for user root
+Jul 25 23:23:32 managednode2 sudo[10694]:  devops : TTY=pts/1 ; PWD=/home/devops ; USER=root ; COMMAND=/bin/sh -c echo BECOME-SUCCESS-sdlbuowdpqszfolchrurogtyttndmoxl ; /usr/libexec/platform-python /home/devops/.ansible/tmp/ansible-tmp-1658784212.2286816-38354-238022772378334/AnsiballZ_dnf.py
+Jul 25 23:23:32 managednode2 sudo[10694]: pam_systemd(sudo:session): Cannot create session: Already running in a session or user slice
+Jul 25 23:23:32 managednode2 sudo[10694]: pam_unix(sudo:session): session opened for user root by devops(uid=0)
+Jul 25 23:23:44 managednode2 groupadd[10720]: group added to /etc/group: name=apache, GID=48
+Jul 25 23:23:44 managednode2 groupadd[10720]: group added to /etc/gshadow: name=apache
+Jul 25 23:23:44 managednode2 groupadd[10720]: new group: name=apache, GID=48
+Jul 25 23:23:44 managednode2 useradd[10727]: new user: name=apache, UID=48, GID=48, home=/usr/share/httpd, shell=/sbin/nologin
+Jul 25 23:23:45 managednode2 sudo[10694]: pam_unix(sudo:session): session closed for user root
+Jul 25 23:23:47 managednode2 sudo[16690]:  devops : TTY=pts/1 ; PWD=/home/devops ; USER=root ; COMMAND=/bin/sh -c echo BECOME-SUCCESS-waixsbvxddtqqqyfnquhoiyvmkutvtcx ; /usr/libexec/platform-python /home/devops/.ansible/tmp/ansible-tmp-1658784227.390502-38372-93539236720029/AnsiballZ_dnf.py
+Jul 25 23:23:47 managednode2 sudo[16690]: pam_systemd(sudo:session): Cannot create session: Already running in a session or user slice
+Jul 25 23:23:47 managednode2 sudo[16690]: pam_unix(sudo:session): session opened for user root by devops(uid=0)
+Jul 25 23:23:48 managednode2 sudo[16690]: pam_unix(sudo:session): session closed for user root
+Jul 25 23:23:49 managednode2 sudo[18347]:  devops : TTY=pts/1 ; PWD=/home/devops ; USER=root ; COMMAND=/bin/sh -c echo BECOME-SUCCESS-heeomxpieqjcdqzfdxwyrjnnznmteatm ; /usr/libexec/platform-python /home/devops/.ansible/tmp/ansible-tmp-1658784228.5799344-38390-202716663873716/AnsiballZ_systemd.py
+Jul 25 23:23:49 managednode2 sudo[18347]: pam_systemd(sudo:session): Cannot create session: Already running in a session or user slice
+Jul 25 23:23:49 managednode2 sudo[18347]: pam_unix(sudo:session): session opened for user root by devops(uid=0)
+Jul 25 23:23:49 managednode2 sudo[18347]: pam_unix(sudo:session): session closed for user root
+Jul 25 23:23:50 managednode2 sudo[19582]:  devops : TTY=pts/1 ; PWD=/home/devops ; USER=root ; COMMAND=/bin/sh -c echo BECOME-SUCCESS-pqbblmqdfboaqnimdidwqryiyhgaadss ; /usr/libexec/platform-python /home/devops/.ansible/tmp/ansible-tmp-1658784229.836039-38408-161852425036031/AnsiballZ_systemd.py
+Jul 25 23:23:50 managednode2 sudo[19582]: pam_systemd(sudo:session): Cannot create session: Already running in a session or user slice
+Jul 25 23:23:50 managednode2 sudo[19582]: pam_unix(sudo:session): session opened for user root by devops(uid=0)
+Jul 25 23:23:50 managednode2 sudo[19582]: pam_unix(sudo:session): session closed for user root
+Jul 25 23:24:28 managednode2 sudo[43419]:  devops : TTY=pts/1 ; PWD=/home/devops ; USER=root ; COMMAND=/bin/sh -c echo BECOME-SUCCESS-rqckuztynhykolpwrbgyecrhqkyqxeqp ; /usr/libexec/platform-python /home/devops/.ansible/tmp/ansible-tmp-1658784267.9903343-38477-6517635121961/AnsiballZ_setup.py
+Jul 25 23:24:28 managednode2 sudo[43419]: pam_systemd(sudo:session): Cannot create session: Already running in a session or user slice
+Jul 25 23:24:28 managednode2 sudo[43419]: pam_unix(sudo:session): session opened for user root by devops(uid=0)
+Jul 25 23:24:28 managednode2 sudo[43419]: pam_unix(sudo:session): session closed for user root
+Jul 25 23:24:29 managednode2 sudo[43620]:  devops : TTY=pts/1 ; PWD=/home/devops ; USER=root ; COMMAND=/bin/sh -c echo BECOME-SUCCESS-bnuyoihkzasiaakxrhsqwtgaueurgwen ; /usr/libexec/platform-python /home/devops/.ansible/tmp/ansible-tmp-1658784269.0612051-38499-193971590058074/AnsiballZ_dnf.py
+Jul 25 23:24:29 managednode2 sudo[43620]: pam_systemd(sudo:session): Cannot create session: Already running in a session or user slice
+Jul 25 23:24:29 managednode2 sudo[43620]: pam_unix(sudo:session): session opened for user root by devops(uid=0)
+Jul 25 23:24:30 managednode2 sudo[43620]: pam_unix(sudo:session): session closed for user root
+Jul 25 23:24:30 managednode2 sudo[43778]:  devops : TTY=pts/1 ; PWD=/home/devops ; USER=root ; COMMAND=/bin/sh -c echo BECOME-SUCCESS-xjkrgllfqthjoxjpqtpfdlywupntimaq ; /usr/libexec/platform-python /home/devops/.ansible/tmp/ansible-tmp-1658784270.1866884-38517-181981848078170/AnsiballZ_dnf.py
+Jul 25 23:24:30 managednode2 sudo[43778]: pam_systemd(sudo:session): Cannot create session: Already running in a session or user slice
+Jul 25 23:24:30 managednode2 sudo[43778]: pam_unix(sudo:session): session opened for user root by devops(uid=0)
+Jul 25 23:24:31 managednode2 sudo[43778]: pam_unix(sudo:session): session closed for user root
+Jul 25 23:24:31 managednode2 sudo[43936]:  devops : TTY=pts/1 ; PWD=/home/devops ; USER=root ; COMMAND=/bin/sh -c echo BECOME-SUCCESS-vddciknknzkvrfosgshfwhxhvfainyze ; /usr/libexec/platform-python /home/devops/.ansible/tmp/ansible-tmp-1658784271.2090726-38535-118991758114753/AnsiballZ_systemd.py
+Jul 25 23:24:31 managednode2 sudo[43936]: pam_systemd(sudo:session): Cannot create session: Already running in a session or user slice
+Jul 25 23:24:31 managednode2 sudo[43936]: pam_unix(sudo:session): session opened for user root by devops(uid=0)
+Jul 25 23:24:31 managednode2 sudo[43936]: pam_unix(sudo:session): session closed for user root
+Jul 25 23:24:32 managednode2 sudo[44097]:  devops : TTY=pts/1 ; PWD=/home/devops ; USER=root ; COMMAND=/bin/sh -c echo BECOME-SUCCESS-vzfuhjvadenqmiwxnukiigpgujzgwkur ; /usr/libexec/platform-python /home/devops/.ansible/tmp/ansible-tmp-1658784271.874945-38553-240812366552282/AnsiballZ_systemd.py
+Jul 25 23:24:32 managednode2 sudo[44097]: pam_systemd(sudo:session): Cannot create session: Already running in a session or user slice
+Jul 25 23:24:32 managednode2 sudo[44097]: pam_unix(sudo:session): session opened for user root by devops(uid=0)
+Jul 25 23:24:32 managednode2 sudo[44097]: pam_unix(sudo:session): session closed for user root
+Jul 25 23:24:32 managednode2 sudo[44258]:  devops : TTY=pts/1 ; PWD=/home/devops ; USER=root ; COMMAND=/bin/sh -c echo BECOME-SUCCESS-ddhgscczpgjwdhwsxtbrxuvwwrafszvq ; /usr/libexec/platform-python /home/devops/.ansible/tmp/ansible-tmp-1658784272.3655677-38571-229678292097030/AnsiballZ_stat.py
+Jul 25 23:24:32 managednode2 sudo[44258]: pam_systemd(sudo:session): Cannot create session: Already running in a session or user slice
+Jul 25 23:24:32 managednode2 sudo[44258]: pam_unix(sudo:session): session opened for user root by devops(uid=0)
+Jul 25 23:24:32 managednode2 sudo[44258]: pam_unix(sudo:session): session closed for user root
+Jul 25 23:24:33 managednode2 sudo[44386]:  devops : TTY=pts/1 ; PWD=/home/devops ; USER=root ; COMMAND=/bin/sh -c echo BECOME-SUCCESS-osinmkmgyagtwqulbluyyomtweiimzth ; /usr/libexec/platform-python /home/devops/.ansible/tmp/ansible-tmp-1658784272.3655677-38571-229678292097030/AnsiballZ_copy.py
+Jul 25 23:24:33 managednode2 sudo[44386]: pam_systemd(sudo:session): Cannot create session: Already running in a session or user slice
+Jul 25 23:24:33 managednode2 sudo[44386]: pam_unix(sudo:session): session opened for user root by devops(uid=0)
+Jul 25 23:24:33 managednode2 sudo[44386]: pam_unix(sudo:session): session closed for user root
+Jul 25 23:24:33 managednode2 sudo[44545]:  devops : TTY=pts/1 ; PWD=/home/devops ; USER=root ; COMMAND=/bin/sh -c echo BECOME-SUCCESS-fkzjnykqahkdzwboostjtylcloyjmqyw ; /usr/libexec/platform-python /home/devops/.ansible/tmp/ansible-tmp-1658784273.274527-38603-114745428147580/AnsiballZ_systemd.py
+Jul 25 23:24:33 managednode2 sudo[44545]: pam_systemd(sudo:session): Cannot create session: Already running in a session or user slice
+Jul 25 23:24:33 managednode2 sudo[44545]: pam_unix(sudo:session): session opened for user root by devops(uid=0)
+Jul 25 23:24:34 managednode2 sudo[44545]: pam_unix(sudo:session): session closed for user root
+Jul 25 23:24:35 managednode2 sudo[44928]:  devops : TTY=pts/1 ; PWD=/home/devops ; USER=root ; COMMAND=/bin/sh -c echo BECOME-SUCCESS-thfsyqgweqtrncomemtiksstobnohniw ; /usr/libexec/platform-python /home/devops/.ansible/tmp/ansible-tmp-1658784274.8462367-38621-42170271861085/AnsiballZ_firewalld.py
+Jul 25 23:24:35 managednode2 sudo[44928]: pam_systemd(sudo:session): Cannot create session: Already running in a session or user slice
+Jul 25 23:24:35 managednode2 sudo[44928]: pam_unix(sudo:session): session opened for user root by devops(uid=0)
+Jul 25 23:24:35 managednode2 sudo[44928]: pam_unix(sudo:session): session closed for user root
+Jul 25 23:24:35 managednode2 sudo[45085]:  devops : TTY=pts/1 ; PWD=/home/devops ; USER=root ; COMMAND=/bin/sh -c echo BECOME-SUCCESS-yqignpaexkidzgywkpdachmfqedukvqw ; /usr/libexec/platform-python /home/devops/.ansible/tmp/ansible-tmp-1658784275.5054588-38641-276763301786878/AnsiballZ_setup.py
+Jul 25 23:24:35 managednode2 sudo[45085]: pam_systemd(sudo:session): Cannot create session: Already running in a session or user slice
+Jul 25 23:24:35 managednode2 sudo[45085]: pam_unix(sudo:session): session opened for user root by devops(uid=0)
+Jul 25 23:24:36 managednode2 sudo[45085]: pam_unix(sudo:session): session closed for user root
+Jul 25 23:24:36 managednode2 sudo[45286]:  devops : TTY=pts/1 ; PWD=/home/devops ; USER=root ; COMMAND=/bin/sh -c echo BECOME-SUCCESS-jakwezjphltqjbomezsabbcdxzgxwmyu ; /usr/libexec/platform-python /home/devops/.ansible/tmp/ansible-tmp-1658784276.3404605-38659-5903393533114/AnsiballZ_uri.py
+Jul 25 23:24:36 managednode2 sudo[45286]: pam_systemd(sudo:session): Cannot create session: Already running in a session or user slice
+Jul 25 23:24:36 managednode2 sudo[45286]: pam_unix(sudo:session): session opened for user root by devops(uid=0)
+Jul 25 23:24:36 managednode2 sudo[45286]: pam_unix(sudo:session): session closed for user root
+Jul 25 23:25:16 managednode2 sudo[45492]:  devops : TTY=pts/1 ; PWD=/home/devops ; USER=root ; COMMAND=/bin/sh -c echo BECOME-SUCCESS-vexmgpbxdlwdiqigqixotzmwtzbxkinc ; /usr/libexec/platform-python /home/devops/.ansible/tmp/ansible-tmp-1658784315.7329075-38711-43338363475955/AnsiballZ_setup.py
+Jul 25 23:25:16 managednode2 sudo[45492]: pam_systemd(sudo:session): Cannot create session: Already running in a session or user slice
+Jul 25 23:25:16 managednode2 sudo[45492]: pam_unix(sudo:session): session opened for user root by devops(uid=0)
+Jul 25 23:25:16 managednode2 sudo[45492]: pam_unix(sudo:session): session closed for user root
+Jul 25 23:25:17 managednode2 sudo[45693]:  devops : TTY=pts/1 ; PWD=/home/devops ; USER=root ; COMMAND=/bin/sh -c echo BECOME-SUCCESS-dvfzudxlbzldhifuvtydtzbdknghhzpm ; /usr/libexec/platform-python /home/devops/.ansible/tmp/ansible-tmp-1658784316.786822-38733-144873087070928/AnsiballZ_dnf.py
+Jul 25 23:25:17 managednode2 sudo[45693]: pam_systemd(sudo:session): Cannot create session: Already running in a session or user slice
+Jul 25 23:25:17 managednode2 sudo[45693]: pam_unix(sudo:session): session opened for user root by devops(uid=0)
+Jul 25 23:25:17 managednode2 sudo[45693]: pam_unix(sudo:session): session closed for user root
+Jul 25 23:25:18 managednode2 sudo[45851]:  devops : TTY=pts/1 ; PWD=/home/devops ; USER=root ; COMMAND=/bin/sh -c echo BECOME-SUCCESS-sfmvypifkxrawrinrjtpfvaxfgnwfaks ; /usr/libexec/platform-python /home/devops/.ansible/tmp/ansible-tmp-1658784317.9488904-38751-26092596355254/AnsiballZ_dnf.py
+Jul 25 23:25:18 managednode2 sudo[45851]: pam_systemd(sudo:session): Cannot create session: Already running in a session or user slice
+Jul 25 23:25:18 managednode2 sudo[45851]: pam_unix(sudo:session): session opened for user root by devops(uid=0)
+Jul 25 23:25:18 managednode2 sudo[45851]: pam_unix(sudo:session): session closed for user root
+Jul 25 23:25:19 managednode2 sudo[46017]:  devops : TTY=pts/1 ; PWD=/home/devops ; USER=root ; COMMAND=/bin/sh -c echo BECOME-SUCCESS-gowbhrquzzlphzwpremxolvhtgbnoeew ; /usr/libexec/platform-python /home/devops/.ansible/tmp/ansible-tmp-1658784318.9439058-38769-105261495594178/AnsiballZ_systemd.py
+Jul 25 23:25:19 managednode2 sudo[46017]: pam_systemd(sudo:session): Cannot create session: Already running in a session or user slice
+Jul 25 23:25:19 managednode2 sudo[46017]: pam_unix(sudo:session): session opened for user root by devops(uid=0)
+Jul 25 23:25:19 managednode2 sudo[46017]: pam_unix(sudo:session): session closed for user root
+Jul 25 23:25:19 managednode2 sudo[46178]:  devops : TTY=pts/1 ; PWD=/home/devops ; USER=root ; COMMAND=/bin/sh -c echo BECOME-SUCCESS-zoctxrizwoafukpkntfbhfialevsdlxh ; /usr/libexec/platform-python /home/devops/.ansible/tmp/ansible-tmp-1658784319.5969632-38787-129624119315374/AnsiballZ_systemd.py
+Jul 25 23:25:19 managednode2 sudo[46178]: pam_systemd(sudo:session): Cannot create session: Already running in a session or user slice
+Jul 25 23:25:19 managednode2 sudo[46178]: pam_unix(sudo:session): session opened for user root by devops(uid=0)
+Jul 25 23:25:19 managednode2 sudo[46178]: pam_unix(sudo:session): session closed for user root
+Jul 25 23:25:20 managednode2 sudo[46339]:  devops : TTY=pts/1 ; PWD=/home/devops ; USER=root ; COMMAND=/bin/sh -c echo BECOME-SUCCESS-oybqvxxlvhjhxondzbyhbgqpntbgbcvq ; /usr/libexec/platform-python /home/devops/.ansible/tmp/ansible-tmp-1658784320.1121778-38805-226758514110443/AnsiballZ_stat.py
+Jul 25 23:25:20 managednode2 sudo[46339]: pam_systemd(sudo:session): Cannot create session: Already running in a session or user slice
+Jul 25 23:25:20 managednode2 sudo[46339]: pam_unix(sudo:session): session opened for user root by devops(uid=0)
+Jul 25 23:25:20 managednode2 sudo[46339]: pam_unix(sudo:session): session closed for user root
+Jul 25 23:25:20 managednode2 sudo[46422]:  devops : TTY=pts/1 ; PWD=/home/devops ; USER=root ; COMMAND=/bin/sh -c echo BECOME-SUCCESS-dulnxuqdvztjcbkybuymaowppjnmsbns ; /usr/libexec/platform-python /home/devops/.ansible/tmp/ansible-tmp-1658784320.1121778-38805-226758514110443/AnsiballZ_file.py
+Jul 25 23:25:20 managednode2 sudo[46422]: pam_systemd(sudo:session): Cannot create session: Already running in a session or user slice
+Jul 25 23:25:20 managednode2 sudo[46422]: pam_unix(sudo:session): session opened for user root by devops(uid=0)
+Jul 25 23:25:20 managednode2 sudo[46422]: pam_unix(sudo:session): session closed for user root
+Jul 25 23:25:21 managednode2 sudo[46579]:  devops : TTY=pts/1 ; PWD=/home/devops ; USER=root ; COMMAND=/bin/sh -c echo BECOME-SUCCESS-nifbcsjxsmkhedettahiaaywebspzkwg ; /usr/libexec/platform-python /home/devops/.ansible/tmp/ansible-tmp-1658784320.9336238-38831-145799919979727/AnsiballZ_systemd.py
+Jul 25 23:25:21 managednode2 sudo[46579]: pam_systemd(sudo:session): Cannot create session: Already running in a session or user slice
+Jul 25 23:25:21 managednode2 sudo[46579]: pam_unix(sudo:session): session opened for user root by devops(uid=0)
+Jul 25 23:25:22 managednode2 sudo[46579]: pam_unix(sudo:session): session closed for user root
+Jul 25 23:25:22 managednode2 sudo[46960]:  devops : TTY=pts/1 ; PWD=/home/devops ; USER=root ; COMMAND=/bin/sh -c echo BECOME-SUCCESS-ioawzcqsyqoxbesieziskqiegfhwwsza ; /usr/libexec/platform-python /home/devops/.ansible/tmp/ansible-tmp-1658784322.4817371-38849-25207162824698/AnsiballZ_firewalld.py
+Jul 25 23:25:22 managednode2 sudo[46960]: pam_systemd(sudo:session): Cannot create session: Already running in a session or user slice
+Jul 25 23:25:22 managednode2 sudo[46960]: pam_unix(sudo:session): session opened for user root by devops(uid=0)
+Jul 25 23:25:22 managednode2 sudo[46960]: pam_unix(sudo:session): session closed for user root
+Jul 25 23:25:23 managednode2 sudo[47117]:  devops : TTY=pts/1 ; PWD=/home/devops ; USER=root ; COMMAND=/bin/sh -c echo BECOME-SUCCESS-temzuzyapnzlcpckmrapokirerczdjjt ; /usr/libexec/platform-python /home/devops/.ansible/tmp/ansible-tmp-1658784323.1176581-38869-69626355073172/AnsiballZ_setup.py
+Jul 25 23:25:23 managednode2 sudo[47117]: pam_systemd(sudo:session): Cannot create session: Already running in a session or user slice
+Jul 25 23:25:23 managednode2 sudo[47117]: pam_unix(sudo:session): session opened for user root by devops(uid=0)
+Jul 25 23:25:23 managednode2 sudo[47117]: pam_unix(sudo:session): session closed for user root
+Jul 25 23:25:24 managednode2 sudo[47318]:  devops : TTY=pts/1 ; PWD=/home/devops ; USER=root ; COMMAND=/bin/sh -c echo BECOME-SUCCESS-mlowufkompgrajkihdjafbvpshbxvbbh ; /usr/libexec/platform-python /home/devops/.ansible/tmp/ansible-tmp-1658784323.957579-38887-43694250102132/AnsiballZ_uri.py
+Jul 25 23:25:24 managednode2 sudo[47318]: pam_systemd(sudo:session): Cannot create session: Already running in a session or user slice
+Jul 25 23:25:24 managednode2 sudo[47318]: pam_unix(sudo:session): session opened for user root by devops(uid=0)
+Jul 25 23:25:26 managednode2 sudo[47318]: pam_unix(sudo:session): session closed for user root
+Jul 25 23:26:26 managednode2 sshd[9536]: Received disconnect from 51.0.6.1 port 38546:11: disconnected by user
+Jul 25 23:26:26 managednode2 sshd[9536]: Disconnected from user devops 51.0.6.1 port 38546
+Jul 25 23:26:26 managednode2 sshd[9504]: pam_unix(sshd:session): session closed for user devops
+Jul 25 23:26:57 managednode2 sshd[47396]: Accepted publickey for devops from 51.0.6.1 port 38550 ssh2: RSA SHA256:7caVHyig9u/OCljihnANPndMtyeF2pR6bft6KiAIg8c
+Jul 25 23:26:57 managednode2 systemd[47401]: pam_unix(systemd-user:session): session opened for user devops by (uid=0)
+Jul 25 23:26:58 managednode2 sshd[47396]: pam_unix(sshd:session): session opened for user devops by (uid=0)
+Jul 25 23:26:58 managednode2 sudo[47625]:  devops : TTY=pts/1 ; PWD=/home/devops ; USER=root ; COMMAND=/bin/sh -c echo BECOME-SUCCESS-nzpqcsjkbxwxqhghsxvfpfuoizffoviu ; /usr/libexec/platform-python /home/devops/.ansible/tmp/ansible-tmp-1658784418.098752-38939-196342014109180/AnsiballZ_setup.py
+Jul 25 23:26:58 managednode2 sudo[47625]: pam_systemd(sudo:session): Cannot create session: Already running in a session or user slice
+Jul 25 23:26:58 managednode2 sudo[47625]: pam_unix(sudo:session): session opened for user root by devops(uid=0)
+Jul 25 23:26:59 managednode2 sudo[47625]: pam_unix(sudo:session): session closed for user root
+Jul 25 23:26:59 managednode2 sudo[47845]:  devops : TTY=pts/1 ; PWD=/home/devops ; USER=root ; COMMAND=/bin/sh -c echo BECOME-SUCCESS-ykqycqsvvtnijurohvybnfvwzpprytao ; /usr/libexec/platform-python /home/devops/.ansible/tmp/ansible-tmp-1658784419.535411-38969-30645803604370/AnsiballZ_dnf.py
+Jul 25 23:26:59 managednode2 sudo[47845]: pam_systemd(sudo:session): Cannot create session: Already running in a session or user slice
+Jul 25 23:26:59 managednode2 sudo[47845]: pam_unix(sudo:session): session opened for user root by devops(uid=0)
+Jul 25 23:27:00 managednode2 sudo[47845]: pam_unix(sudo:session): session closed for user root
+Jul 25 23:27:00 managednode2 sudo[48003]:  devops : TTY=pts/1 ; PWD=/home/devops ; USER=root ; COMMAND=/bin/sh -c echo BECOME-SUCCESS-ivzgaarqvhnuptumitdbfzgutaijijpd ; /usr/libexec/platform-python /home/devops/.ansible/tmp/ansible-tmp-1658784420.608181-38987-46593726355110/AnsiballZ_dnf.py
+Jul 25 23:27:00 managednode2 sudo[48003]: pam_systemd(sudo:session): Cannot create session: Already running in a session or user slice
+Jul 25 23:27:00 managednode2 sudo[48003]: pam_unix(sudo:session): session opened for user root by devops(uid=0)
+Jul 25 23:27:01 managednode2 sudo[48003]: pam_unix(sudo:session): session closed for user root
+Jul 25 23:27:02 managednode2 sudo[48161]:  devops : TTY=pts/1 ; PWD=/home/devops ; USER=root ; COMMAND=/bin/sh -c echo BECOME-SUCCESS-talvaissfvoyrmarveuancctmvdlrymn ; /usr/libexec/platform-python /home/devops/.ansible/tmp/ansible-tmp-1658784421.6253986-39005-241843871024485/AnsiballZ_systemd.py
+Jul 25 23:27:02 managednode2 sudo[48161]: pam_systemd(sudo:session): Cannot create session: Already running in a session or user slice
+Jul 25 23:27:02 managednode2 sudo[48161]: pam_unix(sudo:session): session opened for user root by devops(uid=0)
+Jul 25 23:27:02 managednode2 sudo[48161]: pam_unix(sudo:session): session closed for user root
+Jul 25 23:27:02 managednode2 sudo[48322]:  devops : TTY=pts/1 ; PWD=/home/devops ; USER=root ; COMMAND=/bin/sh -c echo BECOME-SUCCESS-qjukqhvqufjshayqklcrwfjhkrhuepxp ; /usr/libexec/platform-python /home/devops/.ansible/tmp/ansible-tmp-1658784422.2986245-39023-231068350780461/AnsiballZ_systemd.py
+Jul 25 23:27:02 managednode2 sudo[48322]: pam_systemd(sudo:session): Cannot create session: Already running in a session or user slice
+Jul 25 23:27:02 managednode2 sudo[48322]: pam_unix(sudo:session): session opened for user root by devops(uid=0)
+Jul 25 23:27:02 managednode2 sudo[48322]: pam_unix(sudo:session): session closed for user root
+Jul 25 23:27:03 managednode2 sudo[48483]:  devops : TTY=pts/1 ; PWD=/home/devops ; USER=root ; COMMAND=/bin/sh -c echo BECOME-SUCCESS-nxloqslikmqldlzkaejogexpcmbpiqbc ; /usr/libexec/platform-python /home/devops/.ansible/tmp/ansible-tmp-1658784422.8226662-39041-41808633435279/AnsiballZ_stat.py
+Jul 25 23:27:03 managednode2 sudo[48483]: pam_systemd(sudo:session): Cannot create session: Already running in a session or user slice
+Jul 25 23:27:03 managednode2 sudo[48483]: pam_unix(sudo:session): session opened for user root by devops(uid=0)
+Jul 25 23:27:03 managednode2 sudo[48483]: pam_unix(sudo:session): session closed for user root
+Jul 25 23:27:03 managednode2 sudo[48566]:  devops : TTY=pts/1 ; PWD=/home/devops ; USER=root ; COMMAND=/bin/sh -c echo BECOME-SUCCESS-unqjalhmiscegjykjtjhgbdnoelnsqyj ; /usr/libexec/platform-python /home/devops/.ansible/tmp/ansible-tmp-1658784422.8226662-39041-41808633435279/AnsiballZ_file.py
+Jul 25 23:27:03 managednode2 sudo[48566]: pam_systemd(sudo:session): Cannot create session: Already running in a session or user slice
+Jul 25 23:27:03 managednode2 sudo[48566]: pam_unix(sudo:session): session opened for user root by devops(uid=0)
+Jul 25 23:27:03 managednode2 sudo[48566]: pam_unix(sudo:session): session closed for user root
+Jul 25 23:27:03 managednode2 sudo[48723]:  devops : TTY=pts/1 ; PWD=/home/devops ; USER=root ; COMMAND=/bin/sh -c echo BECOME-SUCCESS-bukbxxgomvawflvwdsqeojamcvjvyweq ; /usr/libexec/platform-python /home/devops/.ansible/tmp/ansible-tmp-1658784423.698898-39075-211763454861543/AnsiballZ_systemd.py
+Jul 25 23:27:03 managednode2 sudo[48723]: pam_systemd(sudo:session): Cannot create session: Already running in a session or user slice
+Jul 25 23:27:03 managednode2 sudo[48723]: pam_unix(sudo:session): session opened for user root by devops(uid=0)
+Jul 25 23:27:05 managednode2 sudo[48723]: pam_unix(sudo:session): session closed for user root
+Jul 25 23:27:05 managednode2 sudo[49104]:  devops : TTY=pts/1 ; PWD=/home/devops ; USER=root ; COMMAND=/bin/sh -c echo BECOME-SUCCESS-sttsruyxgaqiezbapoccnhckjikpapdt ; /usr/libexec/platform-python /home/devops/.ansible/tmp/ansible-tmp-1658784425.2595944-39093-267520114410035/AnsiballZ_firewalld.py
+Jul 25 23:27:05 managednode2 sudo[49104]: pam_systemd(sudo:session): Cannot create session: Already running in a session or user slice
+Jul 25 23:27:05 managednode2 sudo[49104]: pam_unix(sudo:session): session opened for user root by devops(uid=0)
+Jul 25 23:27:05 managednode2 sudo[49104]: pam_unix(sudo:session): session closed for user root
+Jul 25 23:28:05 managednode2 sshd[47419]: Received disconnect from 51.0.6.1 port 38550:11: disconnected by user
+Jul 25 23:28:05 managednode2 sshd[47419]: Disconnected from user devops 51.0.6.1 port 38550
+Jul 25 23:28:05 managednode2 sshd[47396]: pam_unix(sshd:session): session closed for user devops
+Jul 25 23:28:16 managednode2 systemd[47407]: pam_unix(systemd-user:session): session closed for user devops
+Jul 25 23:44:40 managednode2 sshd[49324]: Accepted publickey for devops from 51.0.6.1 port 38554 ssh2: RSA SHA256:7caVHyig9u/OCljihnANPndMtyeF2pR6bft6KiAIg8c
+Jul 25 23:44:40 managednode2 systemd[49329]: pam_unix(systemd-user:session): session opened for user devops by (uid=0)
+Jul 25 23:44:40 managednode2 sshd[49324]: pam_unix(sshd:session): session opened for user devops by (uid=0)
+Jul 25 23:44:41 managednode2 sudo[49552]:  devops : TTY=pts/1 ; PWD=/home/devops ; USER=root ; COMMAND=/bin/sh -c echo BECOME-SUCCESS-xzvsnfpzgwbnagxviysryjkxtshdfubl ; /usr/libexec/platform-python /home/devops/.ansible/tmp/ansible-tmp-1658785480.4588907-39558-271766558692332/AnsiballZ_setup.py
+Jul 25 23:44:41 managednode2 sudo[49552]: pam_systemd(sudo:session): Cannot create session: Already running in a session or user slice
+Jul 25 23:44:41 managednode2 sudo[49552]: pam_unix(sudo:session): session opened for user root by devops(uid=0)
+Jul 25 23:44:41 managednode2 sudo[49552]: pam_unix(sudo:session): session closed for user root
+Jul 25 23:44:42 managednode2 sudo[49774]:  devops : TTY=pts/1 ; PWD=/home/devops ; USER=root ; COMMAND=/bin/sh -c echo BECOME-SUCCESS-dzgfaqsumukzfzuiaatdvovlpzuwcebk ; /usr/libexec/platform-python /home/devops/.ansible/tmp/ansible-tmp-1658785481.8592374-39588-259034302645548/AnsiballZ_dnf.py
+Jul 25 23:44:42 managednode2 sudo[49774]: pam_systemd(sudo:session): Cannot create session: Already running in a session or user slice
+Jul 25 23:44:42 managednode2 sudo[49774]: pam_unix(sudo:session): session opened for user root by devops(uid=0)
+Jul 25 23:44:42 managednode2 sudo[49774]: pam_unix(sudo:session): session closed for user root
+Jul 25 23:45:42 managednode2 sshd[49348]: Received disconnect from 51.0.6.1 port 38554:11: disconnected by user
+Jul 25 23:45:42 managednode2 sshd[49348]: Disconnected from user devops 51.0.6.1 port 38554
+Jul 25 23:45:42 managednode2 sshd[49324]: pam_unix(sshd:session): session closed for user devops
+Jul 25 23:45:53 managednode2 systemd[49336]: pam_unix(systemd-user:session): session closed for user devops
+Jul 25 23:48:25 managednode2 sshd[49880]: Accepted publickey for devops from 51.0.6.1 port 38558 ssh2: RSA SHA256:7caVHyig9u/OCljihnANPndMtyeF2pR6bft6KiAIg8c
+Jul 25 23:48:26 managednode2 systemd[49885]: pam_unix(systemd-user:session): session opened for user devops by (uid=0)
+Jul 25 23:48:26 managednode2 sshd[49880]: pam_unix(sshd:session): session opened for user devops by (uid=0)
+Jul 25 23:48:26 managednode2 sudo[50106]:  devops : TTY=pts/1 ; PWD=/home/devops ; USER=root ; COMMAND=/bin/sh -c echo BECOME-SUCCESS-qmsuieyfpprggvxdsolrmdtjgbkcilqi ; /usr/libexec/platform-python /home/devops/.ansible/tmp/ansible-tmp-1658785706.2095704-39717-135107964858167/AnsiballZ_setup.py
+Jul 25 23:48:26 managednode2 sudo[50106]: pam_systemd(sudo:session): Cannot create session: Already running in a session or user slice
+Jul 25 23:48:26 managednode2 sudo[50106]: pam_unix(sudo:session): session opened for user root by devops(uid=0)
+Jul 25 23:48:27 managednode2 sudo[50106]: pam_unix(sudo:session): session closed for user root
+Jul 25 23:48:27 managednode2 sudo[50328]:  devops : TTY=pts/1 ; PWD=/home/devops ; USER=root ; COMMAND=/bin/sh -c echo BECOME-SUCCESS-gfxiisfyndxsugumevusryleynoxipav ; /usr/libexec/platform-python /home/devops/.ansible/tmp/ansible-tmp-1658785707.6399853-39747-127657474943433/AnsiballZ_dnf.py
+Jul 25 23:48:27 managednode2 sudo[50328]: pam_systemd(sudo:session): Cannot create session: Already running in a session or user slice
+Jul 25 23:48:27 managednode2 sudo[50328]: pam_unix(sudo:session): session opened for user root by devops(uid=0)
+Jul 25 23:48:28 managednode2 sudo[50328]: pam_unix(sudo:session): session closed for user root
+Jul 25 23:48:34 managednode2 sudo[50535]:  devops : TTY=pts/1 ; PWD=/home/devops ; USER=root ; COMMAND=/bin/sh -c echo BECOME-SUCCESS-pmgovjlfaunoqanamaktnlwcawlbezrt ; /usr/libexec/platform-python /home/devops/.ansible/tmp/ansible-tmp-1658785714.4991572-39777-118756963662003/AnsiballZ_setup.py
+Jul 25 23:48:34 managednode2 sudo[50535]: pam_systemd(sudo:session): Cannot create session: Already running in a session or user slice
+Jul 25 23:48:34 managednode2 sudo[50535]: pam_unix(sudo:session): session opened for user root by devops(uid=0)
+Jul 25 23:48:35 managednode2 sudo[50535]: pam_unix(sudo:session): session closed for user root
+Jul 25 23:48:35 managednode2 sudo[50736]:  devops : TTY=pts/1 ; PWD=/home/devops ; USER=root ; COMMAND=/bin/sh -c echo BECOME-SUCCESS-fepevrckghscxocolhwhqzfeljvfyitb ; /usr/libexec/platform-python /home/devops/.ansible/tmp/ansible-tmp-1658785715.644469-39799-8703992657777/AnsiballZ_dnf.py
+Jul 25 23:48:35 managednode2 sudo[50736]: pam_systemd(sudo:session): Cannot create session: Already running in a session or user slice
+Jul 25 23:48:35 managednode2 sudo[50736]: pam_unix(sudo:session): session opened for user root by devops(uid=0)
+Jul 25 23:48:36 managednode2 sudo[50736]: pam_unix(sudo:session): session closed for user root
+Jul 25 23:49:36 managednode2 sshd[49902]: Received disconnect from 51.0.6.1 port 38558:11: disconnected by user
+Jul 25 23:49:36 managednode2 sshd[49902]: Disconnected from user devops 51.0.6.1 port 38558
+Jul 25 23:49:36 managednode2 sshd[49880]: pam_unix(sshd:session): session closed for user devops
+Jul 25 23:49:55 managednode2 sshd[50814]: Accepted publickey for devops from 51.0.6.1 port 38562 ssh2: RSA SHA256:7caVHyig9u/OCljihnANPndMtyeF2pR6bft6KiAIg8c
+Jul 25 23:49:55 managednode2 systemd[50819]: pam_unix(systemd-user:session): session opened for user devops by (uid=0)
+Jul 25 23:49:55 managednode2 sshd[50814]: pam_unix(sshd:session): session opened for user devops by (uid=0)
+Jul 25 23:49:56 managednode2 sudo[51040]:  devops : TTY=pts/1 ; PWD=/home/devops ; USER=root ; COMMAND=/bin/sh -c echo BECOME-SUCCESS-eksuavjziuicfxtlgawyxxmyjwnknjoh ; /usr/libexec/platform-python /home/devops/.ansible/tmp/ansible-tmp-1658785796.010102-39844-212415080233952/AnsiballZ_setup.py
+Jul 25 23:49:56 managednode2 sudo[51040]: pam_systemd(sudo:session): Cannot create session: Already running in a session or user slice
+Jul 25 23:49:56 managednode2 sudo[51040]: pam_unix(sudo:session): session opened for user root by devops(uid=0)
+Jul 25 23:49:57 managednode2 sudo[51040]: pam_unix(sudo:session): session closed for user root
+Jul 25 23:49:57 managednode2 sudo[51262]:  devops : TTY=pts/1 ; PWD=/home/devops ; USER=root ; COMMAND=/bin/sh -c echo BECOME-SUCCESS-nosttaoieduvysvazntjahbkssribpzv ; /usr/libexec/platform-python /home/devops/.ansible/tmp/ansible-tmp-1658785797.4144464-39873-18919904303351/AnsiballZ_dnf.py
+Jul 25 23:49:57 managednode2 sudo[51262]: pam_systemd(sudo:session): Cannot create session: Already running in a session or user slice
+Jul 25 23:49:57 managednode2 sudo[51262]: pam_unix(sudo:session): session opened for user root by devops(uid=0)
+Jul 25 23:49:58 managednode2 sudo[51262]: pam_unix(sudo:session): session closed for user root
+Jul 25 23:50:58 managednode2 sshd[50836]: Received disconnect from 51.0.6.1 port 38562:11: disconnected by user
+Jul 25 23:50:58 managednode2 sshd[50836]: Disconnected from user devops 51.0.6.1 port 38562
+Jul 25 23:50:58 managednode2 sshd[50814]: pam_unix(sshd:session): session closed for user devops
+Jul 25 23:51:08 managednode2 systemd[50824]: pam_unix(systemd-user:session): session closed for user devops
+Jul 26 09:15:07 managednode2 polkitd[880]: Loading rules from directory /etc/polkit-1/rules.d
+Jul 26 09:15:07 managednode2 polkitd[880]: Loading rules from directory /usr/share/polkit-1/rules.d
+Jul 26 09:15:08 managednode2 polkitd[880]: Finished loading, compiling and executing 11 rules
+Jul 26 09:15:08 managednode2 polkitd[880]: Acquired the name org.freedesktop.PolicyKit1 on the system bus
+Jul 26 09:15:09 managednode2 sshd[1027]: Server listening on 0.0.0.0 port 22.
+Jul 26 09:15:09 managednode2 sshd[1027]: Server listening on :: port 22.
+Jul 26 09:15:17 managednode2 useradd[1987]: failed adding user 'vboxadd', exit code: 9
+Jul 26 09:15:17 managednode2 useradd[1988]: failed adding user 'vboxadd', exit code: 9
+Jul 26 09:15:19 managednode2 systemd[2092]: pam_unix(systemd-user:session): session opened for user gdm by (uid=0)
+Jul 26 09:15:19 managednode2 gdm-launch-environment][2087]: pam_unix(gdm-launch-environment:session): session opened for user gdm by (uid=0)
+Jul 26 09:15:22 managednode2 polkitd[880]: Registered Authentication Agent for unix-session:c1 (system bus name :1.99 [/usr/bin/gnome-shell], object path /org/freedesktop/PolicyKit1/AuthenticationAgent, locale en_US.UTF-8)
+Jul 26 09:15:58 managednode2 systemd[2443]: pam_unix(systemd-user:session): session opened for user admin by (uid=0)
+Jul 26 09:15:58 managednode2 gdm-password][2427]: pam_unix(gdm-password:session): session opened for user admin by (uid=0)
+Jul 26 09:16:01 managednode2 polkitd[880]: Registered Authentication Agent for unix-session:2 (system bus name :1.263 [/usr/bin/gnome-shell], object path /org/freedesktop/PolicyKit1/AuthenticationAgent, locale en_US.UTF-8)
+Jul 26 09:16:09 managednode2 polkitd[880]: Unregistered Authentication Agent for unix-session:c1 (system bus name :1.99, object path /org/freedesktop/PolicyKit1/AuthenticationAgent, locale en_US.UTF-8) (disconnected from bus)
+Jul 26 09:16:09 managednode2 gdm-launch-environment][2087]: pam_unix(gdm-launch-environment:session): session closed for user gdm
+Jul 26 09:16:19 managednode2 systemd[2096]: pam_unix(systemd-user:session): session closed for user gdm
+Jul 26 09:34:23 managednode2 gdm-password][3441]: gkr-pam: unlocked login keyring
+Jul 26 09:36:18 managednode2 sshd[3488]: Accepted publickey for devops from 51.0.6.1 port 45612 ssh2: RSA SHA256:7caVHyig9u/OCljihnANPndMtyeF2pR6bft6KiAIg8c
+Jul 26 09:36:18 managednode2 systemd[3494]: pam_unix(systemd-user:session): session opened for user devops by (uid=0)
+Jul 26 09:36:18 managednode2 sshd[3488]: pam_unix(sshd:session): session opened for user devops by (uid=0)
+Jul 26 09:36:19 managednode2 sudo[3743]:  devops : TTY=pts/0 ; PWD=/home/devops ; USER=root ; COMMAND=/bin/sh -c echo BECOME-SUCCESS-zxyfxgyruxzxtkkazfqxznodkktchpdd ; /usr/libexec/platform-python /home/devops/.ansible/tmp/ansible-tmp-1658820979.6017427-3390-77902676561782/AnsiballZ_ping.py
+Jul 26 09:36:19 managednode2 sudo[3743]: pam_systemd(sudo:session): Cannot create session: Already running in a session or user slice
+Jul 26 09:36:19 managednode2 sudo[3743]: pam_unix(sudo:session): session opened for user root by devops(uid=0)
+Jul 26 09:36:19 managednode2 sudo[3743]: pam_unix(sudo:session): session closed for user root
+Jul 26 09:37:19 managednode2 sshd[3518]: Received disconnect from 51.0.6.1 port 45612:11: disconnected by user
+Jul 26 09:37:19 managednode2 sshd[3518]: Disconnected from user devops 51.0.6.1 port 45612
+Jul 26 09:37:19 managednode2 sshd[3488]: pam_unix(sshd:session): session closed for user devops
+Jul 26 09:37:29 managednode2 systemd[3502]: pam_unix(systemd-user:session): session closed for user devops
+Jul 26 09:37:46 managednode2 sshd[3824]: Accepted publickey for devops from 51.0.6.1 port 45616 ssh2: RSA SHA256:7caVHyig9u/OCljihnANPndMtyeF2pR6bft6KiAIg8c
+Jul 26 09:37:46 managednode2 systemd[3830]: pam_unix(systemd-user:session): session opened for user devops by (uid=0)
+Jul 26 09:37:46 managednode2 sshd[3824]: pam_unix(sshd:session): session opened for user devops by (uid=0)
+Jul 26 09:37:47 managednode2 sudo[4079]:  devops : TTY=pts/0 ; PWD=/home/devops ; USER=root ; COMMAND=/bin/sh -c echo BECOME-SUCCESS-jjwonemqoaszsjezdfwnzedezftuaqco ; /usr/libexec/platform-python /home/devops/.ansible/tmp/ansible-tmp-1658821067.8192186-3543-180936933311156/AnsiballZ_ping.py
+Jul 26 09:37:47 managednode2 sudo[4079]: pam_systemd(sudo:session): Cannot create session: Already running in a session or user slice
+Jul 26 09:37:47 managednode2 sudo[4079]: pam_unix(sudo:session): session opened for user root by devops(uid=0)
+Jul 26 09:37:47 managednode2 sudo[4079]: pam_unix(sudo:session): session closed for user root
+Jul 26 09:38:48 managednode2 sshd[3854]: Received disconnect from 51.0.6.1 port 45616:11: disconnected by user
+Jul 26 09:38:48 managednode2 sshd[3854]: Disconnected from user devops 51.0.6.1 port 45616
+Jul 26 09:38:48 managednode2 sshd[3824]: pam_unix(sshd:session): session closed for user devops
+Jul 26 09:38:58 managednode2 systemd[3838]: pam_unix(systemd-user:session): session closed for user devops
+Jul 26 10:01:35 managednode2 sshd[4360]: Accepted publickey for devops from 51.0.6.1 port 45620 ssh2: RSA SHA256:7caVHyig9u/OCljihnANPndMtyeF2pR6bft6KiAIg8c
+Jul 26 10:01:35 managednode2 systemd[4367]: pam_unix(systemd-user:session): session opened for user devops by (uid=0)
+Jul 26 10:01:35 managednode2 sshd[4360]: pam_unix(sshd:session): session opened for user devops by (uid=0)
+Jul 26 10:01:36 managednode2 sudo[4617]:  devops : TTY=pts/0 ; PWD=/home/devops ; USER=root ; COMMAND=/bin/sh -c echo BECOME-SUCCESS-fwpgzvawkcgagjvctoqsjyrnmlmlvpyu ; /usr/libexec/platform-python /home/devops/.ansible/tmp/ansible-tmp-1658822496.2413726-4389-4701437616627/AnsiballZ_setup.py
+Jul 26 10:01:36 managednode2 sudo[4617]: pam_systemd(sudo:session): Cannot create session: Already running in a session or user slice
+Jul 26 10:01:36 managednode2 sudo[4617]: pam_unix(sudo:session): session opened for user root by devops(uid=0)
+Jul 26 10:01:37 managednode2 sudo[4617]: pam_unix(sudo:session): session closed for user root
+Jul 26 10:01:37 managednode2 sudo[4867]:  devops : TTY=pts/0 ; PWD=/home/devops ; USER=root ; COMMAND=/bin/sh -c echo BECOME-SUCCESS-vakwpawdzcxmrcphwioraqpkhbisdzvy ; /usr/libexec/platform-python /home/devops/.ansible/tmp/ansible-tmp-1658822497.7993443-4409-93601056778242/AnsiballZ_setup.py
+Jul 26 10:01:37 managednode2 sudo[4867]: pam_systemd(sudo:session): Cannot create session: Already running in a session or user slice
+Jul 26 10:01:37 managednode2 sudo[4867]: pam_unix(sudo:session): session opened for user root by devops(uid=0)
+Jul 26 10:01:38 managednode2 sudo[4867]: pam_unix(sudo:session): session closed for user root
+Jul 26 10:02:38 managednode2 sshd[4392]: Received disconnect from 51.0.6.1 port 45620:11: disconnected by user
+Jul 26 10:02:38 managednode2 sshd[4392]: Disconnected from user devops 51.0.6.1 port 45620
+Jul 26 10:02:38 managednode2 sshd[4360]: pam_unix(sshd:session): session closed for user devops
+Jul 26 10:02:48 managednode2 systemd[4374]: pam_unix(systemd-user:session): session closed for user devops
+Jul 26 10:11:15 managednode2 sshd[5065]: Accepted publickey for devops from 51.0.6.1 port 45622 ssh2: RSA SHA256:7caVHyig9u/OCljihnANPndMtyeF2pR6bft6KiAIg8c
+Jul 26 10:11:15 managednode2 systemd[5072]: pam_unix(systemd-user:session): session opened for user devops by (uid=0)
+Jul 26 10:11:15 managednode2 sshd[5065]: pam_unix(sshd:session): session opened for user devops by (uid=0)
+Jul 26 10:11:16 managednode2 sudo[5322]:  devops : TTY=pts/0 ; PWD=/home/devops ; USER=root ; COMMAND=/bin/sh -c echo BECOME-SUCCESS-sedulclpqijyasxrhgpsdjjuokkyksjn ; /usr/libexec/platform-python /home/devops/.ansible/tmp/ansible-tmp-1658823076.1531763-4694-107038181016322/AnsiballZ_setup.py
+Jul 26 10:11:16 managednode2 sudo[5322]: pam_systemd(sudo:session): Cannot create session: Already running in a session or user slice
+Jul 26 10:11:16 managednode2 sudo[5322]: pam_unix(sudo:session): session opened for user root by devops(uid=0)
+Jul 26 10:11:17 managednode2 sudo[5322]: pam_unix(sudo:session): session closed for user root
+Jul 26 10:11:34 managednode2 sudo[5572]:  devops : TTY=pts/0 ; PWD=/home/devops ; USER=root ; COMMAND=/bin/sh -c echo BECOME-SUCCESS-xrxxagiqfdznkzgjppmnflvnufxtaimj ; /usr/libexec/platform-python /home/devops/.ansible/tmp/ansible-tmp-1658823094.1433814-4739-21424734914618/AnsiballZ_setup.py
+Jul 26 10:11:34 managednode2 sudo[5572]: pam_systemd(sudo:session): Cannot create session: Already running in a session or user slice
+Jul 26 10:11:34 managednode2 sudo[5572]: pam_unix(sudo:session): session opened for user root by devops(uid=0)
+Jul 26 10:11:35 managednode2 sudo[5572]: pam_unix(sudo:session): session closed for user root

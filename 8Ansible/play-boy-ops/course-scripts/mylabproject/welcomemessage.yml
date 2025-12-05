@@ -1,0 +1,21 @@
+---
+- name: getting current user without privilege escalation
+  become: no
+  hosts: production
+  vars:
+    contact_email: support@xyz.com
+  tasks:
+    - name: Getting the current logged in user
+      shell: 'echo $(whoami)'
+      register: current_user
+
+- name: Setting welcome message
+  hosts: production
+  vars:
+    loggeduser: "{{current_user['stdout']}}"
+    contact_email: support@xyz.com
+  tasks:
+    - name: Rendering J2 Template
+      template:
+        src: welcome.j2
+        dest: /etc/motd

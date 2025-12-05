@@ -1,0 +1,15 @@
+---
+- name: Play to create partition , format file system and mount it
+  hosts: localhost
+  vars:
+    - partition_number: 2
+    - device_path: /dev/sdb
+    - mount_point: /mostafa
+    - filesystem_type: ext4
+    - part_start: 400MB
+    - partition_size: 1GB
+  tasks:
+    - name: New partition of {{partition_size}}
+      import_tasks: makepartition.yml
+    - import_tasks: makeswap.yml
+

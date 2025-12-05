@@ -1,0 +1,4 @@
+[production]
+managednode1
+[DR]
+managednode2 

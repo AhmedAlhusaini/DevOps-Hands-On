@@ -1,0 +1,22 @@
+---
+- name: Play to Practice error handling
+  hosts: all
+  force_handlers: yes
+  vars:
+    echo_string: ok
+  tasks:
+    - name: Determining when output fails and changes
+      shell: "echo {{echo_string}}"
+      register: shell_output
+      ignore_errors: yes
+      changed_when: "'changed' in shell_output.stdout"
+      failed_when: "'failed' in shell_output.stdout"
+      notify: handling_second_task
+    - name: Instaling wrong package
+      yum:
+        name: wrongPackage
+        state: latest
+  handlers:
+    - name: handling_second_task
+      debug:
+        msg: "Handling 2nd Task"

@@ -1,0 +1,60 @@
+---
+- name: Play to practice files management
+  hosts: all
+  vars:
+    localtmp: /tmp/localfile
+    remotetmp: /tmp/remotefile
+  tasks:
+    - name: Creating/ removing a new file
+      file:
+        path: /home/admin/filebyplay
+        state: file
+        owner: root
+        group: admin
+        mode: u=rw,g=rw,o=x
+        setype: httpd_sys_content_t
+    - name: Copying {{localtmp}} to remote managed nodes on {{remotetmp}}
+      copy:
+        src: "{{localtmp}}"
+        dest: "{{remotetmp}}"
+    - name: Fetch (reverse copy) remote file to my control node
+      fetch:
+        src: "/tmp/remotefile2"
+        dest: "/tmp/localdirectory"
+    - name: Synchronize local file to remote files as rsync command
+      synchronize:
+        src: "{{localtmp}}"
+        dest: "{{remotetmp}}"
+    - name: Adding/ Removing a single line to remote hosts
+      lineinfile:
+        path: /tmp/remotefile3
+        line: 'First update by lineinfile module'
+        state: absent
+    - name: Adding/Removing a block of text
+      blockinfile:
+        path: /tmp/remotefile3
+        block: |
+          
+          Removed last line and added an 
+          entire block
+        state: present
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

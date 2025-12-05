@@ -1,0 +1,48 @@
+{{ansible_managed}}
+
+This is my first jinja2 Template.
+
+The Linux Distro for this host {{inventory_hostname}} is {{ansible_facts['distribution']}}
+
+
+IPV4 for Ansible Network on enp0s8 is {{ansible_facts['enp0s8']['ipv4']['address']}}
+
+Playbook Variable = {{playbook_variable}}
+
+Free Memory: {{ansible_facts['memfree_mb']}}
+
+{% if ansible_facts['memfree_mb'] > 1490 %}
+
+System is IDLE and has enough memory.
+
+{% else %}
+
+System is Busy.
+
+{% endif %}
+
+
+IP      hostname
+
+{% for host in groups['all']  %}
+
+{{hostvars[host]['ansible_facts']['enp0s8']['ipv4']['address']}} {{hostvars[host]['ansible_facts']['hostname']}}
+
+{% endfor %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

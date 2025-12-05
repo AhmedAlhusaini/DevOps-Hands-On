@@ -1,0 +1,29 @@
+---
+- name: Play to practice loops
+  hosts: all
+  tasks:
+    - name: Creating users
+      user:
+        name: "{{item['name']}}"
+        uid: "{{item['uid']}}"
+        state: present
+      loop:
+        - name: yasmin
+          uid: 5001
+        - name: mahmoud
+          uid: 5002
+        - name: hesham
+          uid: 5003
+      register: loop_results
+    - name: Showing output of last task
+      debug:
+        msg: "User {{item['name']}} has been created!"
+      loop: "{{loop_results['results']}}"
+    - name: Playing around with yum
+      yum:
+        name:
+          - httpd
+          - mariadb
+          - nginx
+        state: present
+

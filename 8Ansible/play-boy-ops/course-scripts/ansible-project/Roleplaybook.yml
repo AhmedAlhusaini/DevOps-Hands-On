@@ -1,0 +1,6 @@
+---
+- name: Play to practice roles
+  hosts: all
+  roles:
+    - myfirstrole
+    - geerlingguy.docker

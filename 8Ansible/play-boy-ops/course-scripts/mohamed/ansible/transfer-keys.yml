@@ -1,0 +1,11 @@
+---
+- name: Key based authentication to managed hosts for Ansible
+  hosts: all
+  tasks:
+    - name: Ensuring key is located on managednodes
+      authorized_key:
+        user: mohamed
+        state: present
+        key: '{{item}}'
+      with_file:
+        - ~/.ssh/id_rsa.pub

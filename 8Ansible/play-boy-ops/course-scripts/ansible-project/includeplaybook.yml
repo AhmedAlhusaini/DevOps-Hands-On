@@ -1,0 +1,6 @@
+---
+- name: Play to include task
+  hosts: all
+  tasks:
+    - name: Including a task
+      include_tasks: Simpletask.yml

@@ -1,0 +1,28 @@
+---
+- name: Play to practice package management
+  hosts: all
+  tasks:
+    - name: generic module to install packages
+      package:
+        name: httpd
+        state: present
+      when: 
+        - ansible_facts['distribution'] != "Rocky"
+        - ansible_facts['distribution'] != "Fedora"
+        - ansible_facts['distribution'] != "Ubuntu"
+    - name: install package on Rocky/Redhat
+      yum:
+        name: httpd
+        state: latest
+      when: ansible_facts['distribution'] == "Rocky"
+    - name: install package on fedora
+      dnf:
+        name: httpd
+        state: latest
+      when: ansible_facts['distribution'] == "Fedora"
+    - name: install package on Ubuntu
+      apt:
+        name: apache2
+        state: latest
+      when: ansible_facts['distribution'] == "Ubuntu"
+

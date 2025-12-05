@@ -1,0 +1,16 @@
+---
+- name: Play to run tasks conditionally
+  hosts: all
+  vars:
+    run_the_task: false
+    list_of_integers:
+      - 5
+      - 10
+      - 15
+  tasks:
+    - name: Installing httpd based on some conditions
+      yum:
+        name: httpd
+        state: present
+      loop: "{{list_of_integers}}"
+      when: item > 10

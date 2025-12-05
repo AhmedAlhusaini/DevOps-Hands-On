@@ -1,0 +1,11 @@
+---
+- name: Configure Exam Repo
+  hosts: all 
+  tasks:
+    - name: Fedora Repo exists
+      yum_repository:
+        file: fedora
+        name: fedora-opensource
+        description: Opensource-Repo
+        baseurl: https://dl.fedoraproject.org/pub/epel/8/Everything/x86_64/
+        enabled: yes

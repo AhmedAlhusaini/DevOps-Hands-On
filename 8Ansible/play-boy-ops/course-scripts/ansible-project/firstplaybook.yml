@@ -1,0 +1,22 @@
+---
+- name: First play to create a user
+  hosts: managednode2
+  tasks:
+    - name: Creating user David
+      user:
+        name: David
+        uid: 1050
+        state: present
+    - name: Creating a new file
+      file:
+        path: /home/admin/filebyplay
+        state: touch
+        owner: admin
+        mode: 777
+- name: Second play to install EPEL-RELEASE
+  hosts: all
+  tasks:
+    - name: Installing EPEL-RELEASE
+      yum:
+        name: epel-release
+        state: latest

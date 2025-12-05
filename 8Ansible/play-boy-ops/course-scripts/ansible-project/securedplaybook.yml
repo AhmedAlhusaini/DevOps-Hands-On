@@ -1,0 +1,13 @@
+---
+- name: First play to create a user
+  hosts: all
+  vars_files:
+    - secrets.yml
+  tasks:
+    - name: Creating user {{user}}
+      user:
+        name: "{{user}}"
+        password: "{{password|password_hash('sha512')}}"
+        state: present
+      register: user_results
+    - debug: var=user_results

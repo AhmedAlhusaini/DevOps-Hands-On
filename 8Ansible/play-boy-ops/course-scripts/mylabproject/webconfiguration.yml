@@ -1,0 +1,27 @@
+---
+- name: Play to manage server certificates and web configuration file
+  hosts: production
+  vars:
+    - ssl_cert_dir: /etc/ssl/certs/
+    - config_files: /etc/httpd/conf/httpd.conf
+  tasks:
+    - name: Block for ssl certicicates and httpd config files
+      block:
+        - name: ssl certificate exists
+          file:
+            path: "{{ssl_cert_dir}}"
+            state: directory
+        - name: Deploy httpd configuration to remote hosts 
+          copy:
+            src: "{{config_files}}"
+            dest: "{{config_files}}"
+          notify: restart_http
+      rescue:
+        - debug:
+            msg: "One or more of the configuration changes failed but the web service is still active"
+  handlers:
+    - name: restart_http
+      service:
+        name: httpd
+        state: restarted
+

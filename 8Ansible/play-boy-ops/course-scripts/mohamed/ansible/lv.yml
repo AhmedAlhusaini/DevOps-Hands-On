@@ -1,0 +1,39 @@
+---
+- name: Play to create LVM
+  hosts: all
+  tasks:
+    - name: Creating a volume group
+      lvg:
+        vg: research
+        pvs: /dev/sdc
+        pesize: 16
+    - name: Create a logical volume of 1500MiB
+      block:
+        - lvol:
+            vg: research
+            lv: data
+            size: 1.5g
+      rescue:
+        - debug:
+            msg: "Could not create logical volume of that size"
+        - lvol:
+            vg: research
+            lv: data
+            size: 800m
+    - name: Create XFS filesystem
+      filesystem:
+        fstype: xfs
+        dev: /dev/research/data
+- name: Play to mount /data on dev group
+  hosts: dev
+  tasks:
+    - name: Creating mount point
+      file:
+        name: /data
+        state: directory
+    - name: mounting /data
+      mount:
+        path: /data
+        src: /dev/research/data
+        fstype: xfs
+        state: mounted

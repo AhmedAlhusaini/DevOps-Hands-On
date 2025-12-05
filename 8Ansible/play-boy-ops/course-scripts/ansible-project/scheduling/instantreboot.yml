@@ -1,0 +1,8 @@
+---
+- name: Play to instant reboot 
+  hosts: managednode1
+  tasks:
+    - name: Instant Reboot
+      reboot:
+- import_playbook: blockplaybook.yml
+

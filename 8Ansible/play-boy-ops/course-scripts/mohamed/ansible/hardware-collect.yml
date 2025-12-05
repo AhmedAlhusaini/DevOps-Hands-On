@@ -1,0 +1,44 @@
+---
+- name: Play to collect Hardware Info
+  hosts: localhost
+  vars:
+    - output_file: /tmp/hardwarereport.txt
+  tasks:
+     - name: Setting a hardware report for each host
+       template:
+         src: hwreport.j2
+         dest: "{{output_file}}"
+     - name: Line to add sda size
+       block:
+         - lineinfile:
+            path: "{{output_file}}"
+            line: "sda Size: {{ansible_facts['devices']['sda']['size']}}"
+            state: present
+       rescue:
+         - lineinfile:
+            path: "{{output_file}}"
+            line: "sda Size: NONE"
+            state: present
+
+     - name: Line to add sdb size
+       block:
+         - lineinfile:
+            path: "{{output_file}}"
+            line: "sdb Size: {{ansible_facts['devices']['sdb']['size']}}"
+            state: present
+       rescue:
+         - lineinfile:
+            path: "{{output_file}}"
+            line: "sdb Size: NONE"
+            state: present
+     - name: Line to add sdc size
+       block:
+         - lineinfile:
+            path: "{{output_file}}"
+            line: "sdc Size: {{ansible_facts['devices']['sdc']['size']}}"
+            state: present
+       rescue:
+         - lineinfile:
+            path: "{{output_file}}"
+            line: "sdc Size: NONE"
+            state: present

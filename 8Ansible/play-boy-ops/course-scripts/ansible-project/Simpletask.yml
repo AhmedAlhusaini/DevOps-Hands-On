@@ -1,0 +1,3 @@
+---
+- name: simple task with Debug
+  debug: msg="A simple debug task {{var}}  to be included or imported"

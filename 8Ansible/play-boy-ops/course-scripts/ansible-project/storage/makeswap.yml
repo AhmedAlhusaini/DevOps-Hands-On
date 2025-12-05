@@ -1,0 +1,6 @@
+---
+- name: format swap
+  command: 'mkswap {{device_path}}{{partition_number}}'
+- name: Activate swap
+  command: 'swapon {{device_path}}{{partition_number}}'
+

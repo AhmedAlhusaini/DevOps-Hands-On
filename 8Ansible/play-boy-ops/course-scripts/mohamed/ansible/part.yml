@@ -1,0 +1,31 @@
+---
+- name: Creating and using partitions
+  hosts: all
+  vars:
+    - partition_size: 2GB
+    - target_disk: sdb
+    - partition_number: 1
+  tasks:
+    - name: Ensure that /dev/sdb exists using Fail message
+      fail:
+        msg: "Device /dev/sdb does not exist"
+      when: target_disk not in ansible_facts['devices']
+    - name: Creating primary partitions
+      block:
+        - name: Using parted
+          parted:
+            device: /dev/sdb
+            number: "{{partition_number}}"
+            state: absent
+            part_end: "{{partition_size}}"
+            fs_type: xfs
+      rescue:
+        - name: Something wrong with partition size
+          debug:
+            msg: "Could not create partition of that size"
+        - parted:
+            device: /dev/sdb
+            number: "{{partition_number}}"
+            state: absent
+            part_end: 1GB
+            fs_type: xfs

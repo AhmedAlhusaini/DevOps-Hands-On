@@ -1,0 +1,5 @@
+---
+- name: Play to run geerlingguy ntp role
+  hosts: all
+  roles:
+    - geerlingguy.ntp

@@ -1,0 +1,10 @@
+---
+- name: New partition of {{partition_size}}
+  parted:
+    device: "{{device_path}}"
+    number: "{{partition_number}}"
+    state: present
+    part_start: "{{part_start}}"
+    part_end: "{{partition_size}}"
+    fs_type: ext4
+

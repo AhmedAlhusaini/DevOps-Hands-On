@@ -1,0 +1,17 @@
+---
+- name: Play to increase LVM
+  hosts: all
+  vars:
+    - device_path: /dev/sdc
+    - mount_point: /rnt/myvg
+    - vgcontainer: vgcontainer
+    - lvname: lvdolfinlab
+  tasks:
+    - name: Resizing /rnt/myvg
+      lvol:
+        vg: "{{vgcontainer}}"
+        lv: "{{lvname}}"
+        size: 900m
+        resizefs: yes
+        force: yes
+

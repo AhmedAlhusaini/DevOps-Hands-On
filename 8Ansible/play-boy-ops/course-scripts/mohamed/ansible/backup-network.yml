@@ -1,0 +1,15 @@
+---
+- name: Play to setup ansible backup network on
+  vars:
+    - host: node1
+    - ip_v4: 53.0.35.9/24
+  hosts: "{{host}}"
+  tasks:
+    - name: NIC Configuration
+      nmcli:
+        conn_name: ansible-backup-connection
+        ifname: enp0s9
+        type: ethernet
+        ip4: "{{ip_v4}}"
+        gw4: 53.0.35.254
+        state: present

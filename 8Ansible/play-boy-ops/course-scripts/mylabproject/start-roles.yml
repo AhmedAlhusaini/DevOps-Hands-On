@@ -1,0 +1,5 @@
+---
+- name: Testing roles one by one
+  hosts: managednode1
+  roles:
+    - web

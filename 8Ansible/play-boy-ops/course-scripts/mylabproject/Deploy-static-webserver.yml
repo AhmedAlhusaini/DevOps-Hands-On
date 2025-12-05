@@ -1,0 +1,44 @@
+---
+- name: Setting up Environment
+  hosts: production
+  tasks:
+    - name: Installing httpd
+      yum:
+        name: httpd
+        state: latest
+    - name: Installing firewalld
+      yum:
+        name: firewalld
+        state: latest
+    - name: Httpd is up and running
+      service:
+        name: httpd
+        enabled: true
+        state: started
+    - name: Firewalld is up and running
+      service:
+        name: firewalld
+        state: started
+        enabled: yes
+    - name: Adding content to index.html
+      copy:
+        content: "My First Web Server on Ansbile"
+        dest: /var/www/html/index.html
+    - name: Restarting httpd
+      service:
+        name: httpd
+        state: restarted
+    - name: Adding http to firewall configuration
+      firewalld:
+        state: enabled
+        permanent: true
+        immediate: true
+        service: http
+- name: Verifying Webserver is working 
+  hosts: managednode1
+  tasks:
+    - name: connect to webserver on managednode1 (for example)
+      uri:
+        url: http://managednode1
+        return_content: yes
+        status_code: 200
