@@ -1,0 +1,71 @@
+---
+- name: Gather information about instances with different options
+  hosts: localhost
+  gather_facts: no
+  become: false
+  tasks:
+    - name: Gather information about all instances
+      amazon.aws.ec2_instance_info:
+        region: us-east-1
+      register: output1
+    - debug: var=output1.instances
+
+    - name: Gather information about all instances in specific AZ
+      amazon.aws.ec2_instance_info:
+        region: us-east-2
+        filters:
+          availability-zone: us-east-2b
+      register: output2
+    - debug: var=output2
+
+    - name: Gather information about a particular instance using ID
+      amazon.aws.ec2_instance_info:
+        region: us-east-2
+        instance_ids:
+          - i-0a0431bebf93b4ef5
+      register: output3
+    - debug: var=output3
+
+    - name: Gather information about any instance with a tag key Name and value Example
+      amazon.aws.ec2_instance_info:
+        region: us-east-2
+        filters:
+          "tag:Name": ansible-worker
+      register: output4
+    - debug: var=output4
+
+    - name: Gather information about any instance in states "shutting-down", "stopping", "stopped"
+      amazon.aws.ec2_instance_info:
+        region: us-east-1
+        filters:
+          instance-state-name: [ "stopped" ]
+      register: output5
+    - debug: var=output5
+
+###################################
+# ---
+- name: Gather information and filter output to exact required information
+  hosts: localhost
+  gather_facts: no
+  become: false
+
+  tasks:
+    - name: Gather information about all instances
+      amazon.aws.ec2_instance_info:
+        region: us-east-1
+      register: output
+
+    - name: Set fact for first instance id (if any)
+      set_fact:
+        instance_id: "{{ output.instances[0].instance_id }}"
+      when: output.instances | length > 0
+
+    - name: Debug instance_id
+      debug:
+        var: instance_id
+      when: output.instances | length > 0
+
+    - name: Debug message if no instances found
+      debug:
+        msg: "No EC2 instances found in region us-east-1"
+      when: output.instances | length == 0

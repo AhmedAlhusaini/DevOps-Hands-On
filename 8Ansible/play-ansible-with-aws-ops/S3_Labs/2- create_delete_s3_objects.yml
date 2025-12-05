@@ -1,0 +1,44 @@
+---
+- name: Dealing with S3 objects
+  hosts: localhost
+  gather_facts: no
+  tasks:
+    - name: Simple PUT for a new object
+      amazon.aws.aws_s3:
+        bucket: dolfinedbucket12345
+        object: nice_image.jpeg
+        src: /Users/enggalal/Desktop/Dolfined/nice_image.jpeg
+        mode: put
+      register: output
+    - debug: var=output
+
+
+    - name: Simple GET operation for an object and put it on my desktop
+      amazon.aws.aws_s3:
+        bucket: dolfinedbucket12345
+        object: nice_image.jpeg
+        dest: /Users/enggalal/Desktop/fetched_file.jpeg
+        mode: get
+      register: output2
+    - debug: var=output2.s3_keys
+
+    - name: List all my objects inside a specific bucket
+      amazon.aws.aws_s3:
+        bucket: dolfinedbucket12345
+        mode: list
+  ########################################################################################################
+  ---
+  - name: Dealing with S3 objects
+    hosts: localhost
+    gather_facts: no
+    tasks:
+      - name: Delete an object from a bucket
+        amazon.aws.aws_s3:
+          bucket: dolfinedbucket12345
+          object: nice_image.jpeg
+          mode: delobj
+
+      - name: Delete a bucket and all its contents
+          amazon.aws.aws_s3:
+            bucket: dolfinedbucket12345
+            mode: delete

@@ -1,0 +1,27 @@
+---
+- name: Create Multiple IAM Users inside AWS
+  hosts: localhost
+  gather_facts: no
+  vars:
+  tasks:
+    - name: Create Multiple users
+      community.aws.iam_user:
+        name: "{{item.name}}"
+        password: "{{item.password}}"
+        managed_policies:
+          - arn:aws:iam::aws:policy/AmazonEC2FullAccess
+        state: present
+        tags:
+          Name: ec2_dev_user
+      with_items:
+        - { name: 'user1', password: 'P@ssw0rd' }
+        - { name: 'user2', password: 'P@ssw0rd' }
+        - { name: 'user3', password: 'P@ssw0rd' }
+        - { name: 'user4', password: 'P@ssw0rd' }
+
+    - name: List all users in my account
+      community.aws.iam_user_info:
+      register: output2
+    - debug:
+         msg: "{{ item.user_name}}"
+      loop: "{{output2.iam_users}}"

@@ -1,0 +1,65 @@
+---
+- name: Add route table inside a VPC and associate subnets to it
+  hosts: localhost
+  gather_facts: no
+  tasks:
+    - name: Collect all subnets_IDs inside a VPC
+      amazon.aws.ec2_vpc_subnet_info:
+        region: us-east-2
+        filters:
+          vpc-id: vpc-01b9a8ab6a60a73bc
+      register: output
+    - debug: var=output
+
+    - name: Add the route table and attach the first and second subnets to it
+      amazon.aws.ec2_vpc_route_table:
+        vpc_id: vpc-01b9a8ab6a60a73bc
+        region: us-east-2
+        tags:
+          Name: Public123
+        subnets:
+         - "{{ output.subnets[0].id }}"
+         - "{{ output.subnets[1].id }}"
+        routes:
+          - dest: 0.0.0.0/0
+            gateway_id: igw-03451db78ffd0a671
+      register: public_route_table
+    - debug: var=public_route_table.route_table.id
+
+    - name: delete a route table inside a VPC
+      amazon.aws.ec2_vpc_route_table:
+        vpc_id: vpc-01b9a8ab6a60a73bc
+        region: us-east-2
+        route_table_id: rtb-05ecf0c817c24231b
+        lookup: id
+        state: absent
+  ##################################################################################
+
+
+# this Info module exist in the ansible documentation , but it is not working and gives an error.
+#---
+#  - name: Gather information about the existing route tables with different options
+#    hosts: localhost
+#    gather_facts: no
+#    tasks:
+#      - name: Gather information about all route tables inside a region
+#        amazon.aws.ec2_vpc_route_table_info:
+#        amazon.aws.ec2_vpc_route_table_info
+#          region: us-east-2
+#        register: output2
+#      - debug: var=output2
+#
+#      - name: Gather information about a particular VPC route table using route table ID
+#        amazon.aws.ec2_vpc_route_table_info:
+#          filters:
+#            route-table-id: rtb-097b1634840aa1670
+#
+#      - name: Gather information about any VPC route table with a tag key Name and value Example
+#        amazon.aws.ec2_vpc_route_table_info:
+#          filters:
+#            "tag:Name": Example
+#
+#      - name: Gather information about  route tables within specific VPC
+#        amazon.aws.ec2_vpc_route_table_info:
+#          filters:
+#            vpc-id: vpc-01b9a8ab6a60a73bc

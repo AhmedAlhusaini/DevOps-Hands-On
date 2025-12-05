@@ -1,0 +1,42 @@
+# ---
+# - name: Create EC2 Instances
+#   hosts: localhost
+#   gather_facts: no
+#   become: false   # <--- disable sudo
+#   vars_files:
+#     - /home/ansible/play-ansible-with-aws-ops/keys.yml
+# 
+#   tasks:
+#     - name: Launch new EC2 instances
+#       amazon.aws.ec2_instance:
+#         region: us-east-1
+#         key_name: ansible-machines-keys
+#         instance_type: t2.micro
+#         image_id: ami-0fa3fe0fa7920f68e
+#         security_groups:
+#           - default
+#         subnet_id: subnet-0c621079ec0e1a88c
+#         network:
+#           assign_public_ip: true
+#         count: 2
+#         tags:
+#           Name: ansible-worker
+# 
+
+---
+- name: Terminate EC2 Instances
+  hosts: localhost
+  gather_facts: no
+  become: false   # no sudo needed
+  vars_files:
+    - /home/ansible/play-ansible-with-aws-ops/keys.yml
+
+  tasks:
+    - name: Terminate EC2 instances by tag
+      amazon.aws.ec2_instance:
+        region: us-east-1
+        aws_access_key: "{{ AWS_ACCESS_KEY_ID }}"
+        aws_secret_key: "{{ AWS_SECRET_ACCESS_KEY }}"
+        state: absent
+        filters:
+          "tag:Name": ansible-worker

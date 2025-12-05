@@ -1,0 +1,19 @@
+---
+- name: Provision EC2 Instances
+  hosts: localhost
+  gather_facts: no
+  become: false   # no sudo needed for AWS API calls
+  tasks:
+    - name: Stop EC2 instances with tag
+      amazon.aws.ec2_instance:
+        region: us-east-1
+        filters:
+          "tag:Name": "ansible-worker"
+        state: stopped
+
+    # - name: Start EC2 instances with tag
+    #   amazon.aws.ec2_instance:
+    #     region: us-east-1
+    #     filters:
+    #       "tag:Name": "ansible-worker"
+    #     state: running

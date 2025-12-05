@@ -1,0 +1,64 @@
+---
+- name: Dealing with Security Groups inside AWS
+  hosts: localhost
+  gather_facts: no
+  tasks:
+    - name: Create security group with rules
+      amazon.aws.ec2_group:
+        name: ssh_SG
+        description: to allow SSH connections
+        vpc_id: vpc-01b9a8ab6a60a73bc
+        region: us-east-2
+        rules: # define the inbound rules
+          - proto: tcp
+            ports:
+              - 22
+            cidr_ip: 0.0.0.0/0    # from where the traffic is coming from
+            rule_desc: allow ssh connections on port 22
+      register: output
+    - debug: var=output.group_id
+
+
+    - name: Gather all Security groups information
+      amazon.aws.ec2_group_info:
+      register: output2
+    - debug:
+        msg: " the security group ID is {{item.group_id}}"
+      loop: "{{ output2.security_groups }}"
+
+
+    - name: Gather information about all security groups in a specific VPC
+      amazon.aws.ec2_group_info:
+        filters:
+          vpc-id: vpc-01b9a8ab6a60a73bc
+      register: output3
+    - debug:
+        msg: " the security group ID is {{item.group_id}}"
+      loop: "{{ output2.security_groups }}"
+
+
+    - name: Gather information about a security group using its group name
+      amazon.aws.ec2_group_info:
+        filters:
+          group-name: ssh_SG
+      register: output4
+    - debug: var=output4
+
+
+
+    - name:  Gather information about a security group by its group id
+      amazon.aws.ec2_group_info:
+        filters:
+          group-id: sg-0df46f46898416bee
+      register: output5
+    - debug: var=output5
+
+
+
+    - name: Delete a security group using its group id
+      amazon.aws.ec2_group:
+        region: us-east-2
+        group_id: sg-0228988024c27ac5f
+        state: absent
+      register: output6
+    - debug: var=output6

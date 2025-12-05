@@ -1,0 +1,47 @@
+---
+- name: Dealing with AWS VPCs
+  hosts: localhost
+  gather_facts: no
+  tasks:
+    - name: create a VPC inside a region
+      amazon.aws.ec2_vpc_net:
+        name: dolfined_VPC
+        cidr_block: 10.10.0.0/16
+        region: us-east-2
+        state: present # default
+      register: out1
+    - debug: var=out1.vpc.id
+
+
+    - name: List my VPCs inside a region without any filter
+      amazon.aws.ec2_vpc_net_info:
+      register: out2
+    - debug:
+        msg: " the vpc_id is {{ item.0.id }}"
+      with_together:
+        - "{{ out2.vpcs }}"
+
+
+    - name: Gather information about a particular VPC using VPC ID
+      amazon.aws.ec2_vpc_net_info:
+        vpc_ids: vpc-01b9a8ab6a60a73bc
+      register: filtered_vpc
+    - debug: var=filtered_vpc.vpcs[0].id
+################################################################################################
+  ---
+  - name: Delete a VPC with a Tag Value
+    hosts: localhost
+    gather_facts: no
+    tasks:
+    - name: Capture the VPC_ID of particular VPC using its Tag
+      amazon.aws.ec2_vpc_net_info:
+        filters:
+          "tag:Name": dolfined_VPC
+      register: tag_vpc
+
+    - name: Delete the VPC after getting its id
+      amazon.aws.ec2_vpc_net:
+        name: "{{tag_vpc.vpcs[0].tags.Name}}"
+        cidr_block: "{{tag_vpc.vpcs[0].cidr_block}}"
+        region: us-east-2
+        state: absent

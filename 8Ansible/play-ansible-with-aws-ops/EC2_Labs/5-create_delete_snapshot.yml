@@ -1,0 +1,64 @@
+---
+- name: Dealing with EC2 Snapshots
+  hosts: localhost
+  gather_facts: no
+  tasks:
+    - name : Simple snapshot of volume using existing volume_id
+      amazon.aws.ec2_snapshot:
+        volume_id: vol-0cea3258460095592
+        description: snapshot of Data volume - 1st Full backup
+      register: snapshot
+    - debug: var=snapshot.snapshot_id
+
+    - name: Snapshot of root_volume mounted on instance_id
+      amazon.aws.ec2_snapshot:
+        instance_id: i-083e6d732b24578b5
+        device_name: /dev/xvda
+        description: snapshot of Instance root_volume
+      register: snapshot2
+    - debug: var=snapshot2.snapshot_id
+
+    - name: Create a snapshot only if the most recent one is older than 1 hour
+      amazon.aws.ec2_snapshot:
+        volume_id: vol-009194b34c7b2320f
+        last_snapshot_min_age: 60
+      register: snapshot3
+    - debug: var=snapshot3.snapshot_id
+  ##############################################################################
+---
+- name: Creating new volume and taking a snapshot from it
+  hosts: localhost
+  tasks:
+    - name: create a new volume from an existing EC2 Instance then create a snapshot to it
+      amazon.aws.ec2_vol:
+        instance: i-083e6d732b24578b5
+        volume_size: 10
+        device_name: /dev/sdf
+        region: us-east-2
+        delete_on_termination: yes
+      register: volume
+    - debug: var=volume.volume_id
+
+    - name: taking Snapshot of the newly created volume
+      amazon.aws.ec2_snapshot:
+        volume_id: "{{ volume.volume_id}}"
+        description: snapshot of Data volume - 1st Full backup
+      register: snapshot
+    - debug: var=snapshot.snapshot_id
+
+  ##############################################################################
+  ---
+  - name: Delete all Snapshots in my account and using some filters
+    hosts: localhost
+    tasks:
+      - name: first , list all my snapshots in my account
+        amazon.aws.ec2_snapshot_info:
+          filters:
+            owner-id: 541732166793
+        register: snapshots
+
+      - name: Remove all snapshots in my account
+        amazon.aws.ec2_snapshot:
+          snapshot_id: "{{ item.snapshot_id }}"
+          state: absent
+        loop: "{{snapshots.snapshots}}"

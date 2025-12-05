@@ -1,0 +1,44 @@
+---
+- name: Dealing with IAM Users inside AWS
+  hosts: localhost
+  gather_facts: no
+  tasks:
+    - name: Create a user with login access/password and attach a policy to him
+      community.aws.iam_user:
+        name: dolfined_user
+        password: 123@Dolfined
+        managed_policies:
+          - arn:aws:iam::aws:policy/AmazonEC2FullAccess
+        state: present
+        tags:
+          Name: ec2_dev_user
+      register: output
+    - debug: var=output.user.user_id
+
+
+
+    - name: Create a user with access-key and attach a policy to him
+      community.aws.iam_user:
+        name: dolfined_user1234
+        managed_policies:
+          - arn:aws:iam::aws:policy/AmazonEC2FullAccess
+        state: present
+        tags:
+          Name: user_programmatic_access
+      register: output2
+    - name: Generate the Programmatic access key to the created user
+      community.aws.iam_access_key:
+        user_name: "{{ output2.user.user_name }}"
+        state: present
+      register: output3
+    - debug:
+        msg:
+           - " the access key for user:{{ output2.user.user_name }} is {{ output3.access_key.access_key_id }}"
+           - " the secret access key for user:{{output2.user.user_name}} is {{ output3.secret_access_key }}"
+
+
+    - name: Delete a user after de_attach any policy from it
+      community.aws.iam_user:
+        name: dolfined_user
+        purge_policies: true
+        state: absent
