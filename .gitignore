@@ -10,23 +10,39 @@
 *.pub
 *.csv
 *.log
+.idea/
+.vscode/
+*.iml
+*.DS_Store
+*keys
+*.Identifier
 
 #Folder Exclusions
+0SoftSkills/*
 
-/0Intro_And_Tools/Tools/
-/*/Please StudyMe*
+0Intro_And_Tools/*
+
 /0Intro_And_Tools/Assests/AWSInstances/
 /0Intro_And_Tools/Assests/Dumps/
-.git-BK/
+/0Intro_And_Tools/Tools/
 
-0SoftSkills/*
-0DEPI-DevOpsNinjas-Project/*
+
+*/Please StudyMe*
+*/StudyMe*
+*/*/StudyMe*
+
+6AWS-Azure/*
 
 7Terraform/providers/*
-Assets/TechworldWithNana2024/
-0Intro_And_Tools/*
-6AWS-Azure/*
-7Terraform/StudyMe/
-8Ansible/*
+
+8Ansible/play-boy-ops/course-scripts/mohamed/ansible/roles/*
+8Ansible/play-boy-ops/course-scripts/ansible-project/roles/*
+8Ansible/play-boy-ops/course-scripts/mylabproject/roles/*
+8Ansible/play-boy-ops/roles/*
+8Ansible/play-boy-ops/testRoles/*
+
 9Docker/*
 10Kubernates/*
+
+
+Assets/TechworldWithNana2024/
