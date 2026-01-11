@@ -1,0 +1,5 @@
+FROM ubuntu:20.04
+RUN apt-get update && apt-get install -y cowsay && \
+    mkdir -p /usr/share/cowsay/cows && \
+    echo "## Whale ASCII art here" > /usr/share/cowsay/cows/docker.cow
+ENTRYPOINT ["/usr/games/cowsay"]
