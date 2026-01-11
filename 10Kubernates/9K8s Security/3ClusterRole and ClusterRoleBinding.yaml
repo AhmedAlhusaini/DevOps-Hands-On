@@ -1,0 +1,236 @@
+
+
+
+###############################################################################
+################### Demo - ClusterRole and ClusterRoleBinding #################
+###############################################################################
+
+
+ubuntu@master:~$ kubectl auth can-i list pods --as dolfined
+yes
+
+ubuntu@master:~$ kubectl get po --context=dolfined
+No resources found in default namespace.
+
+ubuntu@master:~$ kubectl auth can-i list pods --as dolfined --all-namespaces
+no
+
+
+
+# kubectl api-resources
+
+ubuntu@master:~$ kubectl config get-contexts
+CURRENT   NAME                          CLUSTER      AUTHINFO           NAMESPACE
+          dolfined                      kubernetes   dolfined
+*         kubernetes-admin@kubernetes   kubernetes   kubernetes-admin
+
+
+ubuntu@master:~$ kubectl get ns
+NAME              STATUS   AGE
+default           Active   44d
+kube-flannel      Active   44d
+kube-node-lease   Active   44d
+kube-public       Active   44d
+kube-system       Active   44d
+kubeview          Active   15d
+
+
+ubuntu@master:~$ kubectl auth can-i list ns --as dolfined
+no
+
+ubuntu@master:~$ kubectl get ns --context=dolfined
+Error from server (Forbidden): namespaces is forbidden: User "dolfined" cannot list resource "namespaces" in API group "" at the cluster scope
+
+ubuntu@master:~$ kubectl create clusterrole dolfined-cr --resource=namespaces --verb=create,list
+clusterrole.rbac.authorization.k8s.io/dolfined-cr created
+
+ubuntu@master:~$ kubectl get clusterrole
+NAME                                CREATED AT
+dolfined-cr                         2023-04-02T13:54:47Z
+
+ubuntu@master:~$ kubectl delete clusterrole dolfined-cr
+clusterrole.rbac.authorization.k8s.io "dolfined-cr" deleted
+
+cr.yaml
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: dolfined-cr
+rules:
+- apiGroups: [""]
+  resources: ["namespaces"]
+  verbs: ["create", "watch", "list"]
+---
+
+ubuntu@master:~$ kubectl apply -f cr.yaml
+clusterrole.rbac.authorization.k8s.io/dolfined-cr created
+
+
+ubuntu@master:~$ kubectl get clusterrole
+NAME                                                                   CREATED AT
+dolfined-cr                                                            2023-03-18T01:27:25Z
+
+
+ubuntu@master:~$ kubectl describe clusterrole dolfined-cr
+Name:         dolfined-cr
+Labels:       <none>
+Annotations:  <none>
+PolicyRule:
+  Resources   Non-Resource URLs  Resource Names  Verbs
+  ---------   -----------------  --------------  -----
+  namespaces  []                 []              [create watch list]
+
+ubuntu@master:~$ kubectl create clusterrolebinding dolfined-crb --clusterrole=dolfined-cr --user=dolfined
+clusterrolebinding.rbac.authorization.k8s.io/dolfined-crb created
+
+ubuntu@master:~$ kubectl get clusterrolebinding
+NAME                                                   ROLE                                                                               AGE
+dolfined-crb                                           ClusterRole/dolfined-cr                                                            13s
+
+ubuntu@master:~$ kubectl delete clusterrolebinding dolfined-crb
+clusterrolebinding.rbac.authorization.k8s.io "dolfined-crb" deleted
+
+
+vim crb.yaml
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: dolfined-crb
+subjects:
+- kind: User
+  name: dolfined 
+  apiGroup: rbac.authorization.k8s.io
+roleRef:
+  kind: ClusterRole
+  name: dolfined-cr
+  apiGroup: rbac.authorization.k8s.io
+---
+
+ubuntu@master:~$ kubectl apply -f crb.yaml
+clusterrolebinding.rbac.authorization.k8s.io/dolfined-crb created
+
+ubuntu@master:~$ kubectl get clusterrolebinding
+NAME                                                   ROLE                                                                               AGE
+dolfined-crb                                           ClusterRole/dolfined-cr                                                            13s
+
+ubuntu@master:~$ kubectl describe clusterrolebinding dolfined-crb
+Name:         dolfined-crb
+Labels:       <none>
+Annotations:  <none>
+Role:
+  Kind:  ClusterRole
+  Name:  dolfined-cr
+Subjects:
+  Kind  Name      Namespace
+  ----  ----      ---------
+  User  dolfined
+
+ubuntu@master:~$ kubectl auth can-i list ns --as dolfined
+yes
+
+
+ubuntu@master:~$ kubectl get ns --context=dolfined
+NAME              STATUS   AGE
+default           Active   44d
+kube-flannel      Active   44d
+kube-node-lease   Active   44d
+kube-public       Active   44d
+kube-system       Active   44d
+kubeview          Active   15d
+
+ubuntu@master:~$ kubectl auth can-i list node --as dolfined
+no
+
+cr.yaml
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: dolfined-cr
+rules:
+- apiGroups: [""]
+  resources: ["namespaces", "nodes", "pods"]
+  verbs: ["create", "watch", "list"]
+---
+
+ubuntu@master:~$ kubectl auth can-i list node --as dolfined
+yes
+
+ubuntu@master:~$ kubectl get nodes --context=dolfined
+NAME     STATUS   ROLES                  AGE   VERSION
+master   Ready    control-plane,master   59d   v1.21.5
+node1    Ready    <none>                 59d   v1.21.5
+node2    Ready    <none>                 59d   v1.21.5
+
+
+ubuntu@master:~$ kubectl auth can-i list po --as dolfined --all-namespaces
+yes
+
+ubuntu@master:~$ kubectl get po --all-namespaces  --context=dolfined
+NAMESPACE      NAME                                  READY   STATUS    RESTARTS   AGE
+kube-flannel   kube-flannel-ds-5fk65                 1/1     Running   47         59d
+kube-flannel   kube-flannel-ds-ghbwx                 1/1     Running   47         59d
+# more.........
+
+ubuntu@master:~$ kubectl delete clusterrole dolfined-cr
+clusterrole.rbac.authorization.k8s.io "dolfined-cr" deleted
+
+ubuntu@master:~$ kubectl delete clusterrolebinding dolfined-crb
+clusterrolebinding.rbac.authorization.k8s.io "dolfined-crb" deleted
+
+
+---
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: dolfined-cr
+rules:
+- apiGroups: [""]
+  resources: ["namespaces"]
+  verbs: ["create", "watch", "list"]
+---
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: dolfined-crb
+subjects:
+  - kind: User
+    name: dolfined
+    apiGroup: rbac.authorization.k8s.io
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: dolfined-cr
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
