@@ -1,0 +1,166 @@
+
+
+
+
+##########################################################
+################## Demo – Node Affinity ##################
+##########################################################
+
+
+1. requiredDuringSchedulingIgnoredDuringExecution: 
+
+
+ubuntu@master:~$ kubectl get nodes --show-labels
+NAME     STATUS   ROLES                  AGE   VERSION   LABELS
+master   Ready    control-plane,master   18d   v1.21.5   beta.kubernetes.io/arch=amd64,beta.kubernetes.io/os=linux,kubernetes.io/arch=amd64,kubernetes.io/hostname=master,kubernetes.io/os=linux,node-role.kubernetes.io/control-plane=,node-role.kubernetes.io/master=,node.kubernetes.io/exclude-from-external-load-balancers=
+node1    Ready    <none>                 18d   v1.21.5   beta.kubernetes.io/arch=amd64,beta.kubernetes.io/os=linux,kubernetes.io/arch=amd64,kubernetes.io/hostname=node1,kubernetes.io/os=linux
+node2    Ready    <none>                 18d   v1.21.5   beta.kubernetes.io/arch=amd64,beta.kubernetes.io/os=linux,kubernetes.io/arch=amd64,kubernetes.io/hostname=node2,kubernetes.io/os=linux
+
+ubuntu@master:~$ kubectl label node node1 node=node1
+node/node1 labeled
+
+ubuntu@master:~$ kubectl label node node2 node=node2
+node/node2 labeled
+
+
+
+pod1.yaml
+--- 
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod1
+spec:
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+          - matchExpressions:
+              - key: node
+                operator: In
+                values:
+                - node1
+  containers:
+  - name: nginx
+    image: nginx
+---
+
+ubuntu@master:~$ kubectl get po -o wide
+NAME   READY   STATUS    RESTARTS   AGE   IP            NODE    NOMINATED NODE   READINESS GATES
+pod1   1/1     Running   0          7s    10.244.1.33   node1   <none>           <none>
+
+
+pod2.yaml
+--- 
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod2
+spec:
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+          - matchExpressions:
+              - key: node
+                operator: In
+                values:
+                - node3
+  containers:
+  - name: nginx
+    image: nginx
+---
+
+ubuntu@master:~$ kubectl get po -o wide
+NAME   READY   STATUS    RESTARTS   AGE   IP            NODE     NOMINATED NODE   READINESS GATES
+pod1   1/1     Running   0          89s   10.244.1.33   node1    <none>           <none>
+pod2   0/1     Pending   0          3s    <none>        <none>   <none>           <none>
+# because we use rule "requiredDuringSchedulingIgnoredDuringExecution"
+
+
+pod3.yaml
+--- 
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod3
+spec:
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+          - matchExpressions:
+              - key: node
+                operator: In
+                values:
+                - node1
+                - node3
+  containers:
+  - name: nginx
+    image: nginx
+---
+
+
+ubuntu@master:~$ kubectl get po -o wide
+NAME   READY   STATUS    RESTARTS   AGE     IP            NODE     NOMINATED NODE   READINESS GATES
+pod1   1/1     Running   0          3m49s   10.244.1.33   node1    <none>           <none>
+pod2   0/1     Pending   0          2m23s   <none>        <none>   <none>           <none>
+pod3   1/1     Running   0          3s      10.244.1.34   node1    <none>           <none>
+# it created on node1 because we use multi values
+
+
+
+
+
+2. preferredDuringSchedulingIgnoredDuringExecution:
+
+
+pod4.yaml
+--- 
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod4
+spec:
+  affinity:
+    nodeAffinity:
+      preferredDuringSchedulingIgnoredDuringExecution:
+      - weight: 1
+        preference:
+          matchExpressions:
+          - key: node
+            operator: In
+            values:
+            - node3
+  containers:
+  - name: nginx
+    image: nginx
+---
+
+
+ubuntu@master:~$ kubectl get po -o wide
+NAME   READY   STATUS    RESTARTS   AGE     IP            NODE     NOMINATED NODE   READINESS GATES
+pod1   1/1     Running   0          8m8s    10.244.1.33   node1    <none>           <none>
+pod2   0/1     Pending   0          6m42s   <none>        <none>   <none>           <none>
+pod3   1/1     Running   0          4m22s   10.244.1.34   node1    <none>           <none>
+pod4   1/1     Running   0          3s      10.244.2.33   node2    <none>           <none>
+# it created on node2 because it with low capacity
+
+
+ubuntu@master:~$ kubectl delete po --all
+pod "pod1" deleted
+pod "pod2" deleted
+pod "pod3" deleted
+pod "pod4" deleted
+
+To unlabel Nodes:
+
+ubuntu@master:~$ kubectl label node node1 node-
+node/node1 labeled
+
+ubuntu@master:~$ kubectl label node node2 node-
+node/node2 labeled
+
+
+
+
