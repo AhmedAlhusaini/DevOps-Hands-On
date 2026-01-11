@@ -1,0 +1,86 @@
+
+
+
+
+
+############################################################
+########### Demo - Scale and Updating Deployment ###########
+############################################################
+
+
+#####  Scale Deployment #####
+
+Scaling Applications — Update the replica count to 5:
+$ kubectl scale deploy dolfined --replicas=5  ## scale up
+$ kubectl scale deploy dolfined --replicas=2  ## scale down
+
+also you edit in yaml file:
+$ kubectl edit deploy dolfined #and change the number of replicas:
+
+
+Get the details of the deployment:
+$ kubectl describe deploy dolfined 
+
+
+
+##### 4- Updating Deployment #####
+
+check the rollout status by the following command:
+$ kubectl rollout status deployment dolfined
+
+check the history of rollout:
+$ kubectl rollout history deployment dolfined
+
+try to scale deployment:
+$ kubectl scale deploy dolfined --replicas=5
+
+
+$ kubectl rollout status deployment dolfined
+
+$ kubectl describe deploy dolfined # to check the update
+
+check the history of rollout:
+$ kubectl rollout history deployment dolfined # you will see NO revsion added 
+
+
+
+update the image:
+$ kubectl set image deployment dolfined nginx=nginx:1.14
+
+update the image:
+$ kubectl set image deployment dolfined nginx=nginx:1.16 --record  # notice we add "--record" to record for revision history
+
+
+check the history of rollout:
+$ kubectl rollout history deployment dolfined # you will see the new revsion
+
+kubectl get all # to check the replicaset 
+
+to undo the current rollout and rollback to the previous revision:
+$ kubectl rollout undo deployment dolfined
+
+
+We can rollback to a specific revision by specifying it with --to-revision:
+$ kubectl rollout undo deployment dolfined --to-revision=1
+
+
+#### Pausing and Resuming a rollout of a Deployment
+# Deployments do not need to be paused to make a change. 
+# Use the pause to pause a Deployment 
+# so that you can make several changes ( that are kept in a queue till resume is ordered).
+
+Pause the rollout:
+$ kubectl rollout pause deployment dolfined
+
+so will now make sevral change for deployment:
+  1- first we will update the image:
+  $ kubectl set image deployment dolfined nginx=nginx:1.16
+
+Notice that no new rollout started: # waiting
+$ kubectl rollout status deployment dolfined
+
+resume the Deployment rollout and observe a new ReplicaSet coming up with all the new updates:
+$ kubectl rollout resume deployment dolfined
+
+kubectl rollout status deployment dolfined
+
