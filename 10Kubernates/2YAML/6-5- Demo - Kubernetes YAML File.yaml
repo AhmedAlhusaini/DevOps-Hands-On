@@ -1,0 +1,34 @@
+
+###################################################################
+################ Demo - Access Minikube Dashboard #################
+###################################################################
+
+first open the VScode 
+
+## PS: the capital characters and spaces
+
+To show all resouces:
+$ kubectl api-resources
+
+To show how write pod as a yaml file:
+$ kubectl explain pod
+
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: dolfined
+spec:
+  containers:
+    - name: nginx
+      image: nginx
+---
+
+learn to write the command apply:
+$ kubectl apply -f pod.yaml
+
+Command to show thr running pods:
+$ kubectl get pods
+
+Deletes a specific Pod:
+$ kubectl delete pod dolfined
