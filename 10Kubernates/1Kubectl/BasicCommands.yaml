@@ -1,0 +1,46 @@
+
+###################################################################
+################## Demo - Kubectl Basic Commands ##################
+###################################################################
+
+
+First, we will see the status of minikube:
+$ minikube status
+$ docker ps --> Note that minikube creates a docker container to run the kubernetes cluster.
+$ docker images --> Note that minikube pulls images inside that docker container.
+$ docker exec -it <minikube-container-id> /bin/bash --> To get inside the minikube container.
+$ docker ps -a --> To get the minikube container id.
+$ docker images --> To see the images inside the minikube container.
+
+To start minikube:
+$ minikube start --driver=docker
+$ kubectl get nodes --> To see the node created by minikube.
+
+Lists all supported resource types:
+$ kubectl api-resources
+
+
+List all pods in all namespaces:
+$ kubectl get pods --all-namespaces
+
+
+Gets more information about a given command:
+$ kubectl --help
+$ kubectl --h 
+$ kubectl get --help
+$ kubectl run --help
+
+kubectl v
+kubectl version
+
+gets the documentation for any resource type:
+$ kubectl explain pod
+
+
+create a new pod:
+$ kubectl run <pod-name> --image=<image-name>
+
+kubectl run hasona --image=nginx
+
+Lists one or more pods:
+kubectl get pod hasona
