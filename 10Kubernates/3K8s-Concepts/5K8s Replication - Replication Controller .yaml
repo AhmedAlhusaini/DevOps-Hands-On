@@ -1,0 +1,60 @@
+
+
+
+
+################################################################################
+############## Demo - K8s Replication - Replication Controller #################
+################################################################################
+
+
+#########################
+1-Replication Controller:
+#########################
+
+vim rc.yaml
+
+---
+apiVersion: v1
+kind: ReplicationController
+metadata:
+  name: dolfined
+spec:
+  replicas: 3
+  selector:
+    env: prod
+  template:
+    metadata:
+      labels:
+        env: prod
+    spec:
+      containers:
+      - name: nginx
+        image: nginx
+---
+
+apply file:
+$ kubectl apply -f rc.yaml
+
+get rc list:
+$ kubectl get rc  
+
+get detail of rc:
+$ kubectl describe rc dolfined 
+
+list pods:
+$ kubectl get pods # try to delete one pod
+
+scale rc:
+$ kubectl scale rc dolfined --replicas=5
+
+try second way:
+edit the yaml 
+$ kubectl apply -f rc.yaml
+
+tird way:
+$ kubectl scale rc --replicas=5 -f rc.yaml
+
+
+delete rc:
+$ kubectl delete rc dolfined
+
