@@ -1,0 +1,115 @@
+
+
+
+####################################################################
+################### Demo - Deployment Strategies ###################
+####################################################################
+
+### 1- RollingUpdate ###
+
+
+$ vim rolling-update.yaml
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata: 
+    name: dolfined 
+    labels:
+      env: prod
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      env: prod
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+        maxSurge: 25%
+        maxUnavailable: 25%
+  template:
+    metadata:
+      name: nginx
+      labels:
+        env: prod
+    spec:
+      containers:
+        - name: nginx
+          image: nginx
+---
+
+Check the Deployment created:
+kubectl get deployments
+
+Describe the deployment:
+$ kubectl describe deployment dolfined # check StrategyType, RollingUpdateStrategy
+
+update the image:
+$ kubectl set image deployment dolfined nginx=nginx:1.16
+
+$ kubectl get pods 
+
+$ kubectl describe deployment dolfined # check the events you will see "Scaled up replica ... and Scaled down replica"
+
+## Roll back the Deployment Update
+ 
+$ kubectl rollout history deploy dolfined
+
+$ kubectl rollout undo deploy dolfined
+
+$ kubectl describe deployment dolfined
+
+delete Deployment:
+$ kubectl delete deploy dolfined
+
+
+##### 2- Recreate #####
+
+
+vim recreate.yaml
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata: 
+    name: dolfined
+    labels: 
+      env: prod
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      env: prod
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      name: nginx
+      labels:
+        env: prod
+    spec:
+      containers:
+        - name: nginx
+          image: nginx
+---
+
+
+Describe the deployment:
+$ kubectl describe deployment dolfined # check StrategyType, RollingUpdateStrategy
+
+update the image:
+$ kubectl set image deployment dolfined nginx=nginx:1.16
+
+$ kubectl get pods 
+
+$ kubectl describe deployment dolfined # check the events
+
+## Roll back the Deployment Update
+ 
+$ kubectl rollout history deploy dolfined
+
+$ kubectl rollout undo deploy dolfined
+
+$ kubectl describe deployment dolfined
+
+delete Deployment:
+$ kubectl delete deploy dolfined
