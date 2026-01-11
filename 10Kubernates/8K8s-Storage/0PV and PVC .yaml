@@ -1,0 +1,231 @@
+
+
+
+
+
+#########################################################
+################### Demo - PV and PVC ###################
+#########################################################
+
+
+
+$ pv.yaml
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: dolfined-pv
+spec:
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/home/ubuntu/dolfined-file"
+---
+
+ubuntu@master:~$ kubectl get pv
+NAME          CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS      CLAIM   STORAGECLASS   REASON   AGE
+dolfined-pv   1Gi        RWO            Retain           Available                                   11s
+
+ubuntu@master:~$ kubectl describe pv dolfined-pv
+Name:            dolfined-pv
+
+
+
+pvc.yaml
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: dolfined-pvc
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 1Gi
+---
+
+ubuntu@master:~$ kubectl get pvc
+NAME           STATUS    VOLUME   CAPACITY   ACCESS MODES   STORAGECLASS   AGE
+dolfined-pvc   Pending                                                     6s
+
+# it will still in pending status because access mode is different
+
+ubuntu@master:~$ kubectl describe pvc dolfined-pvc
+Name:  dolfined-pvc
+Events:
+Type    Reason         Age                 From                         Message
+----    ------         ----                ----                         -------
+Normal  FailedBinding  3s (x13 over 3m2s)  persistentvolume-controller  no persistent volumes available for this claim and no storage class is set
+
+ubuntu@master:~$ kubectl delete pvc dolfined-pvc
+persistentvolumeclaim "dolfined-pvc" deleted
+
+
+pvc.yaml
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: dolfined-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
+ubuntu@master:~$ kubectl get pv
+NAME          CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS      CLAIM   STORAGECLASS   REASON   AGE
+dolfined-pv   1Gi        RWO            Retain           Available                                   4s
+# stauts of pv Available
+
+ubuntu@master:~$ kubectl apply -f pvc.yaml
+persistentvolumeclaim/dolfined-pvc created
+
+ubuntu@master:~$ kubectl get pv
+NAME          CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS   CLAIM                  STORAGECLASS   REASON   AGE
+dolfined-pv   1Gi        RWO            Retain           Bound    default/dolfined-pvc                           50s
+# stauts of pv Bound
+
+ubuntu@master:~$ kubectl get pvc
+NAME           STATUS   VOLUME        CAPACITY   ACCESS MODES   STORAGECLASS   AGE
+dolfined-pvc   Bound    dolfined-pv   1Gi        RWO                           52s
+# stauts of pvc Bound also
+
+ubuntu@master:~$ kubectl describe pvc dolfined-pvc
+
+
+$ pod.yaml
+
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: dolfined-app
+spec:
+  containers:
+  - name: dolfined-app
+    image: centos
+    command: ["/bin/sh"]
+    args: ["-c", "while true; do echo $(date -u) >> /data/out.txt; sleep 5; done"]
+    volumeMounts:
+    - name: persistent-storage
+      mountPath: /data
+  volumes:
+  - name: persistent-storage
+    persistentVolumeClaim:
+      claimName: dolfined-pvc
+---
+
+ubuntu@master:~$ kubectl get po -o wide
+NAME           READY   STATUS    RESTARTS   AGE   IP            NODE    NOMINATED NODE   READINESS GATES
+dolfined-app   1/1     Running   0          6s    10.244.1.30   node1   <none>           <none>
+
+
+ubuntu@master:~$ kubectl describe po dolfined-app
+Name:         dolfined-app
+
+Mounts:
+      /data from persistent-storage (rw)
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-4ptrm (ro)
+Volumes:
+  persistent-storage:
+    Type:       PersistentVolumeClaim (a reference to a PersistentVolumeClaim in the same namespace)
+    ClaimName:  dolfined-pvc
+    ReadOnly:   false
+
+# if you go to in Node1 you will find directory called "dolfined-file"
+
+# go to node1
+ubuntu@node1:~$ ls
+dolfined-file
+
+ubuntu@node1:~/dolfined-file$ ls
+out.txt
+
+# go to master node
+
+ubuntu@master:~$ kubectl exec -it dolfined-app -- /bin/bash
+
+[root@dolfined-app /]# ls
+bin  data  dev  etc  home  lib  lib64  lost+found  media  mnt  opt  proc  root  run  sbin  srv  sys  tmp  usr  var
+[root@dolfined-app /]# cd data/
+[root@dolfined-app data]# ls
+out.txt
+[root@dolfined-app data]# touch pod1.txt
+[root@dolfined-app data]# touch pod2.txt
+[root@dolfined-app data]# ls
+out.txt  pod1.txt  pod2.txt
+
+# go to node1
+
+ubuntu@node1:~/dolfined-file$ ls
+out.txt  pod1.txt  pod2.txt
+# you will find everything you created in pod
+
+ubuntu@master:~$ kubectl delete po dolfined-app
+pod "dolfined-app" deleted
+
+
+
+ubuntu@master:~$ kubectl get node --show-labels
+
+
+$ pod1.yaml
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: dolfined-app1
+spec:
+  containers:
+  - name: dolfined-app
+    image: centos
+    command: ["/bin/sh"]
+    args: ["-c", "while true; do echo $(date -u) >> /data/out.txt; sleep 5; done"]
+    volumeMounts:
+    - name: persistent-storage
+      mountPath: /data
+  volumes:
+  - name: persistent-storage
+    persistentVolumeClaim:
+      claimName: dolfined-pvc
+  nodeSelector:
+    node: node1
+---
+
+ubuntu@master:~$ kubectl apply -f pod1.yaml
+pod/dolfined-app1 created
+
+ubuntu@master:~$ kubectl get po -o wide
+NAME            READY   STATUS    RESTARTS   AGE   IP            NODE    NOMINATED NODE   READINESS GATES
+dolfined-app1   1/1     Running   0          11s   10.244.1.31   node1   <none>           <none>
+
+ubuntu@master:~$ kubectl exec -it dolfined-app1 -- /bin/bash
+[root@dolfined-app1 /]# ls
+bin  data  dev  etc  home  lib  lib64  lost+found  media  mnt  opt  proc  root  run  sbin  srv  sys  tmp  usr  var
+[root@dolfined-app1 /]# cd data/
+[root@dolfined-app1 data]# ls
+out.txt  pod1.txt  pod2.txt
+
+# you will find same files in the new pod
+
+ubuntu@master:~$ kubectl delete po dolfined-app1
+
+ubuntu@master:~$ kubectl delete pvc dolfined-pvc
+persistentvolumeclaim "dolfined-pvc" deleted
+
+ubuntu@master:~$ kubectl get pv
+NAME          CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS     CLAIM                  STORAGECLASS   REASON   AGE
+dolfined-pv   1Gi        RWO            Retain           Released   default/dolfined-pvc                           33s
+
+# stauts of pv "Released"
+
+
+ubuntu@master:~$ kubectl delete pv dolfined-pv
+persistentvolume "dolfined-pv" deleted
+
+
