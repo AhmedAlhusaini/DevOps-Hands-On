@@ -1,0 +1,146 @@
+
+
+###################################################################
+################### Demo - Labels and selectors ###################
+###################################################################
+
+
+$ kubectl run dolfined-1 --image=nginx --labels="env=prod"
+
+
+$ kubectl get pods --show-labels
+
+$ kubectl run dolfined-2 --image=nginx --labels="env=prod, tier=frontend" # wrong
+
+$ kubectl run dolfined-2 --image=nginx --labels="env=prod","tier=frontend"
+
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: dolfined
+  labels:
+    env: dev
+    tier: backend
+spec:
+  containers:
+  - name: nginx
+    image: nginx
+---
+
+kubectl get pods --show-labels
+NAME         READY   STATUS    RESTARTS   AGE   LABELS
+dolfined     1/1     Running   0          5s    env=dev,tier=backend
+dolfined-1   1/1     Running   0          96s   env=prod
+dolfined-2   1/1     Running   0          67s   env=prod,tier=frontend
+
+
+Adding a label:
+$ kubectl label pod dolfined-1 tier=backend
+####
+$ kubectl get pods --show-labels
+NAME         READY   STATUS    RESTARTS   AGE     LABELS
+dolfined     1/1     Running   0          3m26s   env=dev,tier=backend
+dolfined-1   1/1     Running   0          4m57s   env=prod,tier=backend
+dolfined-2   1/1     Running   0          4m28s   env=prod,tier=frontend
+
+
+Updating a label:
+$ kubectl label pod dolfined-2 tier=backend --overwrite
+####
+$ kubectl get pods --show-labels
+NAME         READY   STATUS    RESTARTS   AGE     LABELS
+dolfined     1/1     Running   0          5m47s   env=dev,tier=backend
+dolfined-1   1/1     Running   0          7m18s   env=prod,tier=backend
+dolfined-2   1/1     Running   0          6m49s   env=prod,tier=backend
+
+$ kubectl label pod dolfined tier=frontend --overwrite
+###
+$ kubectl get pods --show-labels
+NAME         READY   STATUS    RESTARTS   AGE     LABELS
+dolfined     1/1     Running   0          5m47s   env=dev,tier=frontend
+dolfined-1   1/1     Running   0          7m18s   env=prod,tier=backend
+dolfined-2   1/1     Running   0          6m49s   env=prod,tier=backend
+
+Removing a label:
+$ kubectl label pod dolfined env-
+###
+$ kubectl get pods --show-labels
+NAME         READY   STATUS    RESTARTS   AGE     LABELS
+dolfined     1/1     Running   0          7m26s   tier=frontend
+dolfined-1   1/1     Running   0          8m57s   env=prod,tier=backend
+dolfined-2   1/1     Running   0          8m28s   env=prod,tier=backend
+
+Select Some pods with spcefic labels:
+$ kubectl get pods --selector "env=prod"
+==
+$ kubectl get pods -l "env=prod"
+###
+$ kubectl get pods -l "env=prod"
+NAME         READY   STATUS    RESTARTS   AGE
+dolfined-1   1/1     Running   0          12m
+dolfined-2   1/1     Running   0          11m
+
+$ kubectl get pods -l "env=prod" --show-labels
+NAME         READY   STATUS    RESTARTS   AGE   LABELS
+dolfined-1   1/1     Running   0          12m   env=prod,tier=backend
+dolfined-2   1/1     Running   0          11m   env=prod,tier=backend
+
+Adding a label:
+$ kubectl label pod dolfined env=dev
+$ kubectl label pod dolfined status=online
+
+$ kubectl label pod dolfined-1 status=online
+
+
+$ kubectl label pod dolfined-2 status=online
+
+
+$ kubectl get pods --show-labels
+NAME         READY   STATUS    RESTARTS   AGE   LABELS
+dolfined     1/1     Running   0          25m   env=dev,status=online,tier=frontend
+dolfined-1   1/1     Running   0          26m   env=prod,status=online,tier=backend
+dolfined-2   1/1     Running   0          26m   env=prod,status=online,tier=backend
+
+
+##############################
+1. Equality-Based Requirement: The supported operators are =, ==, !=
+##############################
+
+see all pods with online status:
+$ kubectl get pods -l status=online
+==
+$ kubectl get pods -l status==online
+
+
+see all pods with env=prod:
+$ kubectl get pods -l env=prod --show-labels
+
+set two :
+$ kubectl get pods -l env=dev,tier=frontend --show-labels
+
+see all pods not equal env=prod:
+$ kubectl get pods -l env!=prod --show-labels
+NAME       READY   STATUS    RESTARTS   AGE    LABELS
+dolfined   1/1     Running   0          118s   env=dev,status=online,tier=backend
+
+
+##############################
+2. Set-Based Requirement:  The supported operators are  in, notin and exists
+##############################
+
+see all pods with env=prod:
+kubectl get pods -l 'env in (prod)'
+
+$ kubectl get pods -l 'env in (prod,dev)'  # the comma operator acts as an OR operator. That is, it will list pods which are in prod or dev.
+
+$ kubectl get pods -l 'env in (prod),tier in (backend)' 
+
+
+I want to view pods that are not in the env=prod:
+$ kubectl get pods -l 'env notin (prod)'
+
+Describe pod:
+kubectl describe pod dolfined # to check the labels
+
+
