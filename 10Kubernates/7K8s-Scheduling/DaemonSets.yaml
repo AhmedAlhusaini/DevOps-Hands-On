@@ -1,0 +1,84 @@
+
+
+#########################################################
+################### Demo - DeamonSets ###################
+#########################################################
+
+ubuntu@master:~$ kubectl get node
+NAME     STATUS   ROLES                  AGE   VERSION
+master   Ready    control-plane,master   20d   v1.21.5
+node1    Ready    <none>                 20d   v1.21.5
+node2    Ready    <none>                 20d   v1.21.5
+
+
+
+
+ds.yaml
+---
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: dolfined-ds
+spec:
+  selector:
+    matchLabels:
+      env: prod
+  template:
+    metadata:
+      labels:
+        env: prod
+    spec:
+      containers:
+      - name: nginx
+        image: nginx
+---
+
+ubuntu@master:~$ kubectl get po -o wide
+NAME                READY   STATUS    RESTARTS   AGE   IP            NODE    NOMINATED NODE   READINESS GATES
+dolfined-ds-l66nm   1/1     Running   0          8s    10.244.1.40   node1   <none>           <none>
+dolfined-ds-pm4vb   1/1     Running   0          8s    10.244.2.41   node2   <none>           <none>
+
+ubuntu@master:~$ kubectl get ds
+NAME          DESIRED   CURRENT   READY   UP-TO-DATE   AVAILABLE   NODE SELECTOR   AGE
+dolfined-ds   2         2         2       2            2           <none>          25s
+
+
+ubuntu@master:~$ kubectl describe ds dolfined-ds
+Name:           dolfined-ds
+Selector:       env=prod
+Node-Selector:  <none>
+Labels:         <none>
+
+# show ds on kubeview
+
+ubuntu@master:~$ kubectl get po -o wide
+NAME                READY   STATUS    RESTARTS   AGE     IP            NODE    NOMINATED NODE   READINESS GATES
+dolfined-ds-l66nm   1/1     Running   0          3m27s   10.244.1.40   node1   <none>           <none>
+dolfined-ds-pm4vb   1/1     Running   0          3m27s   10.244.2.41   node2   <none>           <none>
+
+
+# try to delete po 
+
+
+ubuntu@master:~$ kubectl delete po dolfined-ds-pm4vb
+pod "dolfined-ds-pm4vb" deleted
+
+ubuntu@master:~$ kubectl get po -o wide
+NAME                READY   STATUS    RESTARTS   AGE     IP            NODE    NOMINATED NODE   READINESS GATES
+dolfined-ds-425rq   1/1     Running   0          4s      10.244.2.42   node2   <none>           <none>
+dolfined-ds-l66nm   1/1     Running   0          3m52s   10.244.1.40   node1   <none>           <none>
+
+# notice that a new pod created in the same node
+
+
+
+ubuntu@master:~$ kubectl get ds
+NAME          DESIRED   CURRENT   READY   UP-TO-DATE   AVAILABLE   NODE SELECTOR   AGE
+dolfined-ds   2         2         2       2            2           <none>          4m35s
+
+ubuntu@master:~$ kubectl delete ds dolfined-ds
+daemonset.apps "dolfined-ds" deleted
+
+
+
+
