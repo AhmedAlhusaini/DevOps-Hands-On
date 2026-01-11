@@ -1,0 +1,220 @@
+
+
+####################################################
+################## Demo – Ingress ##################
+####################################################
+
+
+$ vim app1.yaml
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app1
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: prod
+  template:
+    metadata:
+      labels:
+        app: prod
+    spec:
+      containers:
+        - name: simple-webserver
+          image: menamagdyhalem/simple-webserver
+          ports:
+            - containerPort: 3000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: app1-svc
+spec:
+  type: ClusterIP
+  selector:
+    app: prod
+  ports:
+    - port: 2000
+      targetPort: 3000
+---
+
+
+
+
+$ vim app2.yaml
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app2
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+        - name: nginx
+          image: gcr.io/google-samples/hello-app:2.0
+          ports:
+            - containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: app2-svc
+spec:
+  type: ClusterIP
+  selector:
+    app: nginx
+  ports:
+    - port: 2500
+      targetPort: 8080
+---
+
+ubuntu@master:~$ kubectl get all
+NAME                                            READY   STATUS    RESTARTS   AGE
+pod/app1-6578d6bb8-4pxft                        1/1     Running   0          3m1s
+pod/app1-6578d6bb8-kggdf                        1/1     Running   0          3m1s
+pod/app1-6578d6bb8-q5hlz                        1/1     Running   0          3m1s
+pod/app2-6799fc88d8-7zzmh                       1/1     Running   0          113s
+pod/app2-6799fc88d8-m42tg                       1/1     Running   0          113s
+pod/app2-6799fc88d8-zxpbn                       1/1     Running   0          113s
+
+NAME                                         TYPE           CLUSTER-IP      EXTERNAL-IP   PORT(S)                      AGE
+service/app1-svc                             ClusterIP      10.101.71.205   <none>        2000/TCP                     3m1s
+service/app2-svc                             ClusterIP      10.105.9.66     <none>        2500/TCP                     113s
+service/kubernetes                           ClusterIP      10.96.0.1       <none>        443/TCP                      8d
+
+NAME                                       READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/app1                       3/3     3            3           3m1s
+deployment.apps/app2                       3/3     3            3           114s
+
+NAME                                                  DESIRED   CURRENT   READY   AGE
+replicaset.apps/app1-6578d6bb8                        3         3         3       3m1s
+replicaset.apps/app2-6799fc88d8                       3         3         3       113s
+
+
+Install Helm:
+curl https://baltocdn.com/helm/signing.asc | gpg --dearmor | sudo tee /usr/share/keyrings/helm.gpg > /dev/null
+sudo apt-get install apt-transport-https --yes
+echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/helm.gpg] https://baltocdn.com/helm/stable/debian/ all main" | sudo tee /etc/apt/sources.list.d/helm-stable-debian.list
+sudo apt-get update
+sudo apt-get install helm
+
+$ helm version
+
+Install Ingress controller for Kubernetes:
+
+helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+helm repo update
+
+helm install ingress-nginx ingress-nginx/ingress-nginx
+
+ubuntu@master:~$ kubectl get all
+NAME                                            READY   STATUS    RESTARTS   AGE
+pod/app1-6578d6bb8-4pxft                        1/1     Running   0          3m1s
+pod/app1-6578d6bb8-kggdf                        1/1     Running   0          3m1s
+pod/app1-6578d6bb8-q5hlz                        1/1     Running   0          3m1s
+pod/app2-6799fc88d8-7zzmh                       1/1     Running   0          113s
+pod/app2-6799fc88d8-m42tg                       1/1     Running   0          113s
+pod/app2-6799fc88d8-zxpbn                       1/1     Running   0          113s
+pod/ingress-nginx-controller-666f45c794-kzcd5   1/1     Running   0          45s
+
+NAME                                         TYPE           CLUSTER-IP      EXTERNAL-IP   PORT(S)                      AGE
+service/app1-svc                             ClusterIP      10.101.71.205   <none>        2000/TCP                     3m1s
+service/app2-svc                             ClusterIP      10.105.9.66     <none>        2500/TCP                     113s
+service/ingress-nginx-controller             LoadBalancer   10.104.195.54   <pending>     80:31643/TCP,443:31233/TCP   45s
+service/ingress-nginx-controller-admission   ClusterIP      10.107.217.77   <none>        443/TCP                      45s
+service/kubernetes                           ClusterIP      10.96.0.1       <none>        443/TCP                      8d
+
+NAME                                       READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/app1                       3/3     3            3           3m1s
+deployment.apps/app2                       3/3     3            3           114s
+deployment.apps/ingress-nginx-controller   1/1     1            1           45s
+
+NAME                                                  DESIRED   CURRENT   READY   AGE
+replicaset.apps/app1-6578d6bb8                        3         3         3       3m1s
+replicaset.apps/app2-6799fc88d8                       3         3         3       113s
+replicaset.apps/ingress-nginx-controller-666f45c794   1         1         1       45s
+
+
+Create a LoadBlancer On AWS: 
+
+- Create a listener on the ALB on port 80
+- The ALB should forward to the target group on port 31643
+
+
+$ vim ingress.yaml
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: dolfined-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: ingress-2044580522.us-east-1.elb.amazonaws.com
+    http:
+      paths:
+      - pathType: Prefix
+        path: /dolfined
+        backend:
+          service:
+            name: app1-svc
+            port:
+              number: 2000
+      - pathType: Prefix
+        path: /mena
+        backend:
+          service:
+            name: app2-svc
+            port:
+              number: 2500
+---
+
+ubuntu@master:~$ kubectl get ing
+NAME               CLASS   HOSTS                                            ADDRESS   PORTS   AGE
+dolfined-ingress   nginx   ingress-2044580522.us-east-1.elb.amazonaws.com             80      16m
+
+
+
+http://ingress-2044580522.us-east-1.elb.amazonaws.com/dolfined
+Hello From DolfinED, This App is Running on Pod: app1-6578d6bb8-q5hlz
+
+
+http://ingress-2044580522.us-east-1.elb.amazonaws.com/mena
+Hello, world!
+Version: 2.0.0
+Hostname: app2-86457d48f6-cfdbh
+
+
+
+
+try to access this 
+http://ingress-2044580522.us-east-1.elb.amazonaws.com/menaaaaa/  #it will work because the "path type" is prefix
+Hello, world!
+Version: 2.0.0
+Hostname: app2-86457d48f6-6s766
+
+
+
+helm uninstall ingress-nginx
+
+kubectl get ing
+kubectl delete ing dolfined-ingress
+
+kubectl get deploy
+kubectl delete deploy app1 app2
+
+kubectl delete svc app1-svc app2-svc
+---
