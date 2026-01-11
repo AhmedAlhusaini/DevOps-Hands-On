@@ -1,0 +1,35 @@
+
+
+###################################################################
+################ Demo - Access Minikube Dashboard #################
+###################################################################
+
+$ minikube start --driver=docker
+    |______minikube start → Initializes a single-node Kubernetes cluster locally.
+    |______         |______ --driver=docker → Specifies Docker as the backend driver. Instead of creating a VM, Minikube spins up containers to simulate the cluster.
+
+$ minikube status 
+$ minikube dashboard
+
+$ kubectl proxy --address='0.0.0.0' --disable-filter=true
+
+
+to access it write:
+
+- copy URL from $ minikube dashboard and then edit ip machine and port 8001 
+
+Like this:
+http://3.239.22.33:8001/api/v1/namespaces/kubernetes-dashboard/services/http:kubernetes-dashboard:/proxy/
+
+
+
+
+
+
+
+
+
+
+
+
+
