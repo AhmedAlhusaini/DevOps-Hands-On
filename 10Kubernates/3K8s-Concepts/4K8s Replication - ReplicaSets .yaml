@@ -1,0 +1,87 @@
+
+
+
+
+################################################################################
+##################### Demo - K8s Replication - ReplicaSet ######################
+################################################################################
+
+
+
+ReplicaSet:
+
+vim rs.yaml
+
+---
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: dolfined
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      env: prod
+  template:
+    metadata:
+      labels:
+        env: prod
+    spec:
+      containers:
+      - name: nginx
+        image: nginx
+---
+
+apply file:
+$ kubectl apply -f rs.yaml
+
+get rc list:
+$ kubectl get rs
+
+list pods:
+$ kubectl get po
+
+try to create another pod:
+$ kubectl run test --image=nginx
+## you will see in kubeview rs choose pods that have label (env: prod)
+
+
+try to delete any pod:
+$ kubectl delete po dolfined-ewds 
+
+list pods with labels:
+$ kubectl get po --show-labels
+
+add a new label for existing pod:
+$ kubectl label po dolfined-9m4rq type=new
+
+$ kubectl get po --show-labels
+
+overwiter for exsiting label: # OR try to delete label
+$ kubectl label po dolfined-9m4rq env=dev --overwrite
+ 
+# you will see the new pod will create 
+
+$ kubectl get po --show-labels
+
+
+get detail of rc:
+$ kubectl describe rs dolfined 
+
+list pods:
+$ kubectl get pods # try to delete one pod
+
+scale rc:
+$ kubectl scale rs dolfined --replicas=5
+
+try second way:
+edit the yaml 
+$ kubectl apply -f rs.yaml
+
+tird way:
+$ kubectl scale rs --replicas=5 -f rs.yaml
+
+
+delete rc:
+$ kubectl delete rs dolfined
+
