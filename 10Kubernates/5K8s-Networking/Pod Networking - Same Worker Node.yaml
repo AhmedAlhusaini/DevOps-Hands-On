@@ -1,0 +1,120 @@
+
+
+
+###########################################################################
+################# Demo - Cluster Networking Deep Dive 01 ##################
+###########################################################################
+
+$ kubectl label node node1 node=node1
+$ kubectl label node node2 node=node2
+
+1. Pod To Pod Communication Within The Same Node:
+
+
+pod1.yaml
+--- 
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod1
+spec:
+  containers:
+  - name: centos
+    image: centos
+    command: ["/bin/sleep", "3650d"]
+    imagePullPolicy: IfNotPresent
+  restartPolicy: Always
+  nodeSelector:
+    node: node1
+---
+
+
+pod2.yaml
+--- 
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod2
+spec:
+  containers:
+  - name: centos
+    image: centos
+    command: ["/bin/sleep", "3650d"]
+    imagePullPolicy: IfNotPresent
+  restartPolicy: Always
+  nodeSelector:
+    node: node1
+---
+
+
+
+# First we will create a pod. We will notice that the first pod1 gets schudeled (deployed on) on node1
+# We then create a second pod "pod2". Again, it gets scheduled on node1
+# K8s creates a new veth for each new pod
+
+# in node1 [there are two pods created; therefore, we will find "2 veth"]
+
+$ ip a
+
+2: ens5: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 9001 qdisc mq state UP group default qlen 1000
+    link/ether 02:17:24:53:c1:d7 brd ff:ff:ff:ff:ff:ff
+    inet 172.31.14.252/20 brd 172.31.15.255 scope global dynamic ens5
+       valid_lft 2970sec preferred_lft 2970sec
+    inet6 fe80::17:24ff:fe53:c1d7/64 scope link
+       valid_lft forever preferred_lft forever
+4: flannel.1: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 8951 qdisc noqueue state UNKNOWN group default
+    link/ether 0a:ff:01:80:bf:2b brd ff:ff:ff:ff:ff:ff
+    inet 10.244.2.0/32 scope global flannel.1
+       valid_lft forever preferred_lft forever
+    inet6 fe80::8ff:1ff:fe80:bf2b/64 scope link
+       valid_lft forever preferred_lft forever
+5: cni0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 8951 qdisc noqueue state UP group default qlen 1000
+    link/ether 06:b5:60:1f:01:99 brd ff:ff:ff:ff:ff:ff
+    inet 10.244.2.1/24 brd 10.244.2.255 scope global cni0
+       valid_lft forever preferred_lft forever
+    inet6 fe80::4b5:60ff:fe1f:199/64 scope link
+       valid_lft forever preferred_lft forever
+9: veth265bd049@if3: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 8951 qdisc noqueue master cni0 state UP group default
+    link/ether 76:c7:25:60:6d:d2 brd ff:ff:ff:ff:ff:ff link-netnsid 0
+    inet6 fe80::74c7:25ff:fe60:6dd2/64 scope link
+       valid_lft forever preferred_lft forever
+10: veth5def40a3@if3: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 8951 qdisc noqueue master cni0 state UP group default
+    link/ether be:69:4c:26:20:4f brd ff:ff:ff:ff:ff:ff link-netnsid 1
+    inet6 fe80::bc69:4cff:fe26:204f/64 scope link
+       valid_lft forever preferred_lft forever
+
+
+
+
+Login in into pod1:
+$ kubectl exec -it pod1 -- /bin/bash
+
+[root@pod1 /]# ip a
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+3: eth0@if9: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 8951 qdisc noqueue state UP group default
+    link/ether c6:52:d7:bf:e3:d7 brd ff:ff:ff:ff:ff:ff link-netnsid 0
+    inet 10.244.2.27/24 brd 10.244.2.255 scope global eth0
+       valid_lft forever preferred_lft forever
+
+[root@pod1 /]# ethtool -S eth0
+NIC statistics:
+     peer_ifindex: 9
+[root@pod1 /]# exit
+
+
+$ kubectl get po -o wide
+
+NAME   READY   STATUS    RESTARTS   AGE   IP            NODE    
+pod1   1/1     Running   0          90m   10.244.2.27   node1
+pod2   1/1     Running   0          87m   10.244.2.28   node1
+
+
+
+
+
+
+==========================================================================================================
+==========================================================================================================
