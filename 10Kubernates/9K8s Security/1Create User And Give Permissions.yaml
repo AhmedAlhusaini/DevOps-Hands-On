@@ -1,0 +1,164 @@
+ 
+
+
+#############################################################################
+################### Demo - Create User And Give Permissions #################
+#############################################################################
+
+
+ubuntu@master:~$ kubectl config get-contexts
+CURRENT   NAME                          CLUSTER      AUTHINFO           NAMESPACE
+*         kubernetes-admin@kubernetes   kubernetes   kubernetes-admin
+
+
+
+check kubeConfig file:
+
+ubuntu@master:~$ kubectl config view
+---
+apiVersion: v1
+clusters:
+- cluster:
+    certificate-authority-data: DATA+OMITTED
+    server: https://172.31.2.99:6443
+  name: kubernetes
+contexts:
+- context:
+    cluster: kubernetes
+    user: kubernetes-admin
+  name: kubernetes-admin@kubernetes
+current-context: kubernetes-admin@kubernetes
+kind: Config
+preferences: {}
+users:
+- name: kubernetes-admin
+  user:
+    client-certificate-data: REDACTED
+    client-key-data: REDACTED
+---
+
+
+ubuntu@master:~$ kubectl config get-contexts
+CURRENT   NAME                          CLUSTER      AUTHINFO           NAMESPACE
+*         kubernetes-admin@kubernetes   kubernetes   kubernetes-admin
+
+
+Create a private key for your user:
+
+ubuntu@master:~$ openssl genrsa -out dolfined.key 2048
+Generating RSA private key, 2048 bit long modulus (2 primes)
+...............................+++++
+......................................+++++
+e is 65537 (0x010001)
+
+Create a certificate sign request test.csr using the private key you just created:
+ubuntu@master:~$ openssl req -new -key dolfined.key -out dolfined.csr -subj "/CN=dolfined"
+
+ubuntu@master:~$ ls
+dolfined.csr  dolfined.key 
+
+
+you should first make CSR to encoded using base64:
+
+ubuntu@master:~$ cat dolfined.csr | base64 | tr -d "\n"
+LS0tLS1CRUdJTiBDRVJUSUZJQ0FURSBSRVFVRVNULS0tLS0KTUlJQ1dEQ0NBVUFDQVFBd0V6RVJNQThHQTFVRUF3d0laRzlzWm1sdVpXUXdnZ0VpTUEwR0NTcUdTSWIzRFFFQgpBUVVBQTRJQkR3QXdnZ0VLQW9JQkFRRE53R3FjYmM3bldyREZ3QUl1SWFIb0FSS0l3WVR4aEpuWDlmdFZMMmovCnd3akp6UWx2Q2NoV3Z3cnFtUlpudVNyN045TVhrOGVWcXhvVmFrT2tUblJEUHJuQ09vYUJTeXFiSW1TaG1PK0oKMWkxc3hFYVFKbjVmL1N6cGs4T0RDTkFLa1RQQXhEem5vSVRoREduNnhFb2ZBb2VXRTZxclhVVy9mSGVlb1JJeQo2WUNkaHVZL0dabXJ3dmJVZis1b056REFaTjZrRmxPT3RBREFJMEZzZWFmTXBxdDBDZUNnTDRlR2pWa1JweW0yClB4YXNYOTByUmprS3hyclVnZk9BZGlDYTdPVjByNGpQcUpjdE13dzhUSFk2dmJFMzhQZmRRVVZvdnUrV2tkUDYKN2xqQ0JwWDkrMDRyKzF4S2hNbGtPWFVKYzZ0bjkwUGtHWHdycVN0VGZqQnJBZ01CQUFHZ0FEQU5CZ2txaGtpRwo5dzBCQVFzRkFBT0NBUUVBb1BqVG9YUGQ4RDJvY1p4WHJsZ2pQbEJUSGxCMjBOWlpqOG1XUlF4YnU5bGJqRzVLClZ5cGowc3VYeUJLQll2VE11S1hMT1RDUTRDcjRJT3laRW41SGJSVmY5aXY3UHJpcmpmR1NDMGtqNitIT3J1Wi8KcFVWajErSnNIbEZGTE9ZWlEvNy90VTBOR3JpWXM3aHBkNFhJTmMzSDVYSkx4MG5CQjhDbmF2dFFTemI4TDhBdApUNUpERVdIVGtsRVJlaUVaYjVMRFNlYkV2QzNLMDlvQ2pvZjY0eXpWMDFqbHpvSTVwV2traVRTOE5MWHpRZGJqClRoNU5xc3MrQzVieXlUR3luMjIxNDVYb2JaVWJSTGJFNlBzb0tGVGhwalNGRHdWR25IeGJ2dzR6WTlUaEw1TTkKa29QV1dhRTVFL3RuZlJuM1V2THo5Z25xL21jbTNlaHRkZ3lkS1E9PQotLS0tLUVORCBDRVJUSUZJQ0FURSBSRVFVRVNULS0tLS0K
+
+ubuntu@master:~$ kubectl get csr
+No resources found
+
+
+Create a CertificateSigningRequest and submit it to a Kubernetes Cluster:
+
+csr.yaml
+---
+apiVersion: certificates.k8s.io/v1
+kind: CertificateSigningRequest
+metadata:
+  name: dolfined
+spec:
+  request: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURSBSRVFVRVNULS0tLS0KTUlJQ1dEQ0NBVUFDQVFBd0V6RVJNQThHQTFVRUF3d0laRzlzWm1sdVpXUXdnZ0VpTUEwR0NTcUdTSWIzRFFFQgpBUVVBQTRJQkR3QXdnZ0VLQW9JQkFRRE53R3FjYmM3bldyREZ3QUl1SWFIb0FSS0l3WVR4aEpuWDlmdFZMMmovCnd3akp6UWx2Q2NoV3Z3cnFtUlpudVNyN045TVhrOGVWcXhvVmFrT2tUblJEUHJuQ09vYUJTeXFiSW1TaG1PK0oKMWkxc3hFYVFKbjVmL1N6cGs4T0RDTkFLa1RQQXhEem5vSVRoREduNnhFb2ZBb2VXRTZxclhVVy9mSGVlb1JJeQo2WUNkaHVZL0dabXJ3dmJVZis1b056REFaTjZrRmxPT3RBREFJMEZzZWFmTXBxdDBDZUNnTDRlR2pWa1JweW0yClB4YXNYOTByUmprS3hyclVnZk9BZGlDYTdPVjByNGpQcUpjdE13dzhUSFk2dmJFMzhQZmRRVVZvdnUrV2tkUDYKN2xqQ0JwWDkrMDRyKzF4S2hNbGtPWFVKYzZ0bjkwUGtHWHdycVN0VGZqQnJBZ01CQUFHZ0FEQU5CZ2txaGtpRwo5dzBCQVFzRkFBT0NBUUVBb1BqVG9YUGQ4RDJvY1p4WHJsZ2pQbEJUSGxCMjBOWlpqOG1XUlF4YnU5bGJqRzVLClZ5cGowc3VYeUJLQll2VE11S1hMT1RDUTRDcjRJT3laRW41SGJSVmY5aXY3UHJpcmpmR1NDMGtqNitIT3J1Wi8KcFVWajErSnNIbEZGTE9ZWlEvNy90VTBOR3JpWXM3aHBkNFhJTmMzSDVYSkx4MG5CQjhDbmF2dFFTemI4TDhBdApUNUpERVdIVGtsRVJlaUVaYjVMRFNlYkV2QzNLMDlvQ2pvZjY0eXpWMDFqbHpvSTVwV2traVRTOE5MWHpRZGJqClRoNU5xc3MrQzVieXlUR3luMjIxNDVYb2JaVWJSTGJFNlBzb0tGVGhwalNGRHdWR25IeGJ2dzR6WTlUaEw1TTkKa29QV1dhRTVFL3RuZlJuM1V2THo5Z25xL21jbTNlaHRkZ3lkS1E9PQotLS0tLUVORCBDRVJUSUZJQ0FURSBSRVFVRVNULS0tLS0K
+  signerName: kubernetes.io/kube-apiserver-client
+  usages:
+  - client auth
+---
+
+ubuntu@master:~$ kubectl get csr
+NAME       AGE   SIGNERNAME                            REQUESTOR          CONDITION
+dolfined   74s   kubernetes.io/kube-apiserver-client   kubernetes-admin   Pending
+# check the status
+
+ubuntu@master:~$ kubectl certificate approve dolfined
+certificatesigningrequest.certificates.k8s.io/dolfined approved
+
+ubuntu@master:~$ kubectl get csr
+NAME       AGE     SIGNERNAME                            REQUESTOR          CONDITION
+dolfined   3m13s   kubernetes.io/kube-apiserver-client   kubernetes-admin   Approved,Issued
+
+ubuntu@master:~$ kubectl get csr -o yaml
+
+
+ubuntu@master:~$ kubectl get csr dolfined -o jsonpath='{.status.certificate}'| base64 -d > dolfined.crt
+
+ubuntu@master:~$ ls
+csr.yaml  dolfined.crt  dolfined.csr  dolfined.key
+
+Connect user to the Cluster:
+Add to kubeconfig:
+The last step is to add this user into the kubeconfig file.:
+
+First, you need to add new credentials:
+
+
+ubuntu@master:~$ kubectl config set-credentials dolfined --client-key=/home/ubuntu/dolfined.key --client-certificate=/home/ubuntu/dolfined.crt --embed-certs=true
+User "dolfined" set.
+
+Then, you need to add the context:
+ubuntu@master:~$ kubectl config set-context dolfined --cluster=kubernetes --user=dolfined
+Context "dolfined" created.
+
+
+ubuntu@master:~$ kubectl config view
+
+---
+apiVersion: v1
+clusters:
+- cluster:
+    certificate-authority-data: DATA+OMITTED
+    server: https://172.31.2.99:6443
+  name: kubernetes
+contexts:
+- context:
+    cluster: kubernetes
+    user: dolfined
+  name: dolfined
+- context:
+    cluster: kubernetes
+    user: kubernetes-admin
+  name: kubernetes-admin@kubernetes
+current-context: kubernetes-admin@kubernetes
+kind: Config
+preferences: {}
+users:
+- name: dolfined
+  user:
+    client-certificate-data: REDACTED
+    client-key-data: REDACTED
+- name: kubernetes-admin
+  user:
+    client-certificate-data: REDACTED
+    client-key-data: REDACTED
+---
+
+
+ubuntu@master:~$ kubectl config get-contexts
+CURRENT   NAME                          CLUSTER      AUTHINFO           NAMESPACE
+          dolfined                      kubernetes   dolfined
+*         kubernetes-admin@kubernetes   kubernetes   kubernetes-admin
+
+
+ubuntu@master:~$ kubectl get po --context=dolfined
+Error from server (Forbidden): pods is forbidden: User "dolfined" cannot list resource "pods" in API group "" in the namespace "default"
+
+ubuntu@master:~$ kubectl get po --context=dolfined1 
+ #Here you will see that user dofined1 context was not created yet , this show that user dofined1 has no access to the cluster unlike dolfined user which we have created above.
+error: context "dolfined1" does not exist
