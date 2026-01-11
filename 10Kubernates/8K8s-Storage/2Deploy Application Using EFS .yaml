@@ -1,0 +1,70 @@
+
+
+
+
+Go to console and create EFS and do some configuration:
+- go to network and click on "Manage" and edit security group for Availability zone that match with your ec2 and allow all trafic
+- get file system ID "fs-0685f062990d58016"
+
+
+
+create your app:
+
+---
+kind: StorageClass
+apiVersion: storage.k8s.io/v1
+metadata:
+  name: efs-sc
+provisioner: efs.csi.aws.com
+parameters:
+  provisioningMode: efs-ap
+  fileSystemId: fs-0dced311504143d73
+  directoryPerms: "700"
+---
+
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: efs-claim
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: efs-sc
+  resources:
+    requests:
+      storage: 5Gi
+---
+
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: efs-app-new
+  labels:
+    app: efs
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: efs
+  template:
+    metadata:
+      labels:
+        app: efs
+    spec:
+      containers:
+        - name: app
+          image: centos
+          command: ["/bin/sh"]
+          args: ["-c", "while true; do echo $(date -u) >> /data/out.txt; sleep 5; done"]
+          volumeMounts:
+            - name: persistent-storage
+              mountPath: /data
+      volumes:
+        - name: persistent-storage
+          persistentVolumeClaim:
+            claimName: efs-claim
+---
