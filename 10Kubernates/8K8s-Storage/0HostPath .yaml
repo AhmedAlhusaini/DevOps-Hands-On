@@ -1,0 +1,123 @@
+
+
+
+
+#######################################################
+################### Demo - HostPath ###################
+#######################################################
+
+
+
+vim hostpath.yaml
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: dolfined
+spec:
+  containers:
+  - name: app
+    image: centos
+    command: ["/bin/sh"]
+    args: ["-c", "while true; do echo $(date -u) >> /data/out.txt; sleep 5; done"]
+    volumeMounts:
+    - name: dolfined-storage
+      mountPath: /data
+  volumes:
+  - name: dolfined-storage
+    hostPath:
+      path: /home/ubuntu/dolfined
+      type: Directory
+---
+
+
+ubuntu@master:~$ kubectl apply -f hostpath.yaml
+pod/dolfined created
+
+ubuntu@master:~$ kubectl get po -o wide
+NAME       READY   STATUS              RESTARTS   AGE   IP       NODE    NOMINATED NODE   READINESS GATES
+dolfined   0/1     ContainerCreating   0          45s   <none>   node2   <none>           <none>
+
+
+ubuntu@master:~$ kubectl describe po dolfined
+Events:
+  Type     Reason       Age               From               Message
+  ----     ------       ----              ----               -------
+  Normal   Scheduled    70s               default-scheduler  Successfully assigned default/dolfined tdirectoryo node2
+  Warning  FailedMount  6s (x8 over 70s)  kubelet            MountVolume.SetUp failed for volume "dolfined-storage" : hostPath type check failed: /home/ubuntu/dolfined is not a directory
+
+So Let's create a directory on node2:
+ubuntu@node2:~$ mkdir dolfined
+
+ubuntu@master:~$ kubectl get po
+NAME       READY   STATUS    RESTARTS   AGE
+dolfined   1/1     Running   0          6m15s
+
+Go to node2:
+ubuntu@node2:~$ cd dolfined/
+
+ubuntu@node2:~/dolfined$ ls
+out.txt
+
+ubuntu@master:~$ kubectl exec -it dolfined -- /bin/bash
+[root@dolfined /]# ls
+bin  data  dev  etc  home  lib  lib64  lost+found  media  mnt  opt  proc  root  run  sbin  srv  sys  tmp  usr  var
+[root@dolfined /]# cd data/
+[root@dolfined data]# ls
+out.txt
+[root@dolfined data]# touch test
+[root@dolfined data]# touch test1
+[root@dolfined data]# ls
+out.txt  test  test1
+[root@dolfined data]# exit
+exit
+
+
+ubuntu@node2:~/dolfined$ ls
+out.txt  test  test1 # you will see the same files on node2
+
+ubuntu@master:~$ kubectl delete po dolfined
+
+
+let's try to create a new pod:
+
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: dolfined
+spec:
+  containers:
+  - name: app
+    image: centos
+    command: ["/bin/sh"]
+    args: ["-c", "while true; do echo $(date -u) >> /data/out.txt; sleep 5; done"]
+    volumeMounts:
+    - name: dolfined-storage
+      mountPath: /data
+  volumes:
+  - name: dolfined-storage
+    hostPath:
+      path: /home/ubuntu/dolfined
+      type: Directory
+  nodeSelector:
+    node: node2
+---
+
+ubuntu@master:~$ kubectl apply -f hostpath.yaml
+pod/dolfined created
+
+ubuntu@master:~$ kubectl get po
+NAME       READY   STATUS    RESTARTS   AGE
+dolfined   1/1     Running   0          7s
+
+ubuntu@master:~$ kubectl exec -it dolfined -- /bin/bash
+[root@dolfined /]# ls
+bin  data  dev  etc  home  lib  lib64  lost+found  media  mnt  opt  proc  root  run  sbin  srv  sys  tmp  usr  var
+[root@dolfined /]# cd data/
+[root@dolfined data]# ls
+out.txt  test  test1
+# you will found the same files
+
+
+
