@@ -1,0 +1,168 @@
+
+
+
+
+
+#############################################################################
+################### Demo - Dynamic Provisioning With EBS  ###################
+#############################################################################
+kubectl get pods -n kube-system
+NAME                                  READY   STATUS    RESTARTS   AGE
+ebs-csi-controller-5986d59c4d-nbjcl   6/6     Running   42         5d20h
+ebs-csi-controller-5986d59c4d-r8ddc   6/6     Running   48         5d20h
+ebs-csi-node-5qrbm                    3/3     Running   24         5d20h
+ebs-csi-node-8fwls                    3/3     Running   21       5d20h
+
+
+kubectl get storageclass
+NAME                 PROVISIONER       RECLAIMPOLICY   VOLUMEBINDINGMODE      ALLOWVOLUMEEXPANSION   AGE
+ebs-sc               ebs.csi.aws.com   Delete          WaitForFirstConsumer   false                  5d20h
+gp2 (default)       kubernetes.io/aws-ebs   Delete          Immediate              true                   5d20h
+>> we will create new storage class
+
+
+
+sc.yaml
+
+---
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: dolfined-sc
+provisioner: ebs.csi.aws.com # specify CSI driver
+#reclaimPolicy: Delete
+volumeBindingMode: WaitForFirstConsumer
+---
+
+
+ubuntu@master:~$ kubectl apply -f sc.yaml
+storageclass.storage.k8s.io/dolfined-sc created
+
+ubuntu@master:~$ kubectl get sc
+NAME          PROVISIONER       RECLAIMPOLICY   VOLUMEBINDINGMODE      ALLOWVOLUMEEXPANSION   AGE
+dolfined-sc   ebs.csi.aws.com   Delete          WaitForFirstConsumer   false                  6s
+
+ubuntu@master:~$ kubectl describe sc dolfined-sc
+
+pvc.yaml
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: dolfined-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: dolfined-sc # specify storage class
+  resources:
+    requests:
+      storage: 4Gi
+---
+
+ubuntu@master:~$ kubectl apply -f pvc.yaml
+persistentvolumeclaim/dolfined-pvc created
+
+ubuntu@master:~$ kubectl get pvc
+NAME           STATUS    VOLUME   CAPACITY   ACCESS MODES   STORAGECLASS   AGE
+dolfined-pvc   Pending                                      dolfined-sc    6s
+
+ubuntu@master:~$ kubectl describe pvc dolfined-pvc
+
+
+pod.yaml
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: dolfined-app
+spec:
+  containers:
+  - name: app
+    image: centos
+    command: ["/bin/sh"]
+    args: ["-c", "while true; do echo $(date -u) >> /data/out.txt; sleep 5; done"]
+    volumeMounts:
+    - name: persistent-storage
+      mountPath: /data
+  volumes:
+  - name: persistent-storage # specify pvc
+    persistentVolumeClaim:
+      claimName: dolfined-pvc # specify pvc
+  # nodeSelector:
+  #   node: node2
+---
+
+
+ubuntu@master:~$ kubectl apply -f pod.yaml
+pod/dolfined-app created
+
+ubuntu@master:~$ kubectl get po -o wide
+NAME           READY   STATUS              RESTARTS   AGE   IP       NODE    NOMINATED NODE   READINESS GATES
+dolfined-app   0/1     ContainerCreating   0          7s    <none>   node2   <none>           <none>
+
+
+ubuntu@master:~$ kubectl get po -o wide
+NAME           READY   STATUS    RESTARTS   AGE   IP            NODE    NOMINATED NODE   READINESS GATES
+dolfined-app   1/1     Running   0          24s   10.244.2.29   node2   <none>           <none>
+
+
+>> You will find a new volume will be created in AWS volumes 
+
+>> ubuntu@master:~$ kubectl get pv
+
+ubuntu@master:~$ kubectl exec -it dolfined-app -- /bin/bash
+[root@dolfined-app /]# ls
+bin  data  dev  etc  home  lib  lib64  lost+found  media  mnt  opt  proc  root  run  sbin  srv  sys  tmp  usr  var
+[root@dolfined-app /]# cd data/
+[root@dolfined-app data]# ls
+lost+found  out.txt
+[root@dolfined-app data]# echo "Hello from first pod" > first.text
+[root@dolfined-app data]# ls
+first.text  lost+found  out.txt
+
+ubuntu@master:~$ kubectl delete po dolfined-app
+pod "dolfined-app" deleted
+
+
+pod1.yaml
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: dolfined-app1
+spec:
+  containers:
+  - name: app
+    image: centos
+    command: ["/bin/sh"]
+    args: ["-c", "while true; do echo $(date -u) >> /data/out.txt; sleep 5; done"]
+    volumeMounts:
+    - name: persistent-storage
+      mountPath: /data
+  volumes:
+  - name: persistent-storage
+    persistentVolumeClaim:
+      claimName: dolfined-pvc
+  nodeSelector:
+    node: node1
+---
+### try create on another node
+
+
+ubuntu@master:~$ kubectl apply -f pod1.yaml
+pod/dolfined-app1 created
+
+
+
+ubuntu@master:~$ kubectl get po -o wide
+NAME            READY   STATUS    RESTARTS   AGE   IP            NODE    NOMINATED NODE   READINESS GATES
+dolfined-app1   1/1     Running   0          9s    10.244.2.30   node1   <none>           <none>
+ubuntu@master:~$ kubectl exec -it dolfined-app1 -- /bin/bash
+[root@dolfined-app1 /]# cd data/
+[root@dolfined-app1 data]# ls
+first.text  lost+found  out.txt
+
+# you will find the same files 
+
+
