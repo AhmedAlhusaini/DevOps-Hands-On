@@ -1,0 +1,49 @@
+kubectl version --client
+kubectl cluster-info
+
+minikube start --driver=docker
+minikube status
+
+kubectl get nodes
+kubectl get namespaces
+
+kubectl explain pod 
+kubectl explain pod --recursive | less
+kubectl apply -f app.yaml
+
+kubectl run hello-pod --image=nginx
+kubectl describe pod hello-pod
+kubectl get pods hello-pod -o yaml
+kubectl get pods hello-pod -o json
+kubectl get pods -o wide
+kubectl exec -it hello-pod -- /bin/bash
+kubectl get pods hello-pod -o yaml > hello-pod.yaml
+kubectl delete pod hello-pod
+
+
+
+kubectl create deployment hello-deploy --image=nginx
+kubectl get deployments
+kubectl get pods
+kubectl scale deployment hello-deploy --replicas=3
+kubectl get pods
+kubectl delete deployment hello-deploy
+
+
+
+
+kubectl expose deployment hello-deploy --type=NodePort --port=80
+kubectl get services
+minikube service hello-deploy --url
+kubectl delete service hello-deploy
+kubectl delete deployment hello-deploy
+
+kubectl logs <pod-name>
+kubectl logs -f <pod-name>
+kubectl logs <pod-name> -c <container-name>
+
+
+
+kubectl delete all --all -n default
+minikube stop
+minikube delete
