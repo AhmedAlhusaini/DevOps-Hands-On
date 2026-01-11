@@ -1,0 +1,197 @@
+
+
+# Intsall Docker
+
+$ sudo apt update
+
+
+Install a prerequisite package which allows apt to utilize HTTPS:
+$ sudo apt install apt-transport-https ca-certificates curl software-properties-common
+
+
+Add GPG key from the official Docker repo to the Ubuntu system:
+$ curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+
+
+Add the Docker repo to APT sources:
+$ sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu focal stable"
+
+
+Update the  database with the Docker packages from the added repo:
+$ sudo apt update
+
+
+Install Docker software:
+$ sudo apt install docker.io
+
+Docker should now be installed, the daemon started, and the process enabled to start on boot. To verify:
+$ sudo systemctl status docker
+$ sudo systemctl enable docker
+
+See Groups:
+$ groups
+
+add user to docker Groups:
+$ sudo usermod -aG docker ${USER}
+$ sudo usermod -aG docker ubuntu
+$ docker info
+
+
+####### Should restart the machine at this stage #######
+
+# Intsall kubectl
+
+Update your existing packages:
+$ sudo apt update
+
+Download kubectl binary:
+$ curl -LO https://storage.googleapis.com/kubernetes-release/release/`curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt`/bin/linux/amd64/kubectl
+
+Make the kubectl binary executable:
+$ chmod +x ./kubectl
+
+Move kubectl to /usr/local/bin/kubectl directory:
+$ sudo mv ./kubectl /usr/local/bin/kubectl
+
+To check the installed kubectl version on Ubuntu:
+$ kubectl version
+
+
+
+# Install minikube
+
+To install the latest minikube stable release on x86-64 Linux using binary download:
+
+$ curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
+
+$ chmod +x minikube
+$ chmod +x minikube-linux-amd64
+$ sudo mv minikube /usr/local/bin/
+$ sudo mv minikube-linux-amd64 /usr/local/bin/
+
+$ sudo mv /usr/local/bin/minikube-linux-amd64 /usr/local/bin/minikube
+
+$ minikube version
+
+
+to start minikube with docker:
+$ minikube start --driver=docker
+
+
+
+# In WSL Avioud Using Root 
+
+😄  minikube v1.37.0 on Ubuntu 24.04 (kvm/amd64)
+✨  Using the docker driver based on user configuration
+🛑  The "docker" driver should not be used with root privileges. If you wish to continue as root, use --force.
+💡  If you are running minikube within a VM, consider using --driver=none:
+📘    https://minikube.sigs.k8s.io/docs/reference/drivers/none/
+
+❌  Exiting due to DRV_AS_ROOT: The "docker" driver should not be used with root privileges.
+
+🧱 Why This Error Happens
+The Docker driver starts containers to host your Kubernetes cluster.
+
+Running Docker as root inside Minikube can cause permission conflicts and unsafe setups.
+
+Minikube blocks this by default unless you force it.
+
+✅ How to Fix It
+1. Create a non-root user (e.g., devopsuser).
+2. Add the user to the docker group.
+sudo adduser devopsuser
+sudo usermod -aG docker devopsuser
+sudo usermod -aG sudo devopsuser
+su - devopsuser
+docker run hello-world
+minikube start --driver=docker
+
+Or use the none driver if you're in a VM:
+minikube start --driver=none
+
+Or force it (not recommended):
+minikube start --driver=docker --force
+
+
+
+## 🚀 Kick Off (Cluster & Context)
+- **Start Minikube**  
+  ```bash
+  minikube start
+  ```
+- **Check cluster info**  
+  ```bash
+  kubectl cluster-info
+  ```
+- **See contexts (clusters you can talk to)**  
+  ```bash
+  kubectl config get-contexts
+  kubectl config current-context
+  ```
+
+---
+
+## 🔍 Check Cluster Health
+- **Nodes** (machines in your cluster)  
+  ```bash
+  kubectl get nodes
+  kubectl describe node <node-name>
+  ```
+- **Namespaces** (logical partitions)  
+  ```bash
+  kubectl get namespaces
+  ```
+
+---
+
+## 📦 Pods & Workloads
+- **List pods**  
+  ```bash
+  kubectl get pods
+  kubectl get pods -A   # across all namespaces
+  ```
+- **Describe a pod**  
+  ```bash
+  kubectl describe pod <pod-name>
+  ```
+- **Logs from a pod**  
+  ```bash
+  kubectl logs <pod-name>
+  ```
+
+---
+
+## 🛠️ Deployments & Services
+- **List deployments**  
+  ```bash
+  kubectl get deployments
+  ```
+- **Scale a deployment**  
+  ```bash
+  kubectl scale deployment <name> --replicas=3
+  ```
+- **List services**  
+  ```bash
+  kubectl get svc
+  ```
+- **Expose a deployment**  
+  ```bash
+  kubectl expose deployment <name> --type=NodePort --port=80
+  ```
+
+---
+
+## 📊 Monitoring & Debugging
+- **Events (cluster happenings)**  
+  ```bash
+  kubectl get events --sort-by=.metadata.creationTimestamp
+  ```
+- **Resource usage (if metrics-server enabled)**  
+  ```bash
+  kubectl top pods
+  kubectl top nodes
+  ```
+
+For juniors Like Me , you can frame it like this:  
+👉 *“kubectl get = quick list, kubectl describe = detailed info, kubectl logs = what’s happening inside.”*  
+That triad covers 90% of what they’ll need to explore and debug.
