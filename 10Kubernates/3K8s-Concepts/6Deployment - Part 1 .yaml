@@ -1,0 +1,75 @@
+
+
+
+
+#########################################################
+################### Demo - Deployment ###################
+#########################################################
+
+
+#### 1. create a deployment ####
+
+Creating Deployment “Imperatively” (from the command line):
+$ kubectl create deployment new-dep --image=nginx --replicas=3
+
+$ kubectl create deployment new-dep --image=nginx --replicas=3 --dry-run=client -o yaml 
+
+## delete deployment 
+$ kubectl delete deploy new-dep
+
+Declartive way:
+
+$ vim deployment.yaml
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dolfined
+  labels:
+    app: nginx
+spec:
+  replicas: 3   # 3 Pods should exist at all times.
+  selector:
+    matchLabels:
+      env: prod
+  template:
+    metadata:
+      labels:
+        env: prod
+    spec:
+      containers:
+      - name: nginx
+        image: nginx
+---
+# Here label is matched with the given pod label, if the label is not matched or missing our deployment will fail
+
+kubectl apply -f deployment.yaml
+
+Now get the Deployment list:
+kubectl get deployment
+
+The Deployment will create a replica set before creating the Pod. Get the replicaset list for the Deployment we just created:
+kubectl get replicaset
+
+Get the running Pods list. All the Pods are created using the replicaset:
+kubectl get pods
+
+Get the details of the deployment:
+$ kubectl describe deploy dolfined # show the replicaset and pod
+
+Print Details of Pod Created by this Deployment:
+$ kubectl get pods --show-labels
+$ kubectl get pods -l env=prod
+
+
+
+##### 2- delete pods and replicaset #####
+
+$ kubectl delete pod <pod-name>
+
+$ kubectl delete rs <rs-name>
+
+try to delete Deployment:
+$ kubectl delete deploy dolfined
+
