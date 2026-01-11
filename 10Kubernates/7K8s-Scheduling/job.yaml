@@ -1,0 +1,159 @@
+
+
+# open two terminal in the same time
+
+$ watch kubectl get all
+
+##################################################
+################### Demo - Job ###################
+##################################################
+
+#1
+
+vim job.yaml
+
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: dolfined
+spec:
+  template:
+    spec:
+      containers:
+      - name: alpine
+        image: alpine   
+        command: ["echo", "Hello from DolfinED"]
+      restartPolicy: Never
+      
+---
+watch kubectl get all # you will see the job create pod and complete it
+
+$ kubectl apply -f job.yaml
+
+ubuntu@master:~$ kubectl get po
+NAME             READY   STATUS      RESTARTS   AGE
+dolfined-b94lc   0/1     Completed   0          19s
+
+
+ubuntu@master:~$ kubectl logs dolfined-b94lc
+Hello from DolfinED
+
+ubuntu@master:~$ kubectl get job
+NAME       COMPLETIONS   DURATION   AGE
+dolfined   1/1           2s         90s
+
+ubuntu@master:~$ kubectl describe job dolfined
+Start Time:     Sun, 05 Mar 2023 20:03:41 +0000
+Completed At:   Sun, 05 Mar 2023 20:03:43 +0000
+Events:
+Type    Reason            Age   From            Message
+----    ------            ----  ----            -------
+Normal  SuccessfulCreate  105s  job-controller  Created pod: dolfined-b94lc
+Normal  Completed         103s  job-controller  Job completed
+
+
+ubuntu@master:~$ kubectl delete job dolfined
+job.batch "dolfined" deleted
+
+
+=========================================================
+=========================================================
+
+# 2
+
+vim job.yaml
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: dolfined
+spec:
+  template:
+    spec:
+      containers:
+       - name: alpine
+         image: alpine
+         command: ["sleep", "80"]
+      restartPolicy: Never
+---
+
+$ kubectl delete pod <pod-name> # you will see the new container will be created
+
+=========================================================
+=========================================================
+
+# 3 "completions"
+
+
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: dolfined
+spec:
+  completions: 2
+  template:
+    spec:
+      containers:
+      - name: alpine
+        image: alpine   
+        command: ["echo", "Hello from DolfinED"]
+      restartPolicy: Never
+---
+
+$ kubectl apply -f job.yaml
+
+ubuntu@master:~$ kubectl get po
+NAME             READY   STATUS      RESTARTS   AGE
+dolfined-xqvz2   0/1     Completed   0          5s
+dolfined-zln6w   0/1     Completed   0          3s
+
+
+ubuntu@master:~$ kubectl get job
+NAME       COMPLETIONS   DURATION   AGE
+dolfined   2/2           4s         30s
+
+See more information about job:
+$ kubectl describe job dolfined
+
+
+=========================================================
+=========================================================
+
+# 4 "parallelism"
+
+
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: dolfined
+spec:
+  completions: 4
+  parallelism: 2
+  template:
+    spec:
+      containers:
+       - name: alpine
+         image: alpine
+         command: ["echo", "Hello from DolfinED"]
+      restartPolicy: Never
+---
+
+
+$ kubectl apply -f job.yaml
+
+ubuntu@master:~$ kubectl get job
+NAME       COMPLETIONS   DURATION   AGE
+dolfined   4/4           5s         5s
+
+
+ubuntu@master:~$ kubectl get po
+NAME             READY   STATUS      RESTARTS   AGE
+dolfined-525lf   0/1     Completed   0          12s
+dolfined-62rnb   0/1     Completed   0          10s
+dolfined-8k7wk   0/1     Completed   0          10s
+dolfined-hksc9   0/1     Completed   0          12s
+
+
