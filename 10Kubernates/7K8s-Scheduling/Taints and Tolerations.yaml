@@ -1,0 +1,252 @@
+
+
+
+###################################################################
+################## Demo – Taints and Tolerations ##################
+###################################################################
+
+1. NoSchedule:
+
+pod1.yaml
+--- 
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod1
+spec:
+  containers:
+  - name: nginx
+    image: nginx
+--- 
+ubuntu@master:~$ kubectl run pod1 --image=nginx
+pod/pod1 created
+
+ubuntu@master:~$ kubectl apply -f pod1.yaml
+pod/pod1 created
+
+ubuntu@master:~$ kubectl get po -o wide
+NAME   READY   STATUS    RESTARTS   AGE   IP            NODE    NOMINATED NODE   READINESS GATES
+pod1   1/1     Running   0          3s    10.244.1.31   node1   <none>           <none>
+
+
+ubuntu@master:~$ kubectl get nodes
+NAME     STATUS   ROLES                  AGE   VERSION
+master   Ready    control-plane,master   17d   v1.21.5
+node1    Ready    <none>                 17d   v1.21.5
+node2    Ready    <none>                 17d   v1.21.5
+
+
+ubuntu@master:~$ kubectl describe node node1 | grep Taints
+Taints:             <none>
+
+
+ubuntu@master:~$ kubectl taint nodes node1 name=node1:NoSchedule
+node/node1 tainted
+
+
+ubuntu@master:~$ kubectl describe node node1 | grep Taints
+Taints:             name=node1:NoSchedule
+
+
+ubuntu@master:~$ kubectl get po -o wide 
+NAME   READY   STATUS    RESTARTS   AGE   IP            NODE    NOMINATED NODE   READINESS GATES
+pod1   1/1     Running   0          51s   10.244.1.31   node1   <none>           <none>
+# pod1 is not deleted because we use type "NoSchedule"
+
+ubuntu@master:~$ kubectl taint nodes node2 name=node2:NoSchedule
+node/node2 tainted
+
+ubuntu@master:~$ kubectl describe node node2 | grep Taints
+Taints:             name=node2:NoSchedule
+
+
+pod2.yaml
+--- 
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod2
+spec:
+  containers:
+  - name: nginx
+    image: nginx
+  tolerations:
+  - key: "name"
+    operator: "Equal"
+    value: "node1"
+    effect: "NoSchedule"
+---
+
+ubuntu@master:~$ kubectl get po -o wide
+NAME   READY   STATUS    RESTARTS   AGE     IP            NODE    NOMINATED NODE   READINESS GATES
+pod1   1/1     Running   0          7m59s   10.244.1.31   node1   <none>           <none>
+pod2   1/1     Running   0          7s      10.244.1.32   node1   <none>           <none>
+# pod2 it Successfully scheduled to node1
+
+ubuntu@master:~$ kubectl describe po pod2 # to review Tolerations
+
+
+
+
+
+
+2. PreferNoSchedule:
+
+ubuntu@master:~$ kubectl delete po pod1 pod2
+
+ubuntu@master:~$ kubectl taint nodes node1 name=node1:NoSchedule-
+node/node1 untainted
+
+ubuntu@master:~$ kubectl taint nodes node2 name=node2:NoSchedule-
+node/node2 untainted
+
+ubuntu@master:~$ kubectl taint nodes node2 name=node2:PreferNoSchedule
+node/node2 tainted
+
+ubuntu@master:~$ kubectl describe node node1 | grep Taints
+Taints:             <none>
+
+ubuntu@master:~$ kubectl describe node node2 | grep Taints
+Taints:             name=node2:PreferNoSchedule
+
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: test
+spec:
+  containers:
+    - name: nginx
+      image: nginx
+  tolerations:
+    - key: "name"
+      operator: "Equal"
+      value: "node2"
+      effect: "PreferNoSchedule"
+---
+
+ubuntu@master:~$ kubectl apply -f test.yaml
+pod/test created
+
+ubuntu@master:~$ kubectl get po -o wide
+NAME   READY   STATUS    RESTARTS   AGE   IP            NODE    NOMINATED NODE   READINESS GATES
+test   1/1     Running   0          3s    10.244.1.58   node1   <none>           <none>
+# it created on node1 however we specify to schedule on node2, that because we use effect "PreferNoSchedule"
+
+ubuntu@master:~$ kubectl taint nodes node1 name=node1:NoSchedule
+node/node1 tainted
+
+pod3.yaml
+--- 
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod3
+spec:
+  containers:
+  - name: nginx
+    image: nginx
+---
+
+ubuntu@master:~$ kubectl get po -o wide
+NAME   READY   STATUS    RESTARTS   AGE   IP            NODE    NOMINATED NODE   READINESS GATES
+pod3   1/1     Running   0          13s   10.244.2.60   node2   <none>           <none>
+test   1/1     Running   0          11m   10.244.1.58   node1   <none>           <none>
+# pod3 it Successfully scheduled to node2 because we use "PreferNoSchedule" on node2
+
+
+
+
+
+3. NoExecute:
+
+ubuntu@master:~$ kubectl taint nodes node2 name=node2:PreferNoSchedule-
+node/node2 untainted
+
+
+ubuntu@master:~$ kubectl taint nodes node2 name=node2:NoExecute
+node/node2 tainted
+
+ubuntu@master:~$ kubectl get po -o wide
+NAME   READY   STATUS        RESTARTS   AGE   IP            NODE    NOMINATED NODE   READINESS GATES
+pod3   0/1     Terminating   0          78s   10.244.2.60   node2   <none>           <none>
+test   1/1     Running       0          12m   10.244.1.58   node1   <none>           <none>
+
+ubuntu@master:~$ kubectl get po -o wide
+NAME   READY   STATUS    RESTARTS   AGE   IP            NODE    NOMINATED NODE   READINESS GATES
+test   1/1     Running   0          12m   10.244.1.58   node1   <none>           <none>
+
+# pod3 it delete because we use type "NoExecute" on node2
+
+
+pod4.yaml
+--- 
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod4
+spec:
+  containers:
+  - name: nginx
+    image: nginx
+  tolerations:
+  - key: "name"
+    operator: "Equal"
+    value: "node2"
+    effect: "NoExecute"
+---
+
+
+ubuntu@master:~$ kubectl get po -o wide
+NAME   READY   STATUS    RESTARTS   AGE   IP            NODE    NOMINATED NODE   READINESS GATES
+pod4   1/1     Running   0          5s    10.244.2.61   node2   <none>           <none>
+test   1/1     Running   0          13m   10.244.1.58   node1   <none>           <none>
+
+
+
+pod5.yaml
+--- 
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod5
+spec:
+  containers:
+  - name: nginx
+    image: nginx
+  tolerations:
+  - key: "name"
+    operator: "Equal"
+    value: "node5"
+    effect: "NoExecute"
+---
+
+ubuntu@master:~$ kubectl get po -o wide
+NAME   READY   STATUS    RESTARTS   AGE   IP            NODE     NOMINATED NODE   READINESS GATES
+pod4   1/1     Running   0          59s   10.244.2.61   node2    <none>           <none>
+pod5   0/1     Pending   0          3s    <none>        <none>   <none>           <none>
+test   1/1     Running   0          14m   10.244.1.58   node1    <none>           <none>
+# pod5 it will be in pending state because the toleration is wrong
+
+
+ubuntu@master:~$ kubectl taint nodes node2 name=node2:NoExecute-
+node/node2 untainted
+
+ubuntu@master:~$ kubectl get po -o wide
+NAME   READY   STATUS    RESTARTS   AGE   IP            NODE    NOMINATED NODE   READINESS GATES
+pod4   1/1     Running   0          91s   10.244.2.61   node2   <none>           <none>
+pod5   1/1     Running   0          35s   10.244.2.62   node2   <none>           <none>
+test   1/1     Running   0          14m   10.244.1.58   node1   <none>           <none>
+# pod5 it created on node2 because this node didn`t have any taint
+
+
+ubuntu@master:~$ kubectl taint nodes node1 name=node1:NoSchedule-
+node/node1 untainted
+
+ubuntu@master:~$ kubectl delete po --all
+pod "pod4" deleted
+pod "pod5" deleted
+pod "test" deleted
+
+
+
