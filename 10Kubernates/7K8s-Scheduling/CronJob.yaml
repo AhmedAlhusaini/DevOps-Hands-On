@@ -1,0 +1,82 @@
+
+
+
+######################################################
+################### Demo - CronJob ###################
+######################################################
+
+$ vim cronjob.yaml
+
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: dolfined
+spec:
+  schedule: "* * * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: busybox
+            image: busybox
+            command: ["echo", "Hello from DolfinED"]
+          restartPolicy: Never
+---
+
+$ kubectl apply -f cronjob.yaml
+
+ubuntu@master:~$ kubectl get cj
+NAME       SCHEDULE    SUSPEND   ACTIVE   LAST SCHEDULE   AGE
+dolfined   * * * * *   False     0        <none>          23s
+
+ubuntu@master:~$ kubectl get job
+NAME                COMPLETIONS   DURATION   AGE
+dolfined-27967460   1/1           2s         111s
+dolfined-27967461   1/1           2s         51s
+
+$ kubectl describe cronjob dolfined
+
+------------------------------------------------------------------------------------------------------
+
+
+# 2
+
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: dolfined
+spec:
+  schedule: "* * * * *"
+  successfulJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 0
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: busybox
+            image: busybox
+            command: ["echo", "Hello from DolfinED"]
+          restartPolicy: Never
+---
+
+ubuntu@master:~$ kubectl get cj
+NAME       SCHEDULE    SUSPEND   ACTIVE   LAST SCHEDULE   AGE
+dolfined   * * * * *   False     0        23s             10m
+
+
+
+ubuntu@master:~$ kubectl get job
+NAME                COMPLETIONS   DURATION   AGE
+dolfined-27967762   1/1           1s         32s
+
+
+ubuntu@master:~$ kubectl get po
+NAME                      READY   STATUS      RESTARTS   AGE
+dolfined-27967762-vdbjm   0/1     Completed   0          37s
+
+ubuntu@master:~$ kubectl describe cronjob dolfined
+
