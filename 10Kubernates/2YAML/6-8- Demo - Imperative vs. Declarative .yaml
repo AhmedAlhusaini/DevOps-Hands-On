@@ -1,0 +1,24 @@
+
+###################################################################
+################ Demo - Imperative vs. Declarative ################
+###################################################################
+
+Create a Pod: ----- Imperative
+$ kubectl run imp --image=nginx
+
+Create a Pod: ----- Declarative
+
+dec.yaml
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: dec
+spec:
+  containers:
+    - name: nginx
+      image: nginx
+---
+
+Apply file:
+$ kubectl apply dec.yaml
