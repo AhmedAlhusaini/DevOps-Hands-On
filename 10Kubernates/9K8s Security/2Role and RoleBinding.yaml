@@ -1,0 +1,173 @@
+
+
+
+#################################################################
+################### Demo - Role and RoleBinding #################
+#################################################################
+
+
+
+ubuntu@master:~$ kubectl run dolfined-app --image=nginx
+pod/dolfined-app created
+
+
+
+ubuntu@master:~$ kubectl get po --context=dolfined
+Error from server (Forbidden): pods is forbidden: User "dolfined" cannot list resource "pods" in API group "" in the namespace "default"
+
+
+
+ubuntu@master:~$ kubectl config get-contexts
+CURRENT   NAME                          CLUSTER      AUTHINFO           NAMESPACE
+          dolfined                      kubernetes   dolfined
+*         kubernetes-admin@kubernetes   kubernetes   kubernetes-admin
+
+
+ubuntu@master:~$ kubectl auth can-i list pods --as dolfined
+no
+
+ubuntu@master:~$ kubectl create role dolfined-role --verb=list,create --resource=pod
+role.rbac.authorization.k8s.io/dolfined-role created
+
+ubuntu@master:~$ kubectl get role
+NAME            CREATED AT
+dolfined-role   2023-04-01T17:00:40Z
+
+ubuntu@master:~$ kubectl delete role dolfined-role
+role.rbac.authorization.k8s.io "dolfined-role" deleted
+
+
+role.yaml
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: dolfined-role
+  namespace: default
+rules:
+- apiGroups: [""] #v1 is the default apiGroup
+  resources: ["pods"]
+  verbs: ["create", "watch", "list"]
+---
+
+kubectl api-resources 
+# true ; can be used withing single namespace 
+# false ; you cannot create this resource or bind within single namespace 
+
+ubuntu@master:~$ kubectl apply -f role.yaml
+role.rbac.authorization.k8s.io/dolfined-role created
+
+ubuntu@master:~$ kubectl get role
+NAME            CREATED AT
+dolfined-role   2023-03-16T16:06:07Z
+
+
+ubuntu@master:~$ kubectl describe role dolfined-role
+Name:         dolfined-role
+Labels:       <none>
+Annotations:  <none>
+PolicyRule:
+  Resources  Non-Resource URLs  Resource Names  Verbs
+  ---------  -----------------  --------------  -----
+  pods       []                 []              [get watch list]
+
+kubectl create rolebinding dolfined-rb --role=dolfined-role --user=dolfined
+
+ubuntu@master:~$ kubectl create rolebinding dolfined-rb --role=dolfined-role --user=dolfined
+rolebinding.rbac.authorization.k8s.io/dolfined-rb created
+
+ubuntu@master:~$ kubectl get rolebinding
+NAME          ROLE                 AGE
+dolfined-rb   Role/dolfined-role   7s
+
+ubuntu@master:~$ kubectl delete rolebinding dolfined-rb
+rolebinding.rbac.authorization.k8s.io "dolfined-rb" deleted
+
+rb.yaml
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: dolfined-rb
+  namespace: default
+subjects:
+- kind: User
+  name: dolfined
+  apiGroup: rbac.authorization.k8s.io
+roleRef:
+  kind: Role 
+  name: dolfined-role
+  apiGroup: rbac.authorization.k8s.io
+---
+
+ubuntu@master:~$ kubectl apply -f rb.yaml
+rolebinding.rbac.authorization.k8s.io/dolfined-rb created
+
+
+ubuntu@master:~$ kubectl get rolebinding
+NAME          ROLE                 AGE
+dolfined-rb   Role/dolfined-role   51s
+
+
+
+ubuntu@master:~$ kubectl describe rolebinding dolfined-rb
+Name:         dolfined-rb
+Labels:       <none>
+Annotations:  <none>
+Role:
+  Kind:  Role
+  Name:  dolfined-role
+Subjects:
+  Kind  Name      Namespace
+  ----  ----      ---------
+  User  dolfined
+
+ubuntu@master:~$ kubectl get po --context=dolfined
+NAME           READY   STATUS    RESTARTS   AGE
+dolfined-app   1/1     Running   1          1m
+# it works
+
+ubuntu@master:~$ kubectl auth can-i list pods --as dolfined
+yes
+
+
+ubuntu@master:~$ kubectl get deploy --context=dolfined
+Error from server (Forbidden): deployments.apps is forbidden: User "dolfined" cannot list resource "deployments" in API group "apps" in the namespace "default"
+
+
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: dolfined-role
+  namespace: default
+rules:
+- apiGroups: [""]
+  resources: ["pods"]
+  verbs: ["get", "watch", "list"]
+- apiGroups: ["apps"]
+  resources: ["deployments"]
+  verbs: ["get", "watch", "list"]
+---
+
+ubuntu@master:~$ vim role.yaml
+ubuntu@master:~$ kubectl apply -f role.yaml
+role.rbac.authorization.k8s.io/dolfined-role configured
+
+ubuntu@master:~$ kubectl auth can-i list deployment --as dolfined
+yes
+
+ubuntu@master:~$ kubectl get deploy --context=dolfined
+No resources found in default namespace.
+
+
+ubuntu@master:~$ kubectl delete role dolfined-role
+role.rbac.authorization.k8s.io "dolfined-role" deleted
+
+
+ubuntu@master:~$ kubectl delete rolebinding dolfined-rb
+rolebinding.rbac.authorization.k8s.io "dolfined-rb" deleted
+
+
+
