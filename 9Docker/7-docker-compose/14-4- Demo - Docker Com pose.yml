@@ -1,0 +1,186 @@
+
+$ docker compose version
+
+ubuntu@ip-172-31-5-234:~$ vim docker-compose.yml
+---
+services:
+  db:
+    image: nginx
+    container_name: dolfined
+    ports:
+      - 8080:80
+---
+
+$ docker compose up
+
+$ docker compose start
+
+$ docker compose stop
+
+$ docker compose down
+
+
+$ docker compose up -d
+
+$ docker network ls
+
+ubuntu@ip-172-31-5-234:~$ docker compose down
+
+
+## Docker Compose file ##
+
+$ vim docker-compose.yml
+---
+services:
+  db:
+    image: nginx
+    container_name: dolfined
+    ports:
+      - 8080:80
+  front:
+    image: nginx
+    container_name: dolfined2
+    ports:
+      - 4000:80
+---
+
+$ docker compose up -d
+
+
+$ docker ps
+
+
+$ docker compose down 
+
+
+## Docker Compose file with container volumes##
+
+
+$ mkdir dolfined-storage
+
+$ cd dolfined-storage/
+
+$ pwd
+/home/ubuntu/dolfined-storage
+
+
+ubuntu@ip-172-31-5-234:~$ vim docker-compose.yml
+---
+services:
+
+  db:
+    image: nginx
+    container_name: dolfined
+    ports:
+      - 8080:80
+    volumes:
+      - /home/ubuntu/dolfined-storage:/usr/share/nginx/html
+
+  front:
+    image: nginx
+    container_name: dolfined2
+    ports:
+      - 4000:80
+    volumes:
+      - new-vol:/usr/share/nginx/html
+
+volumes:
+  new-vol: 
+---
+
+$ docker compose up -d
+
+
+$ docker ps
+
+$ docker volume ls
+DRIVER    VOLUME NAME
+local     2450661eb6858231c22909cfd6a1687c1bc7b6fe0bdb8142ff6bc241ce36f09b
+local     bc9d4e9e4336d5281205eef1190e983db98279fde3ca05df7f9f871988228585
+local     ubuntu_new-vol
+
+$ cd dolfined-storage/
+
+
+~/dolfined-storage$ vim index.html
+---
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Home page</title>
+</head>
+<body>
+  <h1>Hello from DolfinED</h1>
+</body>
+</html>
+---
+
+
+$ docker ps
+
+$ docker inspect dolfined
+
+$ docker inspect dolfined2
+
+$ docker ps
+CONTAINER ID   IMAGE     COMMAND                  CREATED              STATUS              PORTS                                   NAMES
+d43aa515662d   nginx     "/docker-entrypoint.…"   About a minute ago   Up About a minute   0.0.0.0:8080->80/tcp, :::8080->80/tcp   dolfined
+eff2f70c404f   nginx     "/docker-entrypoint.…"   About a minute ago   Up About a minute   0.0.0.0:4000->80/tcp, :::4000->80/tcp   dolfined2
+
+$ docker compose down  --volumes
+
+#########################################
+
+$ vim Dockerfile
+---
+FROM nginx
+EXPOSE 80
+---
+
+
+$ vim 2-docker-compose.yml
+---
+services:
+
+  db:
+    build: .
+    container_name: dolfined
+    ports:
+      - 8080:80
+---
+
+$ docker compose -f 2-docker-compose.yml up -d
+
+$ docker ps
+
+$ docker images
+
+
+$ docker compose down --remove-orphans
+
+
+$ docker rmi ubuntu-db
+
+$ mkdir new-dir
+
+$ mv Dockerfile new-dir/docker2
+
+
+$ vim 2-docker-compose.yml
+---
+services:
+
+  db:
+    build:
+      context: ./new-dir
+      dockerfile: docker2
+    container_name: dolfined
+    ports:
+      - 8080:80
+---
+
+$ docker compose -f 2-docker-compose.yml up -d
+
+
+ubuntu@ip-172-31-7-108:~$ docker compose down  --rmi all

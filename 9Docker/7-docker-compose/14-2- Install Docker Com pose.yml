@@ -1,0 +1,18 @@
+
+########### Install Docker Compose ###########
+
+
+$ sudo apt-get update
+Hit:1 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble InRelease
+Get:2 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble-updates InRelease [126 kB]
+Get:3 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble-backports InRelease [126 kB]
+Get:4 https://download.docker.com/linux/ubuntu focal InRelease [57.7 kB]
+Get:5 http://security.ubuntu.com/ubuntu noble-security InRelease [126 kB]
+
+
+$ sudo apt-get install docker-compose-plugin
+
+
+$ docker compose version
+Docker Compose version v2.32.1
+

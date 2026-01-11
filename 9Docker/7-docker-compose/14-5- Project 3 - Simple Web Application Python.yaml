@@ -1,0 +1,166 @@
+
+###################################################
+###################################################
+
+
+$ mkdir project
+
+$ cd project/
+
+:~/project$ vim app.py
+
+############## The Application's Code - Python FLASK - app.py ################
+
+---
+import time
+
+import redis
+from flask import Flask
+
+app = Flask(__name__)
+cache = redis.Redis(host='redis', port=6379)
+
+def get_hit_count():
+    retries = 5
+    while True:
+        try:
+            return cache.incr('hits')
+        except redis.exceptions.ConnectionError as exc:
+            if retries == 0:
+                raise exc
+            retries -= 1
+            time.sleep(0.5)
+
+@app.route('/')
+def hello():
+    count = get_hit_count()
+    return 'Hello From DolfinED, I have been seen {} times.\n'.format(count)
+---
+########### End of Code ##########
+
+$ vim requirements.txt
+---
+flask
+redis
+---
+
+
+$ vim Dockerfile
+---
+FROM python:3.9-slim
+WORKDIR /app
+COPY . /app
+RUN pip install --no-cache-dir -r requirements.txt
+EXPOSE 5000
+ENV FLASK_APP=app.py
+ENV FLASK_RUN_HOST=0.0.0.0
+CMD ["flask", "run"]
+---
+
+
+$ vim docker-compose.yml
+---
+services:
+  web:
+    build: .
+    ports:
+      - "9000:5000"
+  redis:
+    image: "redis:alpine"
+---
+
+$ docker compose up -d
+
+$ docker compose down --rmi all
+
+$ docker compose up -d --build
+
+
+$ docker compose down --rmi all
+
+
+
+---
+services:
+  web:
+    build: .
+    ports:
+      - "9000:5000"
+    volumes:
+      - .:/app
+    environment:
+      FLASK_DEBUG: "true"
+  redis:
+    image: "redis:alpine"
+---
+
+$ docker compose up -d 
+
+$ docker compose down --rmi all
+
+
+####################### NEW ############################
+
+
+$ vim app.py
+---
+import time
+
+import redis
+from flask import Flask
+
+app = Flask(__name__)
+cache = redis.Redis(host='redis', port=6379)
+
+def get_hit_count():
+    retries = 5
+    while True:
+        try:
+            return cache.incr('hits')
+        except redis.exceptions.ConnectionError as exc:
+            if retries == 0:
+                raise exc
+            retries -= 1
+            time.sleep(0.5)
+
+@app.route('/')
+def hello():
+    count = get_hit_count()
+    return 'Hello From DolfinED, I have been seen {} times.\n'.format(count)
+
+
+if __name__ == "__main__":
+    app.run(host='0.0.0.0', port=4000)
+---
+
+
+
+vim Dockerfile
+---
+FROM python:3.9-slim
+WORKDIR /app
+COPY . /app
+RUN pip install --no-cache-dir -r requirements.txt
+EXPOSE 4000
+CMD ["python", "app.py"]
+---
+
+ubuntu@ip-172-31-19-124:~/project$ vim docker-compose.yml
+
+---
+services:
+  web:
+    build: .
+    ports:
+      - "9000:4000"
+    volumes:
+      - .:/app
+    environment:
+      FLASK_DEBUG: "true"
+  redis:
+    image: "redis:alpine"
+---
+
+
+$ docker compose up -d
+
