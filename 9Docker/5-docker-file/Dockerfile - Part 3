@@ -1,0 +1,46 @@
+
+##################################################
+############ Demo Dockerfile Part 3 ##############
+################################################## 
+
+### (Copy, Volume, ENV, WORKDIR)
+
+
+
+$ vim test.text #and write anything
+
+FROM ubuntu
+COPY test.text . 
+
+$ docker build -t copy .
+$ docker run -it copy bash
+$ ls
+$ cat test.text
+
+
+## WORKDIR
+
+
+FROM ubuntu
+WORKDIR /docker
+RUN echo "Welcome to Docker Course" > docker.text
+WORKDIR container
+RUN echo "Welcome to Docker Course" > container.text
+
+$ docker build -t workdir .
+$ docker run -it workdir pwd 
+
+OUTPUT: /docker/container
+
+## ENV
+
+FROM  ubuntu
+RUN apt-get update && apt-get install -y iputils-ping  	
+#Installs the ping tool (it's not included in Ubuntu minimal images by default).
+ENV env1=ping env2=8.8.8.8
+CMD ${env1} ${env2}
+
+$ docekr build -t env .
+$ docker run --name env-ping -d env 
+
+$ docker logs env-ping

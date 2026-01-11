@@ -1,0 +1,48 @@
+##################################################
+############ Demo Dockerfile Part 2 ##############
+##################################################
+
+
+
+FROM ubuntu
+RUN apt-get update && apt-get install -y iputils-ping 
+ENTRYPOINT ["echo"]
+
+$ docker build -t entrypoint .
+$ docker run entrypoint welcom from dolfined
+
+-----------------------------------------------------------
+
+ # Manitner
+
+FROM ubuntu
+MAINTAINER menamagdyhalem  
+RUN apt-get update 
+CMD ["echo", "Hello from DolfinED"]
+## 
+$ docker build -t author .
+$ docker history author   # show the layers of the image
+$ docker run author
+## OUTPUT "Hello from DolfinED"
+$ docker inspect author # show the author name 
+## docker inspect <image ID> | grep Author
+++
+$ docker build -t author1: .
+
+# What happened? the image was built  very quickly and that is because of the "Build Cache"
+--------------------------------------------------------------------
+
+###### EXPOSE ######
+
+FROM nginx
+EXPOSE 80 
+
+# >> this will do in 2 layers 
+
+
+$ docker build -t port .
+$ docker run -it -d -p 3000:80  port 
+
+# >> try to acess 192.168.112.144:3000 
+
+

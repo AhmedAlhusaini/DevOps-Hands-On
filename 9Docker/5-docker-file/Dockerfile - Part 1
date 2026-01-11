@@ -1,0 +1,102 @@
+
+##################################################
+############ Demo Dockerfile Part 1 ##############
+##################################################
+
+# Lets start  first with a simple docker file
+
+# lets Create a Dockerfille using the vim editor
+$ vim Dockerfile
+
+## Docker file 1 ##
+
+FROM alpine
+CMD [ "echo", "DolfinED", "Docker Course"]
+
+$ docker build -t simple-file .
+$ docker run --name first simple-file
+
+A. The Image Name (Tag)
+The docker build Command
+   - `docker build -t simple-file .` 
+   - `-t` is used to tag the image with a name.
+   - `.` indicates the current directory as the build context.
+This is NOT a file path. It is just a label. You can call it ahmed/moahyaml, but Docker won't look for a folder named that.
+docker build -t ahmed/moahyaml .
+
+B. The "Context" Path (Where the code is)
+The context path is the directory where the Dockerfile is located. Docker will send this directory to the Docker daemon to build the image.
+Your code and Dockerfile are in a subfolder named ./backend, but you are currently in the root folder.
+
+# This tells Docker: "Go into ./backend and build what you find there"
+docker build -t my-app ./backend
+
+C. The Dockerfile Path (The specific file)
+Your Dockerfile is hidden in a weird place, like ./configs/dev.Dockerfile, but your code is in the current folder.
+# -f points to the file
+# The "." at the end is still required (it's the build context)
+docker build -f ./configs/dev.Dockerfile -t my-app .
+
+
+
+
+2. The docker compose Command
+If your docker-compose.yml file is not in the current directory, you cannot just run docker compose up.
+
+A. Running a Compose file from another folder
+Goal: You are in root, but your compose file is in ./deploy/docker-compose.yml.
+
+Flag: -f
+
+Command:
+
+	docker compose -f ./deploy/docker-compose.yml up -d
+	
+B. Referencing paths INSIDE the Compose file
+Goal: Your docker-compose.yml is in the root, but it needs to build a Dockerfile located in ./apps/web.
+
+Do this in your YAML:
+services:
+  webapp:
+    build:
+      context: ./apps/web      # <--- Relative path to the folder containing code
+      dockerfile: Dockerfile   # <--- Optional: if the file has a standard name
+
+---
+
+## Docker File 2 ##
+
+FROM ubuntu
+RUN  apt-get update
+RUN apt-get install -y vim
+RUN apt-get install -y git
+CMD ["echo", "Hello from DolfinED"]
+
+$ docker build -t wrong .
+
+# show the layers of an image, to see the layers of an image and it is not a best practice
+$ docker history wrong OR <image_id>  
+
+$ docker run wrong
+
+
+---
+
+### Docker File 3 ###
+
+### Run command recommend ####
+
+FROM ubuntu
+RUN apt-get update && apt-get install -y \
+    vim \
+    git
+CMD ["echo", "Hello From best Container"]
+
+# >> this will do the job in 2 layers 
+
+
+$ docker build -t best-iamge .
+$ docker run --name best-server -d best-iamge
+
+$ docker history best-apache  >>> view layers
+---
