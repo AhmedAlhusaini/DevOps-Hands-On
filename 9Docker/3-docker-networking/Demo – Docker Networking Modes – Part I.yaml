@@ -1,0 +1,48 @@
+
+we have 3 types of network :
+      Bridge # this is a defualt
+      host
+      none
+      
+===========================================================================================
+
+##### Docker Network Commands #####
+
+# List network
+$ docker network ls
+
+# create a new network
+$ docker network create <network-name>
+
+===========================================================================================
+
+# show all ip address
+$ ip a # you will see the eth0 and docker0
+
+# List network
+$ docker network ls # you will see 3 defualt network
+
+# To see more information about network
+$ docker network inspect bridge  # you will see [name, ID, subnet, getway]
+
+# create a new container with defualt network
+$ docker run -it centos
+
+# see the network in container
+[root@9b7581001145 /]# ip a #you will see eth0
+
+===========================================================================================
+
+
+# create a new network
+$ docker network create my-network
+
+# To see more information about network
+$ docker network inspect my-network  # you will see [name, ID, subnet, getway]
+
+# create a new container and connect to the new network
+$ docker run -it --network my-network centos
+
+
+===========================================================================================
+

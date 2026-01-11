@@ -1,0 +1,49 @@
+
+
+# create a new container with defualt network
+$ docker run -it -d --name first centos
+
+# create a new container with custom network
+$ docker network create --subnet 10.0.0.0/16 custom network
+
+$ ip a  # and see the new network (br-8fvd7a) 
+
+# login to container
+$ docker exec -it first bash
+[root@9b7581001145 /]# ip a # you will see, this container have one network only
+
+# connect network to a running container
+$ docker network connect custom network first
+
+$ ip a  # you will see a new network added that has references to a new network that attaches to the existing containe
+
+# disconnect the network
+$ docker network disconnect custom network first
+
+=====================================================================================================================
+
+########### Host ########## 
+
+$ docker run -it --network host centos
+[root@9b7581001145 /]# hostname # you will see the same name of host
+[root@9b7581001145 /]# ip a # you will see all network adapter that in host
+
+$ docker run -it --network host nginx
+$ curl http://localhost  # you will see welcome page nginx without any confguration for port
+# try to access it from browser
+
+=========================================================================================================
+
+########### none #########
+
+$ docker run -it --network none centos
+[root@9b7581001145 /]# ip a  # we will see "lo" only
+
+
+=========================================================================================================
+
+sudo iptables -t nat  -L -n
+
+=========================================================================================================
+
+

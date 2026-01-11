@@ -1,0 +1,57 @@
+
+
+first we will instal telebt because we will use it for this LAB
+
+
+Install Telnet Server:
+$ sudo apt install telnetd -y
+
+------------------------------------------------------------
+
+# We can use one of this commands to publish a port binding
+docker run -d -p 80:8080 nginx
+OR
+docker run -d --publish=80:8080 nginx
+
+------------------------------------------------------------
+# we will test to run nginx and acess it from a browser and see the iptables
+
+docker run -d --name docker-nginx -p 80:80 nginx
+curl 192.168.122.136:80
+open your browser 192.168.112.136:80
+
+###
+sudo iptables -t nat -L -n # to show ip tabels
+###
+that the meaning of # Port bindings
+--------------------------------------------------------------
+
+----- we will make the diagram -----
+
+### first nginx ###
+docker run -d --name first_nginx -p 3000:80 nginx
+docker ps
+curl 192.168.122.136:3000
+open your browser 192.168.112.136:3000
+
+### Second nginx ###
+docker run -d --name first_nginx -p 3001:80 nginx
+docker ps
+curl 192.168.122.136:3001
+open your browser 192.168.112.136:3001
+
+### first mongo ###
+docker run -d --name first_mongo -p 4000:27017 mongo
+telnet localhost 4000 # it will open a connection
+
+try to type:
+telnet localhost 4005 # it will not open a connection 
+
+### Second mongo ###
+docker run -d --name second_mongo -p 4001:27017 mongo
+telnet localhost 4001
+
+
+
+###########  Finish LAB - Container Port ##########
+
