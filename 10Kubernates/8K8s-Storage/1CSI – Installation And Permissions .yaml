@@ -1,0 +1,51 @@
+ 
+
+
+
+
+#################################################################
+################### Demo - Install CSI Driver ###################
+#################################################################
+
+
+Create User:
+
+Attach Permissions "arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy"
+
+create access key
+
+create role and Add permissions "AmazonEBSCSIDriverPolicy"
+
+Add "IAM role" for each machine
+
+Instal CSI driver:
+
+kubectl apply -k "github.com/kubernetes-sigs/aws-ebs-csi-driver/deploy/kubernetes/overlays/stable/?ref=release-1.14"
+
+
+ubuntu@master:~$ kubectl get pods -n kube-system
+NAME                                  READY   STATUS    RESTARTS   AGE
+ebs-csi-controller-5986d59c4d-nbjcl   6/6     Running   42         5d20h
+ebs-csi-controller-5986d59c4d-r8ddc   6/6     Running   48         5d20h
+ebs-csi-node-5qrbm                    3/3     Running   24         5d20h
+ebs-csi-node-8fwls                    3/3     Running   21         5d20h
+ebs-csi-node-gl4lr                    3/3     Running   21         5d20h
+
+ubuntu@master:~$ kubectl get csidriver
+NAME              ATTACHREQUIRED   PODINFOONMOUNT   STORAGECAPACITY   TOKENREQUESTS   REQUIRESREPUBLISH   MODES        AGE
+ebs.csi.aws.com   true             false            false             <unset>         false               Persistent   3d10h
+
+ubuntu@master:~$ kubectl get csinode
+NAME     DRIVERS   AGE
+master   1         3d12h
+node1    1         3d11h
+node2    1         3d11h
+
+Create sceret with credentials user AWS:
+kubectl create secret generic aws-secret \
+    --namespace kube-system \
+    --from-literal "key_id=AKI**************" \
+    --from-literal "access_key=uB************************"
+---
+ubuntu@master:~$ kubectl describe secret aws-secret -n kube-system
+

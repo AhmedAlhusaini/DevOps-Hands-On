@@ -1,0 +1,104 @@
+
+
+
+
+prerequest:
+- aws CLI
+
+
+1. Create a user with permission "AmazonElasticFileSystemFullAccess"
+
+2. Create a policy and role:
+
+---
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": [
+                "elasticfilesystem:DescribeAccessPoints",
+                "elasticfilesystem:DescribeFileSystems",
+                "elasticfilesystem:DescribeMountTargets",
+                "ec2:DescribeAvailabilityZones"
+            ],
+            "Resource": "*"
+        },
+        {
+            "Effect": "Allow",
+            "Action": [
+                "elasticfilesystem:CreateAccessPoint"
+            ],
+            "Resource": "*",
+            "Condition": {
+                "StringLike": {
+                    "aws:RequestTag/efs.csi.aws.com/cluster": "true"
+                }
+            }
+        },
+        {
+            "Effect": "Allow",
+            "Action": [
+                "elasticfilesystem:TagResource"
+            ],
+            "Resource": "*",
+            "Condition": {
+                "StringLike": {
+                    "aws:ResourceTag/efs.csi.aws.com/cluster": "true"
+                }
+            }
+        },
+        {
+            "Effect": "Allow",
+            "Action": "elasticfilesystem:DeleteAccessPoint",
+            "Resource": "*",
+            "Condition": {
+                "StringEquals": {
+                    "aws:ResourceTag/efs.csi.aws.com/cluster": "true"
+                }
+            }
+        }
+    ]
+}
+---
+
+
+3. add IAM role "efs-role" to all instances:
+
+
+4. Intsall EFS driver:
+
+ubuntu@master:~$ kubectl apply -k "github.com/kubernetes-sigs/aws-efs-csi-driver/deploy/kubernetes/overlays/stable/?ref=release-1.5"
+serviceaccount/efs-csi-controller-sa created
+serviceaccount/efs-csi-node-sa created
+clusterrole.rbac.authorization.k8s.io/efs-csi-external-provisioner-role created
+clusterrolebinding.rbac.authorization.k8s.io/efs-csi-provisioner-binding created
+deployment.apps/efs-csi-controller created
+daemonset.apps/efs-csi-node created
+csidriver.storage.k8s.io/efs.csi.aws.com created
+
+ubuntu@master:~$ kubectl get po -n kube-system
+NAME                                  READY   STATUS    RESTARTS   AGE
+efs-csi-controller-f74465746-h92f7    3/3     Running   0          56s
+efs-csi-controller-f74465746-rcfl5    3/3     Running   0          56s
+efs-csi-node-khf7z                    3/3     Running   0          56s
+efs-csi-node-n2wv6                    3/3     Running   0          56s
+efs-csi-node-xpqmj                    3/3     Running   0          56s
+
+ubuntu@master:~$ kubectl get csidriver
+NAME              ATTACHREQUIRED   PODINFOONMOUNT   STORAGECAPACITY   TOKENREQUESTS   REQUIRESREPUBLISH   MODES        AGE
+ebs.csi.aws.com   true             false            false             <unset>         false               Persistent   17d
+efs.csi.aws.com   false            false            false             <unset>         false               Persistent   2m2s
+
+ubuntu@master:~$ kubectl get csinode
+NAME     DRIVERS   AGE
+master   2         52d
+node1    2         52d
+node2    2         52d
+
+5. Create sceret with credentials user AWS:
+kubectl create secret generic efs \
+    --namespace kube-system \
+    --from-literal "key_id=A*************" \
+    --from-literal "access_key=L*****************"
+
