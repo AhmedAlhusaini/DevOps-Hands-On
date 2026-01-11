@@ -1,0 +1,50 @@
+
+##################################################
+############## Demo Docker Volume ################
+##################################################
+
+Objective:
+1- create a volume 
+2- Run the first Container with the volume 
+3- Run the second Container with the same volume 
+4- Access the file in the volume from the two containers
+5- Readonly Option
+
+
+$ docker volume create first-vol
+$ docker inspect first-vol
+
+# run a first container with a volume
+$ docker run -it -d --name cont1 -v first-vol:/cont1 centos 
+$ docker ps
+$ docekr inspect cont1 >>>> and view the mount
+$ docker exec -it cont1 bash
+$ cd /cont1
+$ echo "Hello from cont1" > cont1.text
+
+
+# run a second container with the same volume 
+$ docker run -it -d --name cont2 -v first-vol:/cont2 centos 
+$ docker ps
+$ docekr inspect cont2 >>>> and view the mount 
+$ docker exec -it cont2 bash
+$ cd /cont2
+$ ls
+$ echo "Hello from cont2" > cont2.text
+
+
+######## Working with Read Only #######
+
+# run a third container with the same volume 
+$ docker run -it -d --name cont3 -v first-vol:/cont3:ro centos
+$ docker exec -it cont3 bash
+$ cd /cont3
+$ ls
+$ mkdir cont3
+# you will find this message [ touch: cannot touch 'f.text': Read-only file system ]
+
+#
+
+### finaly Remove the volume ###
+$ docker rm -f cont1 cont2 cont3
+$ docker volume rm first-vol

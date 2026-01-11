@@ -1,0 +1,42 @@
+
+##################################################
+########## Demo Docker file "volume"  ############
+##################################################
+Objective:
+
+1- Create a new Docker file with a volume
+2- Build a image from the docker file
+3- Run a container from the image
+4- make a change to the volume inside the container
+5- access the volume from the host and see the change made
+
+
+############ Create a Docker volume using a Dockerfile ###########
+
+
+VOLUME [volume path]
+
+
+
+$ vim Dockerfile
+
+# The source image to start with
+FROM centos # Create a volume
+VOLUME /dockerfilevolume
+
+
+
+$ docker build -t vol-test .
+$ docker run --name dockerfile-test -it -d vol-test 
+$ docker exec -it dockerfile-test /bin/bash
+$ ls >>>> # you wil find a folder [/dockerfilevolume]
+$ echo "Hello from container" >> test.text
+$ exit
+
+$ docker inspect dockerfile-test  >>>> # and see the mount and copy the volume
+
+$ ls /var/lib/docker/volumes/8f2eeaddb92c62bf04724fb58c14f4c81f8d605edd7b8507f6544572d8d50153/_data
+# >> you will see the file you created 
+
+# write this command to see the file
+$ cat /var/lib/docker/volumes/8f2eeaddb92c62bf04724fb58c14f4c81f8d605edd7b8507f6544572d8d50153/_data/test.text
