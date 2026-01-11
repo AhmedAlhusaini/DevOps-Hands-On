@@ -1,0 +1,376 @@
+--- 
+# Installation Concepts 
+## Essential Components to Install on All Nodes
+- Containerd --> Docker: Container runtime to run containers. Kubernetes does not run containers directly. 
+                        It requires an execution engine to pull container images from registries, start/stop containers, and manage their lifecycle on the host.
+- kubelet: Agent that runs on each node in the cluster. It ensures that containers are running in a Pod.This is the primary "node agent". 
+           It communicates with the Control Plane to receive instructions (PodSpecs) and ensures that the containers described in those specs are running and healthy on its specific node.
+- kubeadm: Tool to set up the Kubernetes cluster.This is the bootstrap tool used to initialize the cluster (on the Control Plane) or join new nodes to an existing cluster (on Workers).
+- kubectl: Command-line tool to interact with the cluster.
+          While technically only required where you intend to run cluster commands, it is standard practice to install it on all nodes for local troubleshooting and configuration
+## Questions to Ask 
+- Why Kublet on All Nodes? Does it neccsartily to be installed in master node as well?
+  - Yes, kubelet must be installed on all nodes, including the Control Plane (master) node. This is because the Control Plane node also runs Pods and workloads, and kubelet is responsible for managing those Pods on that node.
+  - The Control Plane node runs essential components like the API server, etcd, controller manager, and scheduler as static Pods. Kubelet ensures that these components are running correctly on the Control Plane node.
+- Why Kubeadm on All Nodes? Does it neccsartily to be installed in master node as well?
+  - Kubeadm is primarily used for bootstrapping the cluster and joining nodes to the cluster. While it is essential on the Control Plane node to initialize the cluster, it is also required on worker nodes to join them to the cluster.
+  - Installing kubeadm on all nodes ensures that you can easily add new nodes to the cluster in the future without needing to install it later.
+- Why Container Runtime on All Nodes? Does it neccsartily to be installed in master node as well?
+  - Yes, a container runtime (like Docker or containerd) must be installed on all nodes, including the Control Plane node. This is because both Control Plane and worker nodes run Pods, which are collections of containers.
+  - The container runtime is responsible for pulling container images, starting and stopping containers, and managing their lifecycle on the host. Without a container runtime, the kubelet would not be able to run the containers defined in the Pod specifications.
+- What is the Role of Kubelet on Each Node?
+  - Ensures that each node can manage and run the containers assigned to it.
+  - Facilitates communication between the node and the Control Plane for workload management.
+## Final Simplified Steps for All Nodes
+To make your installation work on Ubuntu 24.04, do this on every single machine
+- Prep the OS Turn off swap (Kubernetes hates it).
+- Install the Engine (containerd) This allows containers to run.
+- Install the Hands (kubelet) This allows the node to follow orders.
+- Install the Tool (kubeadm) This is the "installer" that connects everything. Once all nodes have these three things, you use kubeadm init on the first one to make it a leader, and kubeadm join on the others to make them followers.
+
+# System-Level Requirements (All Nodes)
+- Ensure all nodes have a compatible OS (e.g., Ubuntu 20.04 or CentOS 7).
+- Update the package index and install necessary dependencies
+- Disable swap on all nodes
+- Load necessary kernel modules  (overlay, br_netfilter)
+- Set up sysctl parameters for Kubernetes networking
+- Ensure that the firewall allows necessary ports for Kubernetes communication.
+- IP Forwarding ; Systems must have net.ipv4.ip_forward = 1 enabled so that traffic can be routed between pods on different nodes.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# Installing Steps For KubeAdm Cluster Setup
+
+## Step 1: Prepare the system ( Run on all nodes)
+- Ensure all nodes have a compatible OS (e.g., Ubuntu 20.04 or CentOS 7).
+
+  Add the following line to allow passwordless sudo for your user (replace 'your_username' with your actual username):
+  ```
+  sudo hostnamectl set-hostname node2
+  sudo vim /etc/hosts
+  <ip-master> <hostname-master>
+  <ip-node1> <hostname-node1>
+  <ip-node2> <hostname-node2>
+
+  sudo passwd 
+  su root 
+  sudo passwd -l root
+  sudo vim /etc/sudoers
+  ubuntu ALL=(ALL) NOPASSWD:ALL
+  sudo usermod -aG sudo ubuntu
+  ```
+   
+- Update the package index and install necessary dependencies:
+  ```
+  sudo apt-get dist-upgrade -y
+  sudo apt update && sudo apt install -y curl gnupg software-properties-common ca-certificates traceroute
+  for pkg in docker.io docker-doc docker-compose docker-compose-v2 podman-docker containerd runc; do sudo apt-get remove $pkg; done
+
+  # Curl ==gpg 
+  # Gnupg2 == to add gpg keys
+  # Software-properties-common == to manage apt repositories
+  # Apt-transport-https == to allow apt to use https repositories
+  # Ca-certificates == to handle SSL certificates
+  # Inetutils-traceoute == to troubleshoot network issues
+  #selecting 'apt' instead of 'apt-transport-https': apt-transport-https functionality is now included by default in the main apt package in modern Ubuntu releases
+  # Package 'gnupg2' has no installation candidate: In newer Ubuntu versions (like 20.04+), gnupg2 is a transitional or dummy package, and the primary package is simply gnupg.
+  ```
+  You should run that command to ensure a clean slate on your Ubuntu nodes before installing Kubernetes. The command removes all potentially conflicting container software to avoid version mismatches and configuration clashes
+  
+- Disable swap on all nodes:
+  ``` 
+  sudo swapoff -a
+  sudo sed -i '/ swap / s/^\(.*\)$/#\1/g' /etc/fstab
+  ```
+- Load necessary kernel modules:
+  ```
+  sudo modprobe overlay
+  sudo modprobe br_netfilter
+  cat <<EOF | sudo tee /etc/modules-load.d/k8s.conf
+overlay
+br_netfilter
+EOF
+
+  ```
+  
+- Set up sysctl parameters for Kubernetes networking:
+ Both are same On Ubuntu, the sysctl tool loads every file inside the /etc/sysctl.d/ folder that ends in .conf. 
+ You could name the file pizza.conf and it would still work perfectly. 
+ "k8s" is just a common abbreviation for "Kubernetes."
+```
+cat <<EOF | sudo tee /etc/sysctl.d/k8s.conf
+net.bridge.bridge-nf-call-iptables  = 1
+net.bridge.bridge-nf-call-ip6tables = 1
+net.ipv4.ip_forward                 = 1
+EOF
+sudo sysctl --system
+```
+# Step 2: Install Docker
+- Install Docker on all nodes:
+  ```
+  # Option A: Install Docker --> The "Classic" Way (Docker Engine):
+  # where you have two options  systemd cgroup or cgroupfs of contrainerd
+  ``` 
+  sudo apt-get update
+  sudo apt-get install ca-certificates curl gnupg -y
+  
+  sudo install -m 0755  -d /etc/apt/keyrings
+  curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+  sudo chmod a+r /etc/apt/keyrings/docker.asc
+  echo \
+  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
+  $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
+  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+
+  sudo apt-get update
+  sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y
+  
+  sudo apt install docker.io -y
+  
+  newgrp docker
+  sudo usermod -aG docker $USER
+  sudo systemctl enable --now docker
+  sudo systemctl restart docker
+  
+  sudo docker run hello-world
+
+  # Verify 
+  sudo systemctl status docker
+  docker --version
+  docker run -it ubuntu bash
+
+  
+  
+   sudo containerd config default | sudo tee /etc/containerd/config.toml > /dev/null 2>&1
+   sudo sed -i 's/SystemdCgroup = false/SystemdCgroup = true/' /etc/containerd/config.toml
+   sudo systemctl restart containerd
+   sudo systemctl enable containerd
+   
+   sudo cat /etc/containerd/config.toml | grep SystemdCgroup
+  
+  ```
+  # Configure Docker to use systemd as the cgroup driver:
+  sudo mkdir /etc/docker
+  cat <<EOF | sudo tee /etc/docker/daemon.json
+{
+  "exec-opts": ["native.cgroupdriver=systemd"],
+  "log-driver": "json-file",
+  "log-opts": {
+    "max-size": "100m"
+  },  
+  "storage-driver": "overlay2"
+}
+EOF
+  sudo systemctl daemon-reload
+  
+ 
+
+  # The Bridge: Even if you install Docker this way, Kubernetes still wants to talk directly to the containerd part of it.
+  # The Same Fix: You still have to do the "Systemd Cgroup" fix mentioned in Option A for the containerd that Docker installed.
+
+ 
+  ```
+  Or install containerd --> The "Modern" Way (containerd only):
+  ```
+ 
+  curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+  echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+  sudo apt-get update
+  sudo apt install -y containerd.io
+  sudo apt-get install -y containerd | sudo apt install containerd -y
+  sudo mkdir -p /etc/containerd
+  sudo containerd config default | sudo tee /etc/containerd/config.toml > /dev/null 2>&1
+  
+  # Adjust the cgroup driver to systemd
+  sudo sed -i 's/SystemdCgroup = false/SystemdCgroup = true/' /etc/containerd/config.toml
+  sudo systemctl restart containerd
+  sudo systemctl enable containerd
+  ```
+  
+# Step 3: Install kubeadm, kubelet, and kubectl (Run on all nodes)
+- Add Kubernetes apt repository and install the tools "Depreciated Way with Ubuntu 24 and add some security risks":
+  ```
+  curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
+  cat <<EOF | sudo tee /etc/apt/sources.list.d/kubernetes.list
+deb https://apt.kubernetes.io/ kubernetes-xenial main
+EOF
+  sudo apt-get update
+  sudo apt-get install -y kubeadm kubelet kubectl
+  sudo apt-mark hold kubeadm kubelet kubectl
+  
+  
+  ```
+  # Google-hosted (No longer maintained)
+  # kubernetes-xenial (Old code name)
+  
+  New and Secure Way to Install kubeadm, kubelet, and kubectl (Recommended for Ubuntu 24.04):
+  ```
+  # 1. Ensure the directory for storing secure keys exists , make sure or overwrite it 
+  sudo mkdir -p /etc/apt/keyrings
+  
+  # 2. Download the Kubernetes GPG key and save it securely
+  # Version v1.30
+  curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.30/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+  # Recent Versions 1.35
+  curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.35/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+
+  # 3. Add the Kubernetes repository to your APT sources list
+  # Version v1.30
+  echo "deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.30/deb/ /" | sudo tee /etc/apt/sources.list.d/kubernetes.list
+   
+   # Version v1.35
+   # This overwrites any existing configuration in /etc/apt/sources.list.d/kubernetes.list
+echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.35/deb/ /' | sudo tee /etc/apt/sources.list.d/kubernetes.list
+   # 4. Update the local package list to recognize the new repository
+   sudo apt-get update
+    # 5. Install kubeadm, kubelet, and kubectl (Resent versions)
+  sudo apt-get install -y kubeadm kubelet kubectl
+  sudo apt-mark hold kubeadm kubelet kubectl
+  # (Optional) Enable and start the kubelet service
+  sudo systemctl enable --now kubelet
+  
+  #verify 
+  dpkg --get-selections | grep 'kube'
+  sudo systemctl is-active containerd
+  sudo systemctl is-active kubelet
+  free -h
+
+
+  
+  ```
+# Step 4: Initialize the Kubernetes control plane
+Initialize the control plane node using kubeadm init, specifying the desired pod network CIDR.
+Configure kubectl access for your user.
+Save the kubeadm join command for adding worker nodes or generate another one if needed.
+- On the master node, run:
+  ```
+  sudo kubeadm init --pod-network-cidr=10.244.0.0/16
+  
+  #If you don't specify the --apiserver-advertise-address flag, kubeadm will attempt to automatically detect the host's IP address by looking at the network interface associated with the default gateway
+  
+  ip addr show enX0 | grep -Po 'inet \K[\d.]+'
+
+  sudo kubeadm init --pod-network-cidr=10.244.0.0/16 --apiserver-advertise-address=10.0.13.78
+
+  sudo kubeadm init --control-plane-endpoint=master-node --upload-certs
+
+  
+  ## Another 
+  sudo kubeadm init --pod-network-cidr 10.244.0.0/16 --control-plane-endpoint "10.230.0.54:6443" --upload-certs --v=5
+  ## Note: Adjust the pod-network-cidr based on the network plugin you plan to use.
+  # Sets a stable endpoint that all other nodes (workers and other control planes) will use to communicate with the API Server.
+  # use this for mult-node / HA clusters. and incase you have a load balancer in front of your control plane nodes.
+  ```
+- Set up kubeconfig for the root user:
+  ```
+  mkdir -p $HOME/.kube
+  sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+  sudo chown $(id -u):$(id -g) $HOME/.kube/config
+
+  export KUBECONFIG=$HOME/.kube/config
+
+  
+  
+  kubeadm join 10.0.3.135:6443 --token mrf7c3.9djv68zd80cvd3p2 \
+        --discovery-token-ca-cert-hash sha256:2bd72dceb96fb8d357f405fc97797b725318a1763ea339c9fa583579835afa9f
+
+  sudo kubeadm token create --print-join-command
+  ```
+
+  
+# Step 5: Install a Pod network add-on (Run on the master node)
+- Install Flannel as the Pod network:
+  ```
+  kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
+  kubectl apply -f https://raw.githubusercontent.com/flannel-io/flannel/master/Documentation/kube-flannel.yml
+ 
+  #kubectl apply -f raw.githubusercontent.com
+  ```
+  Or Network Plugin (Master Node)
+  ````
+  kubectl apply -f https://raw.githubusercontent.com/projectcalico/calico/v3.25.0/manifests/calico.yaml
+   kubectl apply -f https://raw.githubusercontent.com/projectcalico/calico/v3.25.0/manifests/calico.yaml
+  ````
+# Step 6: Join worker nodes to the cluster
+- On each worker node, run the command provided at the end of the `kubeadm init` output on the master node, which looks like:
+  ```
+  sudo kubeadm join <master-node-ip>:6443 --token <token> --discovery-token-ca-cert-hash sha256:<hash>
+  ``` 
+  Or want single node cluster 
+  
+  ```
+  kubectl describe node ip-10-0-3-135 | grep Taints
+  kubectl taint nodes --all node-role.kubernetes.io/control-plane-
+kubectl describe node ip-10-0-3-135 | grep Taints
+  kubectl taint nodes ip-10-0-3-135 node-role.kubernetes.io/control-plane:NoSchedule --overwrite
+
+
+
+  ```
+# Step 7: Verify the cluster
+- On the master node, check the status of the nodes:
+  ```
+  kubeadm version
+kubectl version --client
+containerd --version
+
+  kubectl get nodes
+  kubectl get pods --all-namespaces
+  kubectl get pods --all-namespaces -o wide
+  kubectl get services --all-namespaces
+  kubectl get endpoints --all-namespaces
+  
+  ``` 
+- Ensure all nodes are in the "Ready" state and that the necessary system pods are running.
+-Deploy a test application to verify functionality:
+  ``` 
+kubectl create deployment nginx-app --image=nginx
+kubectl expose deployment nginx-app --port=80 --type=NodePort
+kubectl get services nginx-app
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
