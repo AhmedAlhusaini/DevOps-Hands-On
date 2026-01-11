@@ -1,0 +1,164 @@
+
+
+
+
+#############################################################################
+################### Demo - Static Provisioning With EBS  ###################
+#############################################################################
+
+
+- Created an Amazon EBS volume # it must in the same availability zone with ec2
+
+Volume ID "vol-0d1bd6d3c8b7cee6b"
+
+ubuntu@master:~$ kubectl get csidriver
+NAME              ATTACHREQUIRED   PODINFOONMOUNT   STORAGECAPACITY   TOKENREQUESTS   REQUIRESREPUBLISH   MODES        AGE
+ebs.csi.aws.com   true             false            false             <unset>         false               Persistent   1d
+
+
+PV.yaml
+
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: dolfined-pv
+spec:
+  accessModes:
+  - ReadWriteOnce
+  capacity:
+    storage: 5Gi
+  csi:
+    driver: ebs.csi.aws.com
+    fsType: ext4
+    volumeHandle: vol-0d1bd6d3c8b7cee6b
+---
+
+
+ubuntu@master:~$ kubectl get pv
+NAME          CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS      CLAIM   STORAGECLASS   REASON   AGE
+dolfined-pv   5Gi        RWO            Retain           Available                                   6s
+ 
+ubuntu@master:~$ kubectl describe pv dolfined-pv
+Source:
+    Type:              CSI (a Container Storage Interface (CSI) volume source)
+    Driver:            ebs.csi.aws.com
+    FSType:            ext4
+    VolumeHandle:      vol-0d1bd6d3c8b7cee6b
+
+
+PVC.yaml
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: dolfined-pvc
+spec:
+  storageClassName: "" # Empty string must be explicitly set otherwise default StorageClass will be set
+  volumeName: dolfined-pv
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
+---
+
+ubuntu@master:~$ kubectl get pvc
+NAME           STATUS   VOLUME        CAPACITY   ACCESS MODES   STORAGECLASS   AGE
+dolfined-pvc   Bound    dolfined-pv   5Gi        RWO                           13s
+
+
+Pod.yaml
+
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: dolfined-app
+spec:
+  containers:
+  - name: app
+    image: centos
+    command: ["/bin/sh"]
+    args: ["-c", "while true; do echo $(date -u) >> /data/out.txt; sleep 5; done"]
+    volumeMounts:
+    - name: persistent-storage
+      mountPath: /data
+  volumes:
+  - name: persistent-storage
+    persistentVolumeClaim:
+      claimName: dolfined-pvc
+---
+
+
+ubuntu@master:~$ kubectl get po -o wide
+NAME           READY   STATUS    RESTARTS   AGE   IP            NODE    NOMINATED NODE   READINESS GATES
+dolfined-app   1/1     Running   0          10s   10.244.1.38   node1   <none>           <none>
+
+
+ubuntu@master:~$ kubectl exec -it dolfined-app -- /bin/bash
+[root@dolfined-app /]# ls
+bin  data  dev  etc  home  lib  lib64  lost+found  media  mnt  opt  proc  root  run  sbin  srv  sys  tmp  usr  var
+[root@dolfined-app /]# cd data/
+[root@dolfined-app data]# ls
+lost+found  out.txt
+[root@dolfined-app data]# touch mee
+[root@dolfined-app data]# ls
+lost+found  mee  out.txt
+
+
+Pod1.yaml
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: dolfined-app1-1
+spec:
+  containers:
+  - name: app
+    image: centos
+    command: ["/bin/sh"]
+    args: ["-c", "while true; do echo $(date -u) >> /data/out.txt; sleep 5; done"]
+    volumeMounts:
+    - name: persistent-storage
+      mountPath: /data
+  volumes:
+  - name: persistent-storage
+    persistentVolumeClaim:
+      claimName: dolfined-pvc
+  nodeSelector:
+    node: node2
+---
+
+ubuntu@master:~$ kubectl get po -o wide
+NAME            READY   STATUS    RESTARTS   AGE   IP            NODE    NOMINATED NODE   READINESS GATES
+dolfined-app1   1/1     Running   0          23s   10.244.2.33   node2   <none>           <none>
+
+# the new pod created in "node2" but the first it created in "node1"
+
+
+ubuntu@master:~$ kubectl exec -it dolfined-app1 -- /bin/bash
+[root@dolfined-app1 /]# ls
+bin  data  dev  etc  home  lib  lib64  lost+found  media  mnt  opt  proc  root  run  sbin  srv  sys  tmp  usr  var
+[root@dolfined-app1 /]# cd data/
+[root@dolfined-app1 data]# ls
+lost+found  mee  out.txt
+
+
+# you will find the same files
+
+ubuntu@master:~$ kubectl delete po dolfined-app
+pod "dolfined-app" deleted
+
+ubuntu@master:~$ kubectl delete pvc dolfined-pvc
+persistentvolumeclaim "dolfined-pvc" deleted
+# you will notice the pv isn't deleted
+
+ubuntu@master:~$ kubectl delete pv dolfined-pv
+persistentvolume "dolfined-pv" deleted
+
+# delete volume from AWS
+
+
+
+
