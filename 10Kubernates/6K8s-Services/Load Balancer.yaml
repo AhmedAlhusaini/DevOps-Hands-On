@@ -1,0 +1,66 @@
+
+######################################################
+################ Demo – Load Balancer ################
+######################################################
+
+
+
+
+$ vim deploy.yaml
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dolfined
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: prod
+  template:
+    metadata:
+      labels:
+        app: prod
+    spec:
+      containers:
+        - name: simple-webserver
+          image: menamagdyhalem/simple-webserver
+          ports:
+            - containerPort: 3000
+---
+
+ubuntu@master:~$ kubectl apply -f deploy.yaml
+
+$ vim service.yaml
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: dolfined-svc
+spec:
+  type: LoadBalancer
+  selector:
+    app: prod
+  ports:
+    - port: 2000
+      targetPort: 3000
+      nodePort: 30000
+---
+
+ubuntu@master:~$ kubectl apply -f service.yaml
+
+## we now need to create a load balancer on AWS
+
+1. create a target group for "node-1 and node-2", (write port=NodePort=30000)
+2. create a Application Load Balancer and configure (Security groups, Select target group )
+
+You access the Application with 3 way:
+
+1. you can access the Application with the DNS name of LoadBalancer
+
+
+2. <Node-ip>:<Nodeo-Port> # inside or outside the cluster
+
+3. <Service-ip>:<Service-port>
+
