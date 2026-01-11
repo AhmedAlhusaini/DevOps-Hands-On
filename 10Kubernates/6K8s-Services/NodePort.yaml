@@ -1,0 +1,131 @@
+ 
+
+#####################################################
+################## Demo – NodePort ##################
+#####################################################
+
+
+1. Access Service Locally:
+
+ubuntu@master:~$ kubectl create deploy test --image=nginx --port=80 --replicas=2
+
+ubuntu@master:~$ kubectl expose deploy test --type=NodePort --port=2500 --target-port=80
+
+ubuntu@master:~$ kubectl get all
+
+NAME                           READY   STATUS    RESTARTS   AGE
+pod/test-7968d6985c-b84zw      1/1     Running   0          2m39s
+pod/test-7968d6985c-gjh4w      1/1     Running   0          2m39s
+
+NAME                   TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)          AGE
+service/kubernetes     ClusterIP   10.96.0.1        <none>        443/TCP          20h
+service/test           NodePort    10.109.50.108    <none>        2500:31952/TCP   92s
+
+ubuntu@master:~$ kubectl exec -it pod/test-7968d6985c-gjh4w -- /bin/bash
+
+root@test-7968d6985c-gjh4w:/# curl 10.109.50.108:2500
+
+<title>Welcome to nginx!</title>
+
+
+ubuntu@master:~$ kubectl describe svc test
+
+ubuntu@master:~$ kubectl delete deploy test
+deployment.apps "test" deleted
+
+ubuntu@master:~$ kubectl delete svc test
+service "test" deleted
+
+
+
+2. Access the svc from outside the cluster:
+
+
+$ vim deploy.yaml
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dolfined
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: prod
+  template:
+    metadata:
+      labels:
+        app: prod
+    spec:
+      containers:
+        - name: simple-webserver
+          image: menamagdyhalem/simple-webserver
+          ports:
+            - containerPort: 3000
+---
+
+ubuntu@master:~$ kubectl apply -f deploy.yaml
+
+$ vim service.yaml
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: dolfined-svc
+spec:
+  type: NodePort
+  selector:
+    app: prod
+  ports:
+    - port: 2000
+      targetPort: 3000
+      nodePort: 30000
+---
+
+ubuntu@master:~$ kubectl apply -f service.yaml
+
+ubuntu@master:~$ kubectl get all
+NAME                           READY   STATUS    RESTARTS   AGE
+pod/dolfined-6578d6bb8-kfvc5   1/1     Running   1          9h
+pod/dolfined-6578d6bb8-kfxks   1/1     Running   1          9h
+pod/dolfined-6578d6bb8-rk4kw   1/1     Running   1          9h
+
+NAME                   TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)          AGE
+service/dolfined-svc   NodePort    10.104.240.208   <none>        2000:30000/TCP   8h
+service/kubernetes     ClusterIP   10.96.0.1        <none>        443/TCP          20h
+
+NAME                       READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/dolfined   3/3     3            3           9h
+
+NAME                                 DESIRED   CURRENT   READY   AGE
+replicaset.apps/dolfined-6578d6bb8   3         3         3       9h
+
+
+ubuntu@master:~$ kubectl get nodes -o wide
+NAME     STATUS   ROLES                  AGE    VERSION   INTERNAL-IP     EXTERNAL-IP   OS-IMAGE             KERNEL-VERSION    CONTAINER-RUNTIME
+master   Ready    control-plane,master   11d    v1.21.5   172.31.13.249   <none>        Ubuntu 20.04.5 LTS   5.15.0-1026-aws   docker://20.10.21
+node1    Ready    <none>                 11d    v1.21.5   172.31.14.252   <none>        Ubuntu 20.04.5 LTS   5.15.0-1026-aws   docker://20.10.21
+node2    Ready    <none>                 6d9h   v1.21.5   172.31.13.32    <none>        Ubuntu 20.04.5 LTS   5.15.0-1026-aws   docker://20.10.22
+ubuntu@master:~$ 3000curl 172.31.13.32:0
+Hello From DolfinED, This App is Running on Pod: dolfined-6578d6bb8-kfvc5
+
+### Then Try to access it from any browser
+
+
+ubuntu@master:~$ kubectl get po
+NAME                       READY   STATUS    RESTARTS   AGE
+dolfined-6578d6bb8-kfvc5   1/1     Running   1          10h
+dolfined-6578d6bb8-kfxks   1/1     Running   1          10h
+dolfined-6578d6bb8-rk4kw   1/1     Running   1          10h
+
+
+ubuntu@master:~$ kubectl get ep
+NAME           ENDPOINTS                                            AGE
+dolfined-svc   10.244.1.23:3000,10.244.1.24:3000,10.244.2.47:3000   8h
+kubernetes     172.31.13.249:6443                                   20h
+
+
+$ kubectl delete deploy dolfined
+
+$ kubectl delete svc dolfined-svc
