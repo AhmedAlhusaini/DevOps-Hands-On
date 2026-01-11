@@ -1,0 +1,56 @@
+
+##################################################
+########## Demo Docker Command Part 2 ############
+##################################################
+
+# it pull, create, start the container and login to it  ------ -i=interact -t=terminal with bash
+$ docker run -it ubuntu /bin/bash 
+
+# -d=detach, run in the background
+$ docker run -it -d ubuntu /bin/bash
+
+# list all running containers
+$ docker ps
+
+#list all containers (stopped)
+$ docker ps -a
+
+To summraies 
+docker ps >>>> list all container running 
+after the container finish the process the container dead so it move to ps -a
+docker ps -a >>> list all container that stoped
+
+
+# rm = Remove Container
+docker ps -a
+docker rm <container_ID or container_name>
+docker rm ID #just first 3 letters
+docker rm ID ID ID # it can delete 1.2.3 of containers in one command
+docker rm -f <container_ID> # it stops the container and delete it
+
+
+# rmi = Remove images
+docker images # list images
+docker rmi <image_name>  # delete an image
+docker run centos
+docker rmi centos # it will fail because there is no running conatiners  based on this image
+
+# you should delete this conatiner first and then try to delete the image
+docker rmi -f centos #it will force an error
+
+
+03:
+docker run -d centos sleep 60
+docker ps # to show the running containers  
+docker ps # the container  will be deleted because the process is finished
+docker ps -a
+
+04:
+docker run -d centos sleep 6000
+docker ps
+docker stop <image_ID or image_name>
+docker ps -a
+
+# exec... it is used to login to the container 
+$ docker run -it -d ubuntu /bin/bash
+$ docker exec <container_id> # login to a container

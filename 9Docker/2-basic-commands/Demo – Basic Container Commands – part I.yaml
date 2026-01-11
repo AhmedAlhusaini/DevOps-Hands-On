@@ -1,0 +1,58 @@
+##################################################
+########## Demo Docker Command Part 1 ############
+##################################################
+
+
+01:
+$ docker pull ubuntu 
+# The pull command just downloads the image,  use this command if you want to download an image without running the image
+
+$ docker image ls # list images 
+
+$ docker container create -it ubuntu bash # it just creates but does not run it 
+
+$ docker container start -i <container-id>  # start the container 
+# -i = interactive mode
+docker container create -it --name myubuntu ubuntu bash
+docker container start -i myubuntu
+docker start -i myubuntu
+docker restart -i myubuntu
+
+docker run -d -p 8088:80 nginx
+
+# -d = detached mode (run in background)
+# -p = port mapping (host:container)  
+# nginx = image name
+# nginx is a web server, so you can open your browser and type localhost:8088
+
+root@bc21358485$ cat /etc/hostname # show the id of container
+
+$ docker container ls -a === docker ps -a   # list all conatiners 
+
+### open another terminal and write >>> docker ps = docker container ls #it will show the running containers
+
+
+
+02:
+docker run -it ubuntu bash # it will login to the container
+# ignore now (-it,bash), all important now is to write the run command, and it will pull image , create and start it with one command
+
+# to just see the illustration
+docker run docker/whalesay cowsay Hello world!
+
+
+# run a python container and play with it 
+docker run -it python /bin/bash
+apt update
+apt upgrade
+ps # list running processes *** PID *** 
+python3 # it will open the interactive mode
+1+1 # it will print 2
+print("Hello Docker!")
+exit()
+exit
+
+
+docker run docker/whalesay cowsay Hello World
+docker run docker/whalesay cowsay "Docker is Fun!"
+docker run mywhalesay:latest "Zain Ahmed Alhusainy"

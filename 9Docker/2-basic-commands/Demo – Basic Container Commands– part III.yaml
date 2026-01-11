@@ -1,0 +1,40 @@
+
+##################################################
+########## Demo Docker Command Part 3 ############
+##################################################
+
+
+# run a conatiner with the specified name 
+docker run -it -d --name test centos # rename an image
+
+#inspect images and conatiners 
+docker inspect <image_name> 
+docker inspect <image_name> | grep Size
+# for a container
+docker inspect <container_name> 
+$ docker inspect <container_name> 
+
+
+# Help Command:
+$ docker --help
+$ docker run --help
+
+
+
+# Logs
+$ docker run -d --name date alpine watch "date >> /var/log/date.log"
+$ docker logs date # it prints the date 
+
+
+
+# commit 
+$ docker run -it -d --name change centos
+$ docker exec -it change bash
+[root@cdfsdfsd /]# vi test.text # and write any word
+[root@cdfsdfsd /]# exit
+$ docker commit change new-change
+$ docker images # to view new image
+$ docker run -it -d --name new-cont new-change
+$ docker exec -it new-cont bash
+[root@cdfsdfsd /]# ls  # list all files and you will found file "test.text"
+
