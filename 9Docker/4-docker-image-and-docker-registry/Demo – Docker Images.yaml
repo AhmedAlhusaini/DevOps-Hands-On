@@ -1,0 +1,24 @@
+
+
+
+### First ### >>> for the  shared layers
+open image postgres and review tag
+
+and try to pull images 
+
+$ docker pull postgres:latest
+
+
+$ docker run -d postgres:12.11
+# and review, you will find some existing layers
+
+Aslo see 
+$ docker history <image_id>
+
+#### Third ####
+
+$ docker commit <container Id> <new image name>:tagname
+$ docker images
+
+################## END #################
+

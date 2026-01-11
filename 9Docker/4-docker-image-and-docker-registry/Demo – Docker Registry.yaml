@@ -1,0 +1,61 @@
+
+
+
+
+### first prepare the image ###
+
+$ docker pull ubuntu
+$ docker run -it -d ubuntu 
+$ docker ps
+$ docker exec -it <container_id> bash   ### docker run -it ubuntu /bin/bash
+container$ ls
+container$ mkdir test-file
+container$ apt install vim
+container$ vim test.yaml
+container$ exit
+
+
+# ---- we want to make an image from this container -----
+$ docker commit <container_id> [username_account]/[new_image name]:1
+# $ docker commit q65ewdhcdc menamagdyhalem/test-docker:v1
+
+$ docker commit q65ewdhcdc test-docker  
+
+#+++++++++  here we will open the docker hub and will show the unoffical images and the writer username +++++++
+
+$ docker tag test-docker menamagdyhalem/docker-course  # latest #
+$ docker tag test-docker menamagdyhalem/docker-course:v1 
+$ docker images 
+
+
+#### try to push ###
+$ docker push menamagdyhalem/docker-course
+
+$ acess denied 
+
+## we need to login first ##
+$ docker login
+$ docker push menamagdyhalem/docker-course
+
+### and then open docker hub and show ###
+
+
+$ docker push menamagdyhalem/docker-course:v1
+
+$ docker logout
+
+
+
+### for private image ###
+
+first, you should go to docker hub and create a new repo with private and set the name, 
+and then follow the previous steps. 
+
+############ END ###########
+
+
+
+
+
+
+
