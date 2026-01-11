@@ -1,0 +1,121 @@
+
+
+
+#########################################################
+################### Demo - NameSpaces ###################
+#########################################################
+
+$ kubectl get namespaces
+
+$ kubectl get ns
+
+first will see the kube-system:
+$ kubectl get all -n kube-system
+
+
+will see the kube-public:
+$ kubectl get cm -n kube-public
+more-info:
+$ kubectl cluster-info
+
+#### Create a new namespace with two ways:
+
+Create a new namespace called “dev”:
+$ kubectl create namespace dev
+
+using the yaml:
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: prod
+---
+
+So we have 3 namepaces can we create a pods in it (default, dev and prod)
+
+## play with namespace
+delete the namespace:
+$ kubectl delete ns dev
+
+more information about NameSpace:
+$ kubectl describe namespace prod
+
+create a namespace that i delete it:
+$ kubectl create namespace dev
+
+
+
+## create pod with different namespace
+
+
+create a new pod in default namesapce:
+kubectl run pod-def --image=nginx  # this pod it will create in default namespace
+
+create a new pod in the specific namesapce: #Imperative
+kubectl run pod-dev --image=nginx --namespace=dev
+kubectl run pod-prod --image=nginx -n prod
+
+create a new pod in the specific namesapce: #Declarative
+pod.yaml
+---
+apiVersion: v1
+kind: Pod
+metadata:
+    name: pod1-dev
+    namespace: dev     
+    labels:
+      env: prod
+spec:
+  containers:
+  - name: nginx
+    image: nginx
+---
+$ kubectl apply -f pod.yaml
+
+create a new pod without namespace: 
+pod1.yaml
+---
+apiVersion: v1
+kind: Pod
+metadata:
+    name: dolfined     
+    labels:
+      env: prod
+spec:
+  containers:
+  - name: nginx
+    image: nginx
+---
+kubectl apply -f pod1.yaml -n prod
+kubectl apply -f pod1.yaml -n dev # --namespace=dev
+
+kubectl get pods # will show pods in defualt namespace
+
+kubectl get pods -n dev # will show pods in dev namespace
+
+
+change the defualt NameSpace:
+$ kubectl config set-context --current --namespace=dev
+
+validate that the command worked with this command:
+$ kubectl config view --minify | grep namespace
+
+kubectl get pods # will show pods in dev namespace
+
+kubectl run new-defualt --image=nginx
+
+show all pods in all namespaces:
+$ kubectl get pods --all-namespaces
+
+## change agian default namespace
+change the defualt NameSpace:
+$ kubectl config set-context --current --namespace=default
+
+## delete ns also it will be delete all pods in this namesapce
+$ kubectl delete ns dev
+
+
+show all pods in all namespaces:
+$ kubectl get pods --all-namespaces
+
+$ kubectl delete ns prod
