@@ -1,0 +1,136 @@
+
+
+#############################################################################
+################## Demo – Resource requirements and Limits ##################
+#############################################################################
+
+Install Metrics Server:
+
+$ kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
+
+$ kubectl get po -n kube-system
+
+ubuntu@master:~$ kubectl edit deployments metrics-server -n kube-system
+
+add this lines after "args"
+---
+command:
+- /metrics-server
+- --kubelet-insecure-tls
+- --kubelet-preferred-address-types=InternalIP
+---
+like this:
+---
+    spec:
+      containers:
+      - args:
+        - --cert-dir=/tmp
+        - --secure-port=4443
+        - --kubelet-preferred-address-types=InternalIP,ExternalIP,Hostname
+        - --kubelet-use-node-status-port
+        - --metric-resolution=15s
+        command:
+        - /metrics-server
+        - --kubelet-insecure-tls
+        - --kubelet-preferred-address-types=InternalIP
+---
+
+
+pod1.yaml
+--- 
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod1
+spec:
+  containers:
+  - name: nginx
+    image: nginx
+    resources:
+      requests:
+        memory: "128Mi"
+        cpu: "250m"
+      limits:
+        memory: "512Mi"
+        cpu: "500m"
+---
+
+ubuntu@master:~$ kubectl get po
+NAME   READY   STATUS    RESTARTS   AGE
+pod1   1/1     Running   0          7s
+
+ubuntu@master:~$ kubectl top po
+NAME   CPU(cores)   MEMORY(bytes)
+pod1   2m           2Mi
+
+ubuntu@master:~$ kubectl describe po pod1
+# check Limits and Requests
+
+
+ubuntu@master:~$ lscpu
+CPU(s):              2   # check CPU
+
+
+pod2.yaml
+--- 
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod2
+spec:
+  containers:
+  - name: nginx
+    image: nginx
+    resources:
+      requests:
+        memory: "128Mi"
+        cpu: "3000m"
+      limits:
+        memory: "512Mi"
+        cpu: "4000m"
+---
+
+ubuntu@master:~$ kubectl get po
+NAME   READY   STATUS    RESTARTS   AGE
+pod1   1/1     Running   0          3m46s
+pod2   0/1     Pending   0          5s
+
+
+ubuntu@master:~$ kubectl describe po pod2
+Events:
+Type     Reason            Age   From               Message
+----     ------            ----  ----               -------
+Warning  FailedScheduling  56s   default-scheduler  0/3 nodes are available:  2 Insufficient cpu.
+
+
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod3
+spec:
+  containers:
+  - name: pod3
+    image: vish/stress
+    resources:
+      limits:
+        cpu: "1"
+      requests:
+        cpu: "0.5"
+    args:
+     - -cpus
+     - "2"
+---
+ubuntu@master:~$ kubectl get po
+NAME       READY   STATUS    RESTARTS   AGE
+pod3       1/1     Running   0          5s
+
+ubuntu@master:~$ kubectl top pod
+NAME       CPU(cores)   MEMORY(bytes)
+pod3        1000m        0Mi
+
+
+
+
+
+
