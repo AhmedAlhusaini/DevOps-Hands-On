@@ -1,0 +1,105 @@
+
+
+
+##################################################
+################### Demo - Pod ###################
+##################################################
+
+
+$ minikube status
+
+$ minikube start --driver=docker
+
+to show how to write yaml file for pod: 
+$ kubectl explain pod
+
+### create pod with declative way ###
+
+Create yaml file:
+$ vim pod.yaml
+
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: dolfined
+spec:
+  containers:
+  - image: nginx
+    name: dolfined-container
+---
+
+Deploy Pod YAML file:
+$ kubectl apply -f pod.yaml
+
+
+
+### Create a new pod with impretaive way ###
+$ kubectl run k8s --image=nginx
+
+
+Get the running pod:
+$ kubectl get pods, pod, po
+$ kubectl get pods dolfined
+
+Print wide output of the running Pod:
+$ kubectl get pods -o wide
+
+Get the running pod with yaml format:
+$ kubectl get pods -o yaml 
+
+Get the running pod with Json format:
+$ kubectl get pods -o json
+
+Login to container:
+$ kubectl exec -it dolfined -- /bin/bash
+
+root@dolfined:/# cat /etc/os-release
+root@dolfined:/# curl http://localhost
+root@dolfined:/# exit
+
+Print the details description of pods:
+$ kubectl describe pods dolfined
+$ kubectl describe pods dolfined | grep Image
+
+
+## there is two way to edit pod: Imperative and Declarative
+# first edit pod with impreative way
+
+$ kubectl get pods
+
+Edit the configuration of the running pod, here we will change the nginx image version from nginx to nginx:1.21.6:
+$ kubectl edit pods dolfined
+
+$ kubectl get pods # see changed of RESTARTS
+
+
+$ kubectl describe pods dolfined
+
+to check the annotations: 
+$ kubectl get po dolfined -o yaml # the annotations not changed
+
+
+## edit pod with Declarative way:
+
+Edit the configuration of the pod, here we will change the nginx image version from nginx to nginx:1.21.4:
+$ vim pod.yaml
+
+apply changes:
+$ kubectl apply -f pod.yaml
+
+$ kubectl get pods # see changed of RESTARTS
+
+$ kubectl describe pods dolfined
+
+to check the annotations:
+$ kubectl get po dolfined -o yaml # the annotations is changed
+
+Check the logs of the pod:
+$ kubectl logs dolfined
+
+
+Delete the running pod:
+$ kubectl delete pods dolfined
+
+$ kubectl delete pods --all
