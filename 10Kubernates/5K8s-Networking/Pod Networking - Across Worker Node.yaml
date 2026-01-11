@@ -1,0 +1,125 @@
+
+
+###########################################################################
+################# Demo - Cluster Networking Deep Dive 02 ##################
+###########################################################################
+apt update && apt upgrade -y && apt install -y iproute2 iputils-ping ethtool
+sudo apt-get install bridge-utils
+brctl sho # show bridge info
+# we can see cni0 bridge created by CNI plugin (like Flannel) for pod networking
+
+
+########################################
+2. Pod To Pod Communication Across Nodes
+########################################
+
+
+pod3.yaml
+--- 
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod3
+spec:
+  containers:
+  - name: centos
+    image: centos
+    command: ["/bin/sleep", "3650d"]
+    imagePullPolicy: IfNotPresent
+  restartPolicy: Always
+  nodeSelector:
+    node: node2
+---
+
+ubuntu@master:~$ kubectl get po -o wide
+NAME   READY   STATUS    RESTARTS   AGE    IP            NODE  
+pod1   1/1     Running   0          103m   10.244.2.27   node1
+pod2   1/1     Running   0          100m   10.244.2.28   node1
+pod3   1/1     Running   0          15s    10.244.1.3    node2 
+
+# in node2 
+
+ubuntu@node2:~$ ip a
+
+2: ens5: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 9001 qdisc mq state UP group default qlen 1000
+    link/ether 02:7b:72:3c:f4:35 brd ff:ff:ff:ff:ff:ff
+    inet 172.31.13.32/20 brd 172.31.15.255 scope global dynamic ens5
+       valid_lft 2587sec preferred_lft 2587sec
+    inet6 fe80::7b:72ff:fe3c:f435/64 scope link
+       valid_lft forever preferred_lft forever
+4: flannel.1: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 8951 qdisc noqueue state UNKNOWN group default
+    link/ether 16:1c:7b:c6:c9:f5 brd ff:ff:ff:ff:ff:ff
+    inet 10.244.1.0/32 scope global flannel.1
+       valid_lft forever preferred_lft forever
+    inet6 fe80::141c:7bff:fec6:c9f5/64 scope link
+       valid_lft forever preferred_lft forever
+5: cni0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 8951 qdisc noqueue state UP group default qlen 1000
+    link/ether 96:54:98:34:d0:9c brd ff:ff:ff:ff:ff:ff
+    inet 10.244.1.1/24 brd 10.244.1.255 scope global cni0
+       valid_lft forever preferred_lft forever
+    inet6 fe80::9454:98ff:fe34:d09c/64 scope link
+       valid_lft forever preferred_lft forever
+7: veth94cea79d@if3: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 8951 qdisc noqueue master cni0 state UP group default
+    link/ether 06:11:e1:59:63:85 brd ff:ff:ff:ff:ff:ff link-netnsid 0
+    inet6 fe80::411:e1ff:fe59:6385/64 scope link
+       valid_lft forever preferred_lft forever
+
+
+
+
+Login in into pod3:
+
+ubuntu@master:~$ kubectl exec -it pod3 -- /bin/bash
+
+[root@pod3 /]# ip a
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+3: eth0@if7: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 8951 qdisc noqueue state UP group default
+    link/ether 62:6b:56:1d:f1:7c brd ff:ff:ff:ff:ff:ff link-netnsid 0
+    inet 10.244.1.3/24 brd 10.244.1.255 scope global eth0
+       valid_lft forever preferred_lft forever
+
+[root@pod3 /]# ethtool -S eth0
+NIC statistics:
+     peer_ifindex: 7
+[root@pod3 /]# exit
+
+# in node 1
+$ ip -d link sh flannel.1   # so the flannel.1 is a vxlan and it connects to ens5
+
+4: flannel.1: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 8951 qdisc noqueue state UNKNOWN mode DEFAULT group default
+    link/ether 16:1c:7b:c6:c9:f5 brd ff:ff:ff:ff:ff:ff promiscuity 0 minmtu 68 maxmtu 65535
+    vxlan id 1 local 172.31.13.32 dev ens5 srcport 0 0 dstport 8472 nolearning ttl auto ageing 300 udpcsum noudp6zerocsumtx noudp6zerocsumrx addrgenmode eui64 numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535
+
+$ kubectl get po -o wide
+
+NAME   READY   STATUS    RESTARTS   AGE    IP            NODE 
+pod1   1/1     Running   0          135m   10.244.2.27   node1 
+pod2   1/1     Running   0          133m   10.244.2.28   node1 
+pod3   1/1     Running   0          33m    10.244.1.3    node2 
+
+
+# in node1
+install tshark:
+sudo apt install tshark
+
+# in master
+$ kubectl exec -it pod3 -- /bin/bash  
+[root@pod3 /]# ping 10.244.2.27
+
+# in node1
+ubuntu@node1:~$ sudo tshark -V --color -i ens5 -d udp.port=8472,vxlan -f "port 8472"
+
+
+Internet Protocol Version 4, Src: 172.31.13.32, # this is the ip address for the ens5 for node2
+Dst: 172.31.14.252 # this is the ip address for the ens5 for node1
+
+
+Internet Protocol Version 4, Src: 10.244.1.3, # ip for pod3
+Dst: 10.244.2.27 # ip for pod1
+    0100 .... = Version: 4
+
+
+
