@@ -57,20 +57,26 @@ To make your installation work on Ubuntu 24.04, do this on every single machine
 ## Step 1: Prepare the system ( Run on all nodes)
 - Ensure all nodes have a compatible OS (e.g., Ubuntu 20.04 or CentOS 7).
 
-  Add the following line to allow passwordless sudo for your user (replace 'your_username' with your actual username):
-  ```
-  sudo hostnamectl set-hostname node2
-  sudo vim /etc/hosts
-  <ip-master> <hostname-master>
-  <ip-node1> <hostname-node1>
-  <ip-node2> <hostname-node2>
-
   sudo passwd 
   su root 
-  sudo passwd -l root
+  sudo passwd  root
   sudo vim /etc/sudoers
   ubuntu ALL=(ALL) NOPASSWD:ALL
-  sudo usermod -aG sudo ubuntu
+  sudo usermod -aG sudo ubuntu  #Add the user to the sudo group (recommended way)
+  groups ubuntu
+  
+  Add the following line to allow passwordless sudo for your user (replace 'your_username' with your actual username):
+  ```
+  sudo hostnamectl set-hostname worker-node2
+  hostnamectl
+  
+  sudo vim /etc/hosts
+  10.0.6.201 master-node
+  10.0.3.229 worker-node1
+  10.0.3.135 worker-node2
+
+
+
   ```
    
 - Update the package index and install necessary dependencies:
@@ -128,7 +134,8 @@ sudo sysctl --system
   sudo apt-get install ca-certificates curl gnupg -y
   
   sudo install -m 0755  -d /etc/apt/keyrings
-  curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+  sudo mkdir -p /etc/apt/keyrings
+  curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo tee /etc/apt/keyrings/docker.asc > /dev/null
   sudo chmod a+r /etc/apt/keyrings/docker.asc
   echo \
   "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
@@ -139,13 +146,12 @@ sudo sysctl --system
   sudo apt-get update
   sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y
   
-  sudo apt install docker.io -y
+  #sudo apt install docker.io -y
   
   newgrp docker
   sudo usermod -aG docker $USER
   sudo systemctl enable --now docker
   sudo systemctl restart docker
-  
   sudo docker run hello-world
 
   # Verify 
