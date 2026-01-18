@@ -1,0 +1,59 @@
+# version: '3.9'
+services:
+  jenkins:
+    image: jenkins/jenkins:lts
+    container_name: jenkins
+    restart: always
+    ports:
+      - "8080:8080"
+      - "50000:50000"
+    volumes:
+      - "D:/Expertise Repository/01 CloudAndDevOps/devops-track-on-the-run/11Jenkins/jenkins-docker/vol:/var/jenkins_home"
+    networks:
+      - jenkins-net
+
+  jenkins-agent01:
+    image: jenkins/agent
+    container_name: jenkins-agent01 
+    restart: always
+    volumes:
+      - "D:/Expertise Repository/01 CloudAndDevOps/devops-track-on-the-run/11Jenkins/jenkins-docker/vol-node:/home/jenkins"
+    networks:
+      - jenkins-net
+    command: >
+      java -jar /usr/share/jenkins/agent.jar
+      -url http://jenkins:8080/
+      -name container-jenkins-agent01
+      -secret ce4639edb014440eab29454b7817ebd6e3555e2ee2e719f64fa595599562faf3
+      -workDir /home/jenkins
+      -webSocket
+
+  jenkins-agent02:
+    image: jenkins/agent
+    container_name: jenkins-agent02
+    restart: always
+    volumes:
+      - "D:/Expertise Repository/01 CloudAndDevOps/devops-track-on-the-run/11Jenkins/jenkins-docker/vol-node:/home/jenkins"
+    networks:
+      - jenkins-net
+    command: >
+      java -jar /usr/share/jenkins/agent.jar
+      -url http://jenkins:8080/
+      -name container-jenkins-agent02
+      -secret e0a5422b7a5e1c8d8bb59e1bc40989c3da5ac01e7064ec0225ec03f13f50e3ee 
+      -workDir /home/jenkins
+      -webSocket
+
+networks:
+ jenkins-net:  # If you want to customize network settings , create it here
+    driver: bridge
+    # external: true
+
+# Commands to manage the agents using docker-compose
+#docker-compose up -d
+#docker-compose -f docker-compose-agents.yaml up -d jenkins-agent01
+#docker-compose -f docker-compose-agents.yaml logs -f jenkins-agent02
+# docker-compose -f docker-compose-agents.yaml down -v --remove-orphans
+# docker-compose -f docker-compose-agents.yaml stop jenkins-agent01
+# docker-compose -f docker-compose-agents.yaml rm -f jenkins-agent01
+
