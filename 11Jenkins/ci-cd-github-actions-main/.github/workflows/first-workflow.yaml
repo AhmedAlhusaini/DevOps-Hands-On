@@ -1,0 +1,38 @@
+name: first workflow
+
+on:
+  push:
+    branches:
+      - "main"
+  pull_request:
+    branches:
+      - "Ahmed"
+    types:
+      - opened
+      - closed
+jobs:
+  first-workflow:
+    name: first workflow
+    runs-on: ubuntu-latest
+    steps:
+      - name: run bash command
+        shell: bash
+        run: |-
+          echo "my first workflow"
+          echo "github actions demo"
+		  ls
+
+  run-python-script:
+    name: run python script
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: "0"
+      - name: List Files after
+        run: ls
+        shell: bash		
+      - name: run python command
+        run: print("Hello World")
+        shell: python
