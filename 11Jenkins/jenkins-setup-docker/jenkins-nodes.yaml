@@ -1,0 +1,34 @@
+# First approach to run Jenkins Agent as Docker Container
+## Inspect Master Network Name 
+## docker network ls
+## docker network inspect bridge --> join the agent to this network 
+docker run -d --name jenkins-agent --init --restart=always --network bridge --volume "D:/Expertise Repository/01 CloudAndDevOps/devops-track-on-the-run/11Jenkins/jenkins-docker/vol-node:/home/jenkins" jenkins/agent java -jar /usr/share/jenkins/agent.jar -jnlpUrl http://jenkins-master:8080/computer/container-jenkins-agent01/jenkins-agent.jnlp -secret ce4639edb014440eab29454b7817ebd6e3555e2ee2e719f64fa595599562faf3 -workDir "/home/jenkins"
+
+docker run -d --name jenkins-agent --init --restart=always --network bridge --volume "D:/Expertise Repository/01 CloudAndDevOps/devops-track-on-the-run/11Jenkins/jenkins-docker/vol-node:/home/jenkins" jenkins/agent java -jar /usr/share/jenkins/agent.jar -url http://jenkins-master:8080/ -name container-jenkins-agent01 -secret ce4639edb014440eab29454b7817ebd6e3555e2ee2e719f64fa595599562faf3 -workDir "/home/jenkins" -webSocket
+
+#dont use localhost in jnlpUrl if jenkins master is running in another container
+#If Jenkins controller runs in another Docker container (same Docker network)
+# -jnlpUrl http://jenkins-master:8080/computer/container-jenkins-agent01/jenkins-agent.jnlp
+# If Jenkins controller runs on host machine (not in Docker)
+# -jnlpUrl http://host.docker.internal:8080/computer/container-jenkins-agent01/jenkins-agent.jnlp
+  # To check the running container
+# docker ps | findstr "jen"
+# docker logs -f jenkins-agent
+  # To stop and remove the container
+  # docker stop jenkins-agent
+  # docker start jenkins-agent
+  # docker rm jenkins-agent
+  
+
+## Second approach 
+docker network create jenkins-net
+docker network connect jenkins-net jenkins-master
+## Optionally : docker run --name jenkins-master --detach --publish 8080:8080 --publish 50000:50000 --network jenkins-net --volume "D:/Expertise Repository/01 CloudAndDevOps/devops-track-on-the-run/11Jenkins/jenkins-docker/vol:/var/jenkins_home" jenkins/jenkins:lts
+docker exec 6f541a11d4d4 cat /etc/hostname  | or use container name jenkins-master for example 
+
+docker run -d --name jenkins-agent --init --restart=always --network jenkins-net --volume "D:/Expertise Repository/01 CloudAndDevOps/devops-track-on-the-run/11Jenkins/jenkins-docker/vol-node:/home/jenkins" jenkins/agent java -jar /usr/share/jenkins/agent.jar -url http://jenkins:8080/ -name container-jenkins-agent01 -secret ce4639edb014440eab29454b7817ebd6e3555e2ee2e719f64fa595599562faf3 -workDir "/home/jenkins" -webSocket
+
+#docker network connect jenkins-net jenkins-agent
+# To check the running container
+# docker ps | findstr "jen"
+# docker logs -f jenkins-agent
