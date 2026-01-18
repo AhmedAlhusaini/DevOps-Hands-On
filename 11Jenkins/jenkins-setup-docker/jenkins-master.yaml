@@ -1,0 +1,17 @@
+```bash
+docker run --name jenkins `
+  --detach `
+  --publish 8080:8080 `
+  --publish 50000:50000 `
+  --volume "D:\Expertise Repository\01 CloudAndDevOps\devops-track-on-the-run\11Jenkins\jenkins-docker\vol:/var/jenkins_home" `
+  jenkins/jenkins:lts
+
+```
+# docker network ls
+# docker network inspect bridge
+
+# docker restart jenkins
+# docker stop jenkins
+# docker rm jenkins
+# docker logs -f jenkins
+
