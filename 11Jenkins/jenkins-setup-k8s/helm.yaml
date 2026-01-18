@@ -1,0 +1,53 @@
+# Values for Jenkins Helm Chart
+---
+controller:
+  image: "jenkins/jenkins:lts"
+  serviceType: NodePort
+  nodePort: 30080   # Jenkins UI exposed at localhost:30080
+  installPlugins: true
+
+persistence:
+  enabled: true
+  existingClaim: ""
+  storageClass: ""
+  accessMode: ReadWriteOnce
+  size: 10Gi
+
+# Use hostPath to bind your Windows folder
+agent:
+  enabled: false
+
+volumeMounts:
+  - name: jenkins-data
+    mountPath: /var/jenkins_home
+
+volumes:
+  - name: jenkins-data
+    hostPath:
+      path: "D:\\Expertise Repository\\01 CloudAndDevOps\\devops-track-on-the-run\\11Jenkins\\jenkins-docker\\vol"
+      type: Directory
+
+--- 
+
+# helm repo add jenkins https://charts.jenkins.io
+# helm repo update
+# 
+# helm install my-jenkins jenkins/jenkins -f values.yaml
+
+# 
+# 
+# 
+# 
+# 
+# helm repo add jenkins https://charts.jenkins.io
+# helm repo update
+# 
+# helm install my-jenkins jenkins/jenkins `
+#   --set persistence.storageClass=hostpath `
+#   --set persistence.size=10Gi `
+#   --set controller.serviceType=NodePort
+# 
+# 
+# 
+# kubectl get secret my-jenkins -o jsonpath="{.data.jenkins-admin-password}" | base64 --decode
+# 
