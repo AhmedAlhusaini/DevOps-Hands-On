@@ -1,0 +1,37 @@
+name: Test Workflow Dispatch
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: "Environment to run tests (dev, staging, prod)"
+        required: true
+        default: "dev"
+      build_version:
+        description: "Build version to test"
+        required: true
+      run_tests:
+        description: "Run full test suite?"
+        required: true
+        type: boolean
+        default: true
+
+jobs:
+  test-job:
+    name: Run Test Job
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Show input values
+        run: |
+          echo "Environment: ${{ github.event.inputs.environment }}"
+          echo "Build Version: ${{ github.event.inputs.build_version }}"
+          echo "Run Tests: ${{ github.event.inputs.run_tests }}"
+        shell: bash
+
+      - name: Run Maven (conditional)
+        if: ${{ github.event.inputs.run_tests == 'true' }}
+        run: mvn clean package
+        shell: bash
