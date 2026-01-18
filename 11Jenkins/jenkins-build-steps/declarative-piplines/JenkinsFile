@@ -1,0 +1,54 @@
+pipeline{
+	agent{
+		label "node" # specify the node label or use 'any' for any available node
+	}
+	stages{
+		stage("A"){
+			steps{
+				script{
+					echo "========A stage executed========"
+				}
+			}
+			post{
+				always{
+					echo "========always========"
+				}
+				success{
+					echo "========A executed successfully========"
+				}
+				failure{
+					echo "========A execution failed========"
+				}
+			}
+		}
+		stage("B"){
+			steps{
+				script{
+					echo "========B stage executed========"
+				}
+			}
+			post{
+				always{
+					echo "========always========"
+				}
+				success{
+					echo "========B executed successfully========"
+				}
+				failure{
+					echo "========B execution failed========"
+				}
+			}
+		}
+	}
+	post{
+		always{
+			echo "========always========"
+		}
+		success{
+			echo "========pipeline executed successfully ========"
+		}
+		failure{
+			echo "========pipeline execution failed========"
+		}
+	}
+}
