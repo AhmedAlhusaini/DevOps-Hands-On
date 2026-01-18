@@ -17,8 +17,10 @@
 *keys
 *.Identifier
 
+
 #Folder Exclusions
 0SoftSkills/*
+11Jenkins/*/vol*
 
 0Intro_And_Tools/*
 
@@ -41,8 +43,8 @@
 8Ansible/play-boy-ops/roles/*
 8Ansible/play-boy-ops/testRoles/*
 
-9Docker/*
-10Kubernates/*
+
+
 
 
 Assets/TechworldWithNana2024/
