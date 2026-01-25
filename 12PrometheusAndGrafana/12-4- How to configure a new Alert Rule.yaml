@@ -1,0 +1,46 @@
+
+kubectl get prometheusrules -n monitoring 
+
+that means if you want to configure a new rule you have to create a new yaml file / new object and apply it like others 
+
+
+kubectl describe prometheusrule xxxxx -n monitoring 
+
+
+
+kubectl describe prometheusrule xxxxx -n monitoring > forNewRule.yaml
+
+
+
+
+
+ubuntu@master:~$ vim alertrule.yaml
+---
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: ahmed-rule
+  namespace: monitoring
+  labels:
+    app: kube-prometheus-stack 
+    release: prometheus
+spec:
+  groups:
+  - name: ahmed.rule
+    rules:
+    - alert: KubernetesPodCrashLooping
+      expr: kube_pod_container_status_restarts_total > 3
+      for: 0m
+      labels:
+        severity: critical
+        namespace: monitoring
+      annotations: 
+        description: "Pod {{ $labels.pod }} is crash looping\n Value = {{ $value }}"
+        summary: "Kubernetes pod crash looping"
+---
+
+ubuntu@master:~$ kubectl apply -f alertrule.yaml
+prometheusrule.monitoring.coreos.com/dolfined.rule created
+
+
+
