@@ -1,0 +1,83 @@
+
+
+
+
+ubuntu@master:~$ vim slack-secret.yaml
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: slack-secret
+  namespace: monitoring
+type: Opaque
+stringData:
+  webhook: 'https://hooks.slack.com/services/...#first-app'......'
+---
+
+ubuntu@master:~$ kubectl apply -f slack-secret.yaml
+secret/slack-secret created
+
+
+
+ubuntu@master:~$ vim ahmed-alert-manager.yaml
+---
+apiVersion: monitoring.coreos.com/v1alpha1
+kind: AlertmanagerConfig
+metadata:
+  name: ahmed-alert-manager
+  namespace: monitoring
+spec:
+  route:
+    receiver: 'ahmed-slack'
+    repeatInterval: 30m
+    routes:
+    - matchers:
+      - name: alertname
+        value: KubernetesPodCrashLooping
+      repeatInterval: 10m
+  receivers:
+  - name: 'ahmed-slack'
+    slackConfigs:
+      - apiURL:
+          key: webhook
+          name: slack-secret
+        channel: '#first-app'
+        sendResolved: true
+
+---
+
+ubuntu@master:~$ kubectl apply -f alert-manager.yaml
+alertmanagerconfig.monitoring.coreos.com/dolfined-alert-manager created
+
+
+jubectl get alertmanagerconfigs -n monitoring
+
+# Use busybox to test alertmanager
+ubuntu@master:~$ kubectl run -i --tty busybox --image=busybox --restart=Never -- sh
+
+```
+apiVersion: v1
+kind: Pod
+metadata:
+  name: busybox
+  namespace: monitoring
+spec:
+  containers:
+  - name: busybox
+    image: busybox
+    resources:
+      limits:
+        memory: "64Mi"
+        cpu: "250m"
+      requests:
+        memory: "32Mi"
+        cpu: "100m"
+    command: ["sh", "-c", "while true; do echo Hello Kubernetes!;; done"]
+  restartPolicy: Never
+```
+
+Then :
+open grafana , altert manager , ..... etc 
+and open slack 
+
+then delete this pod 
