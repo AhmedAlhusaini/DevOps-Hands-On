@@ -1,0 +1,100 @@
+
+
+ubuntu@ip-172-31-45-125:~$ sudo vim /etc/prometheus/rules.yml
+---
+groups:
+  - name: Node_exporter
+    rules:
+    - record: job:satuts_node_exporter
+      expr: up{job="node01"}
+      labels:
+        node: "node_exporter"
+    - alert: NodeDwon
+      expr: up{job="node01"} == 0
+      labels:
+        node: "node_exporter"
+        team: "Infra"
+
+  - name: free_memory
+    rules:
+    - record: free_memory
+      expr: node_memory_MemAvailable_bytes / 1024 / 1024
+---
+
+
+
+
+ubuntu@ip-172-31-45-125:~$ sudo vim /etc/prometheus/alert_rules.yml
+---
+groups:
+- name: cpu_alerts
+  rules:
+  - alert: HighCpuLoad
+    expr: 100 - (avg by(instance) (irate(node_cpu_seconds_total{mode="idle"}[5m])) * 100) > 40
+    labels:
+      severity: critical
+      team: "Ops"
+    annotations:
+      summary: "High CPU load detected on {{ $labels.instance }}"
+      description: "CPU load is over 40% (current value: {{ $value }}%) for more than 1 minutes."
+---
+
+
+
+
+ubuntu@ip-172-31-45-125:~$ sudo vim /etc/alertmanager/alertmanager.yml
+
+---
+global:
+route:
+  receiver: 'default'
+  group_wait: 10s
+  group_interval: 15s
+  routes:
+    - match:
+        severity: 'critical'
+        team: 'Ops'
+      receiver: 'HighCPU'
+    - match:
+        node: 'node_exporter'
+        team: 'Infra'
+      receiver: 'NodeDown'
+
+receivers:
+- name: 'default'
+  slack_configs:
+  - channel: "#general"
+    send_resolved: true
+    api_url: 'https://hooks.slack.com/services/T0........'
+
+- name: 'HighCPU'
+  slack_configs:
+  - channel: "#first-app"
+    send_resolved: true
+    api_url: 'https://hooks.slack.com/services/T0......'
+
+
+- name: 'NodeDown'
+  slack_configs:
+  - channel: "#node-down"
+    send_resolved: true
+    api_url: 'https://hooks.slack.com/services/T06HK........'
+---
+
+
+ubuntu@ip-172-31-45-125:~$ sudo systemctl restart alertmanager.service
+
+ubuntu@ip-172-31-45-125:~$ sudo systemctl restart prometheus.service
+
+
+
+ubuntu@ip-172-31-43-131:~$ sudo stress --cpu 1 -v --timeout 80s
+stress: info: [1184] dispatching hogs: 1 cpu, 0 io, 0 vm, 0 hdd
+stress: dbug: [1184] using backoff sleep of 3000us
+stress: dbug: [1184] setting timeout to 80s
+stress: dbug: [1184] --> hogcpu worker 1 [1185] forked
+
+
+
+
+
