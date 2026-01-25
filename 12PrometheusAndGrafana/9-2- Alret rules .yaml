@@ -1,0 +1,68 @@
+
+# Working with Alert rules in Prometheus , Default location of rules file /etc/prometheus/rules.yml
+ubuntu@ip-172-31-45-125:~$ sudo vim sudo vim /etc/prometheus/rules.yml
+
+---
+groups:
+  - name: Node_exporter
+    rules:
+    - record: job:satuts_node_exporter
+      expr: up{job="node01"}
+      labels:
+        node: "node_exporter"
+    - alert: NodeDown
+      expr: job:satuts_node_exporter == 0
+      # try at first without for for immediate alert
+      for: 80s
+      description: "Node exporter is down on {{ $labels.instance }}"
+      summary: "Node exporter down alert"
+
+  - name: free_memory
+    rules:
+    - record: free_memory
+      expr: node_memory_MemAvailable_bytes / 1024 / 1024
+---
+
+ubuntu@ip-172-31-45-125:~$ sudo systemctl restart prometheus.service
+================================================================================
+# create a new alert rule file and reference it in prometheus.yml
+
+ubuntu@ip-172-31-45-125:~$ sudo vim /etc/prometheus/alert_rules.yml
+
+---
+groups:
+- name: cpu_alerts
+  rules:
+  # Here we have the options to create alert or rule recording
+  - alert: HighCpuLoad
+    expr: 100 - (avg by(instance) (irate(node_cpu_seconds_total{mode="idle"}[5m])) * 100) > 40
+
+---
+
+ubuntu@ip-172-31-45-125:~$ sudo vim /etc/prometheus/prometheus.yml
+---
+rule_files:
+   - "alert_rules.yml"
+---
+# Prometheus File :
+#1. have Global config
+#2. have scrape configs
+#3. have rule_files section to reference alerting rules files or recording rules files
+#4.Jobs to scrape metrics from targets
+#5. Alerting rules to create alerts based on conditions
+#6. Recording rules to create new time series based on existing time series
+
+ubuntu@ip-172-31-45-125:~$ sudo systemctl restart prometheus.service
+
+
+Go TO "node01" to stress CPU
+
+$ sudo apt-get install stress
+
+ubuntu@ip-172-31-43-131:~$ sudo stress --cpu 1 -v --timeout 80s
+stress: info: [1184] dispatching hogs: 1 cpu, 0 io, 0 vm, 0 hdd
+stress: dbug: [1184] using backoff sleep of 3000us
+stress: dbug: [1184] setting timeout to 80s
+stress: dbug: [1184] --> hogcpu worker 1 [1185] forked
+
+
