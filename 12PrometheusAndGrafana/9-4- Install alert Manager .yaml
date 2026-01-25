@@ -1,0 +1,71 @@
+
+
+
+# Bash Script to install Alertmanager
+
+
+ubuntu@ip-172-31-45-125:~$ vim alertmanager.sh
+
+---
+sudo useradd --no-create-home --shell /bin/false alertmanager
+cd /tmp/
+wget https://github.com/prometheus/alertmanager/releases/download/v0.24.0/alertmanager-0.24.0.linux-amd64.tar.gz
+
+tar -xvf alertmanager-0.24.0.linux-amd64.tar.gz
+cd alertmanager-0.24.0.linux-amd64
+
+sudo mv alertmanager /usr/local/bin/
+sudo mv amtool /usr/local/bin/
+sudo chown alertmanager:alertmanager /usr/local/bin/alertmanager
+sudo chown alertmanager:alertmanager /usr/local/bin/amtool
+
+sudo mkdir /etc/alertmanager
+sudo cp alertmanager.yml /etc/alertmanager/alertmanager.yml
+
+sudo chown alertmanager:alertmanager -R /etc/alertmanager
+
+sudo tee /etc/systemd/system/alertmanager.service <<EOF
+[Unit]
+Description=Alertmanager
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+User=alertmanager
+Group=alertmanager
+Type=simple
+WorkingDirectory=/etc/alertmanager/
+ExecStart=/usr/local/bin/alertmanager --config.file=/etc/alertmanager/alertmanager.yml --web.external-url http://0.0.0.0:9093
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+sudo systemctl daemon-reload
+sudo systemctl start alertmanager.service
+sudo systemctl enable alertmanager.service
+
+echo "Alertmanager has been installed and started."
+
+---
+
+
+ubuntu@ip-172-31-45-125:~$ chmod +x alertmanager.sh
+
+ubuntu@ip-172-31-45-125:~$ ./alertmanager.sh
+
+
+
+ubuntu@ip-172-31-45-125:~$ sudo vim /etc/prometheus/prometheus.yml
+---
+# Alertmanager configuration
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets:
+           - localhost:9093
+---
+
+
+ubuntu@ip-172-31-45-125:~$ sudo systemctl restart prometheus.service
+
