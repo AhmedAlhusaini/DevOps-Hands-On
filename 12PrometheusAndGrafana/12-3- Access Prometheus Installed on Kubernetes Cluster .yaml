@@ -1,0 +1,17 @@
+
+
+
+# expose service prometheues
+ubuntu@master:~$ kubectl expose service prometheus-kube-prometheus-prometheus --type=NodePort --target-port=9090 --name=prometheus-kube-prometheus-prometheus-ext -n monitoring
+service/prometheus-kube-prometheus-prometheus-ext exposed
+
+# expose service grafana
+ubuntu@master:~$ kubectl expose service/prometheus-grafana --type=NodePort --target-port=3000 --name=prometheus-grafana-ext  -n monitoring
+service/prometheus-grafana-ext exposed
+
+ubuntu@master:~$ kubectl get secret --namespace monitoring prometheus-grafana -o jsonpath="{.data.admin-password}" | base64 --decode ; echo
+prom-operator
+
+# expose service alertmanager
+ubuntu@master:~$ kubectl expose service/prometheus-kube-prometheus-alertmanager --type=NodePort --target-port=9093 --name=prometheus-kube-prometheus-alertmanager-ext -n monitoring
+service/prometheus-kube-prometheus-alertmanager-ext exposed
