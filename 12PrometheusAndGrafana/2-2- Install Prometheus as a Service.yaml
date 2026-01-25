@@ -1,0 +1,141 @@
+
+
+Create a Prometheus user:
+$ sudo useradd --no-create-home --shell /bin/false prometheus
+
+create required directories:
+sudo mkdir /etc/prometheus
+sudo mkdir /var/lib/prometheus
+
+give the ownership to Prometheus directory:
+$ sudo chown prometheus:prometheus /var/lib/prometheus
+
+
+download Prometheus instalation directory:
+$ cd /tmp/
+$ wget wget https://github.com/prometheus/prometheus/releases/download/v3.9.1/prometheus-3.9.1.linux-amd64.tar.gz
+
+#wget https://github.com/prometheus/prometheus/releases/download/v3.9.1/prometheus-3.9.1.linux-amd64.tar.gz
+#curl -LO https://github.com/prometheus/prometheus/releases/download/v3.9.1/prometheus-3.9.1.linux-amd64.tar.gz
+
+
+extraxt files:
+tar -xvf prometheus-3.9.1.linux-amd64.tar.gz
+cd prometheus-3.9.1.linux-amd64
+ls
+
+# handle Errr Cannot write: No space left on device at temp 
+df -h
+sudo yum clean all
+sudo rm -rf /var/log/*.gz /var/log/*-???????? /var/log/*.old
+
+
+# copy files to their quilivant configuration directory:
+# sudo mv console* /etc/prometheus
+# 
+# sudo mv prometheus.yml /etc/prometheus
+# 
+# sudo chown -R prometheus:prometheus /etc/prometheus
+# 
+# Copy binary files like promtool and Prometheus:
+# sudo mv prometheus /usr/local/bin/
+# sudo mv promtool /usr/local/bin/
+# sudo chown prometheus:prometheus /usr/local/bin/prometheus
+# sudo chown prometheus:prometheus /usr/local/bin/promtool
+# 
+
+# Move binaries
+sudo cp prometheus /usr/local/bin/
+sudo cp promtool /usr/local/bin/
+
+
+# Move configuration + consoles
+sudo cp prometheus.yml /etc/prometheus/
+
+# sudo cp -r consoles /etc/prometheus
+# sudo cp -r console_libraries /etc/prometheus
+sudo cp prometheus.yml /etc/prometheus/
+
+# Fix ownership
+sudo chown -R prometheus:prometheus /etc/prometheus
+sudo chown prometheus:prometheus /usr/local/bin/prometheus
+sudo chown prometheus:prometheus /usr/local/bin/promtool
+sudo chown -R prometheus:prometheus /var/lib/prometheus
+
+
+
+Setup Prometheus Service File to restart the Prometheus service:
+sudo vi /etc/systemd/system/prometheus.service
+
+---
+# [Unit]
+# Description=Prometheus
+# Wants=network-online.target
+# After=network-online.target
+# 
+# [Service]
+# User=prometheus
+# Group=prometheus
+# Type=simple
+# ExecStart=/usr/local/bin/prometheus \
+# --config.file /etc/prometheus/prometheus.yml \
+# --storage.tsdb.path /var/lib/prometheus/ \
+# --web.console.templates=/etc/prometheus/consoles \
+# --web.console.libraries=/etc/prometheus/console_libraries
+# 
+# [Install]
+# WantedBy=multi-user.target
+
+# Key Points:
+# Includes --web.console.templates and --web.console.libraries flags.
+# 
+# These point to directories (/etc/prometheus/consoles and /etc/prometheus/console_libraries) that contain HTML templates for Prometheus’s built‑in web UI.
+# 
+# This was common in older Prometheus builds, where those directories were always shipped in the tarball.
+
+[Unit]
+Description=Prometheus Monitoring
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+User=prometheus
+Group=prometheus
+Type=simple
+ExecStart=/usr/local/bin/prometheus \
+  --config.file=/etc/prometheus/prometheus.yml \
+  --storage.tsdb.path=/var/lib/prometheus/
+
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
+
+
+# Key Points:
+# I did not include the --web.console.templates and --web.console.libraries flags.
+# 
+# Reason: In your extracted tarball (prometheus-3.9.1.linux-amd64), those directories (consoles, console_libraries) were not present.
+# 
+# Modern Prometheus builds (v3.x) often embed default console templates internally, so those flags are optional. If the directories don’t exist, Prometheus will fail to start if you reference them.
+---
+
+Reload the systemd service to register the prometheus service and start the prometheus service:
+sudo systemctl daemon-reload
+sudo systemctl enable prometheus
+sudo systemctl start prometheus
+
+
+
+Check the prometheus service status:
+sudo systemctl status prometheus
+
+
+
+Access Prometheus Web UI:
+<machine-ip>:9090
+
+
+
+
+
