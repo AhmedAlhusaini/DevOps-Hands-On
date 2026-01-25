@@ -1,0 +1,104 @@
+
+
+$ vim node-exporter.sh
+
+
+Bash Script to install Node Exporter as a services:
+---
+# 
+# #!/bin/bash -e
+# 
+# sudo useradd --no-create-home --shell /bin/false node_exporter
+# 
+# cd /tmp/
+# wget https://github.com/prometheus/node_exporter/releases/download/v1.10.2/node_exporter-1.10.2.linux-amd64.tar.gz
+# 
+# 
+# tar -xvf node_exporter-1.10.2.linux-amd64.tar.gz
+# cd node_exporter-1.10.2.linux-amd64.tar.gz
+# 
+# sudo mv node_exporter /usr/local/bin/
+# sudo chown node_exporter:node_exporter /usr/local/bin/node_exporter
+# 
+# sudo tee /etc/systemd/system/node_exporter.service <<EOF
+# [Unit]
+# Description=Node Exporter
+# After=network.target
+# 
+# [Service]
+# User=node_exporter
+# Group=node_exporter
+# Type=simple
+# ExecStart=/usr/local/bin/node_exporter
+# 
+# [Install]
+# WantedBy=multi-user.target
+# EOF
+# 
+# sudo systemctl daemon-reload
+# sudo systemctl start node_exporter
+# sudo systemctl enable node_exporter
+# 
+
+# echo "Node Exporter has been installed and started."
+#!/bin/bash -e
+# Node Exporter installation script for Linux (EC2/Amazon Linux/Ubuntu)
+# Installs Node Exporter v1.10.2
+# Sets up user and systemd service.
+
+cd /tmp
+
+echo "[INFO] Downloading Node Exporter v1.10.2..."
+wget https://github.com/prometheus/node_exporter/releases/download/v1.10.2/node_exporter-1.10.2.linux-amd64.tar.gz \
+  || curl -LO https://github.com/prometheus/node_exporter/releases/download/v1.10.2/node_exporter-1.10.2.linux-amd64.tar.gz
+
+tar -xzf node_exporter-1.10.2.linux-amd64.tar.gz
+
+# Create user
+id node_exporter &>/dev/null || sudo useradd --no-create-home --shell /bin/false node_exporter
+
+# Install binary
+sudo cp node_exporter-1.10.2.linux-amd64/node_exporter /usr/local/bin/
+sudo chown node_exporter:node_exporter /usr/local/bin/node_exporter
+
+# Systemd service
+sudo tee /etc/systemd/system/node_exporter.service > /dev/null <<EOF
+[Unit]
+Description=Node Exporter
+After=network.target
+
+[Service]
+User=node_exporter
+Group=node_exporter
+ExecStart=/usr/local/bin/node_exporter
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+sudo systemctl daemon-reload
+sudo systemctl enable node_exporter
+sudo systemctl start node_exporter
+
+
+---
+
+$ chmod +x node-exporter.sh
+$ sudo ./node-exporter.sh
+
+# To Check : sudo systemctl status node_exporter.service
+
+
+
+$ sudo vim /etc/prometheus/prometheus.yml
+
+# Under the scrape config section add the node exporter target as shown below.:
+- job_name: 'node_exporter_metrics'
+  scrape_interval: 5s
+  static_configs:
+    - targets: ['10.142.0.3:9100']
+
+$ sudo systemctl restart prometheus
+
+
