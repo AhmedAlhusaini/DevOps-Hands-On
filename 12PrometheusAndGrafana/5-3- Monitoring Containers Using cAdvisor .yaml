@@ -1,0 +1,67 @@
+
+
+
+$ sudo vim /etc/docker/daemon.json
+---
+{
+  "metrics-addr" : "127.0.0.1:9323",
+  "experimental" : true
+}
+---
+
+restart docker service:
+$ sudo systemctl restart docker
+
+Create cAdvisor Container:
+$ docker run \
+  --volume=/:/rootfs:ro \
+  --volume=/var/run:/var/run:ro \
+  --volume=/sys:/sys:ro \
+  --volume=/var/lib/docker/:/var/lib/docker:ro \
+  --volume=/dev/disk/:/dev/disk:ro \
+  --publish=8080:8080 \
+  --detach=true \
+  --name=cadvisor \
+  --privileged \
+  --device=/dev/kmsg \
+  gcr.io/cadvisor/cadvisor
+
+
+# New :
+docker run \
+  --volume=/:/rootfs:ro \
+  --volume=/var/run:/var/run:ro \
+  --volume=/sys:/sys:ro \
+  --volume=/var/lib/docker/:/var/lib/docker:ro \
+  --volume=/dev/disk/:/dev/disk:ro \
+  --publish=8080:8080 \
+  --detach=true \
+  --name=cadvisor \
+  --privileged \
+  --device=/dev/kmsg \
+  ghcr.io/google/cadvisor:latest
+
+docker run --volume=/:/rootfs:ro --volume=/var/run:/var/run:ro --volume=/sys:/sys:ro --volume=/var/lib/docker/:/var/lib/docker:ro --volume=/dev/disk/:/dev/disk:ro --publish=8080:8080 --detach=true --name=cadvisor --privileged --device=/dev/kmsg ghcr.io/google/cadvisor:latest
+
+open cAdvisor website:
+<node-ip:8080>
+
+
+
+
+
+>>>> Go To Prometheus Server
+
+$ sudo vim /etc/prometheus/prometheus.yml
+---
+  - job_name: "cAdvisor-node"
+    static_configs:
+      - targets: ["172.31.42.108:8080"]
+---
+
+$ sudo systemctl restart prometheus.service
+
+
+
+
+
