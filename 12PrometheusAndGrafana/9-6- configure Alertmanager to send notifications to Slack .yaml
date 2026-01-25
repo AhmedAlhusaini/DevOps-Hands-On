@@ -1,0 +1,45 @@
+
+
+
+ubuntu@ip-172-31-45-125:~$ sudo vim /etc/alertmanager/
+
+---
+global:
+route:
+  receiver: 'slack'
+  group_by: ['alertname']
+  routes:
+  # - match:
+  #     node: 'HighCPUUsage'
+  #   receiver: 'slack'
+  group_wait: 10s
+  group_interval: 15s
+
+receivers:
+- name: 'slack'
+  slack_configs:
+  - channel: "#first-app"
+    send_resolved: true
+    api_url: 'https://hooks.slack.com/services/.........'
+---
+
+ubuntu@ip-172-31-45-125:~$ sudo systemctl restart alertmanager.service
+ubuntu@ip-172-31-45-125:~$ sudo systemctl restart prometheus.service
+
+
+
+Go TO "node01" to stress CPU
+
+ubuntu@ip-172-31-43-131:~$ sudo stress --cpu 1 -v --timeout 80s
+stress: info: [1184] dispatching hogs: 1 cpu, 0 io, 0 vm, 0 hdd
+stress: dbug: [1184] using backoff sleep of 3000us
+stress: dbug: [1184] setting timeout to 80s
+stress: dbug: [1184] --> hogcpu worker 1 [1185] forked
+
+
+
+
+
+
+
+
