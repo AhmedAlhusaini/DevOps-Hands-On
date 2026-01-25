@@ -1,0 +1,94 @@
+
+
+
+ubuntu@ip-172-31-43-131:~$ mkdir project
+ubuntu@ip-172-31-43-131:~$
+ubuntu@ip-172-31-43-131:~$ cd project/
+
+
+ubuntu@ip-172-31-43-131:~/project$ vim app.py
+
+---
+
+from flask import Flask, jsonify
+from prometheus_client import Counter, generate_latest
+from flask import Response
+
+app = Flask(__name__)
+
+total_requests_counter = Counter('app_total_requests', 'Total number of requests to the application')
+
+@app.route('/')
+def hello():
+    total_requests_counter.inc()
+    return 'Hello From DolfinED'
+
+@app.route('/metrics')
+def metrics():
+    return Response(generate_latest(), content_type='text/plain')
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=5000)
+
+---
+
+
+
+ubuntu@ip-172-31-43-131:~/project$ vim Dockerfile
+---
+FROM python:3.8-slim
+WORKDIR /app
+COPY . /app
+RUN pip install flask && pip install prometheus_client && pip install prometheus-flask-exporter
+EXPOSE 5000
+CMD ["python", "app.py"]
+---
+
+
+
+$ docker build -t python-app .
+$ docker run -d -p 5000:5000 python-app
+
+
+# go to prometheus server
+ubuntu@ip-172-31-45-125:~$ sudo vim /etc/prometheus/prometheus.yml
+
+---
+  - job_name: "Python-App"
+    static_configs:
+      - targets: ["172.31.43.131:5000"]
+
+---
+
+ubuntu@ip-172-31-45-125:~$ sudo systemctl restart prometheus.service
+
+
+
+# try to filter in promethues website
+app_total_requests_total
+
+
+
+ 
+
+
+
+
+
+
+
+Below is a simple bash script that uses the curl command to make 50 requests to the Flask app.
+
+---
+#!/bin/bash
+
+APP_URL="http://localhost:5000"
+
+for ((i=1; i<=50; i++)); do
+    echo "Making request $i"
+    curl -s "$APP_URL" >/dev/null
+    sleep 1  # Optional: Add a delay between requests
+done
+
+echo "Requests completed"
+---
