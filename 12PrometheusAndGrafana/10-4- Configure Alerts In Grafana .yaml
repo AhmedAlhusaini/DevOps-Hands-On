@@ -1,0 +1,26 @@
+
+Go To :
+
+ubuntu@ip-172-31-45-125:~$ sudo vim /etc/grafana/grafana.ini
+
+enabled = true
+host = smtp.gmail.com:587
+user = menahalem253@gmail.com
+password = uvbd zfai vjzn wjjv
+skip_verify = true
+from_address = menahalem253@gmail.com
+from_name = DolfinED
+
+ubuntu@ip-172-31-45-125:~$ sudo systemctl restart grafana-server.service
+
+#Then Start Configuring Alerts In Grafana UI 
+  # Contact Points
+  # Notification Policies
+  # Alert Rules
+  # Set EValuation Interval
+  # Test Alerting
+
+
+
+
+
