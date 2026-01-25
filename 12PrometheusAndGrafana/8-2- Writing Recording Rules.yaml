@@ -1,0 +1,58 @@
+
+
+ubuntu@ip-172-31-45-125:~$ cd /etc/prometheus/
+
+ubuntu@ip-172-31-45-125:/etc/prometheus$ vim rules.yml
+---
+groups:
+  - name: Node_exporter
+    rules:
+    - record: job:satuts_node_exporter
+      expr: up{job="node01"}
+---
+
+ubuntu@ip-172-31-45-125:/etc/prometheus$ promtool check rules rules.yml
+Checking rules.yml
+  SUCCESS: 1 rules found
+
+ubuntu@ip-172-31-45-125:~$ vim /etc/prometheus/prometheus.yml
+---
+rule_files:
+   - "rules.yml"
+---
+
+ubuntu@ip-172-31-45-125:~$ sudo systemctl restart prometheus.service
+
+
+
+ubuntu@ip-172-31-45-125:~$ sudo vim /etc/prometheus/rules.yml
+---
+groups:
+  - name: Node_exporter
+    rules:
+    - record: job:satuts_node_exporter
+      expr: up{job="node01"}
+      labels:
+        node: "node_exporter"
+
+  - name: free_memory
+    rules:
+    - record: free_memory
+      expr: node_memory_MemAvailable_bytes / 1024 / 1024
+---
+
+
+ubuntu@ip-172-31-45-125:~$ sudo systemctl restart prometheus.service
+
+
+
+
+
+
+
+
+
+
+
+
+
