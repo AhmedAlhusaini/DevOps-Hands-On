@@ -1,0 +1,137 @@
+
+$ vim prom.yaml
+$ chmod +x prom.yaml
+$ sudo ./prom.yaml
+
+
+
+Bash Script to install prometheus as a services:
+----------------------------------------
+
+#!/bin/bash -e
+# Prometheus installation script for Linux (EC2/Amazon Linux/Ubuntu)
+# Installs Prometheus v3.9.1, sets up directories, user, and systemd service.
+# All logs written to /var/log/prometheus-install.log
+
+LOGFILE="/var/log/prometheus-install.log"
+exec > >(tee -a "$LOGFILE") 2>&1
+
+echo "=== Starting Prometheus installation at $(date) ==="
+
+# -------------------------------
+# Step 1: Download Prometheus (wget fallback to curl)
+# -------------------------------
+cd /tmp
+echo "[INFO] Downloading Prometheus v3.9.1..."
+wget https://github.com/prometheus/prometheus/releases/download/v3.9.1/prometheus-3.9.1.linux-amd64.tar.gz \
+  || curl -LO https://github.com/prometheus/prometheus/releases/download/v3.9.1/prometheus-3.9.1.linux-amd64.tar.gz
+
+# Validate download
+if [ ! -f prometheus-3.9.1.linux-amd64.tar.gz ]; then
+  echo "[ERROR] Prometheus tarball not downloaded!"
+  exit 1
+fi
+
+# -------------------------------
+# Step 2: Create Prometheus user
+# -------------------------------
+if id "prometheus" &>/dev/null; then
+  echo "[INFO] User prometheus already exists."
+else
+  sudo useradd --no-create-home --shell /bin/false prometheus
+  echo "[INFO] User prometheus created."
+fi
+
+# -------------------------------
+# Step 3: Extract Prometheus tarball
+# -------------------------------
+echo "[INFO] Extracting Prometheus..."
+tar -xzf prometheus-3.9.1.linux-amd64.tar.gz
+
+if [ ! -d prometheus-3.9.1.linux-amd64 ]; then
+  echo "[ERROR] Extraction failed!"
+  exit 1
+fi
+
+# -------------------------------
+# Step 4: Move binaries to /usr/local/bin
+# -------------------------------
+echo "[INFO] Installing binaries..."
+sudo cp prometheus-3.9.1.linux-amd64/prometheus /usr/local/bin/
+sudo cp prometheus-3.9.1.linux-amd64/promtool /usr/local/bin/
+
+# Validate binaries
+if [ ! -x /usr/local/bin/prometheus ] || [ ! -x /usr/local/bin/promtool ]; then
+  echo "[ERROR] Binaries not installed correctly!"
+  exit 1
+fi
+
+sudo chown prometheus:prometheus /usr/local/bin/prometheus
+sudo chown prometheus:prometheus /usr/local/bin/promtool
+
+# -------------------------------
+# Step 5: Create config and data directories
+# -------------------------------
+echo "[INFO] Creating directories..."
+sudo mkdir -p /etc/prometheus
+sudo mkdir -p /var/lib/prometheus
+
+sudo cp prometheus-3.9.1.linux-amd64/prometheus.yml /etc/prometheus/
+
+sudo chown -R prometheus:prometheus /etc/prometheus
+sudo chown -R prometheus:prometheus /var/lib/prometheus
+
+# Validate config
+if [ ! -f /etc/prometheus/prometheus.yml ]; then
+  echo "[ERROR] Config file missing!"
+  exit 1
+fi
+
+# -------------------------------
+# Step 6: Create systemd service file
+# -------------------------------
+echo "[INFO] Creating systemd service..."
+sudo tee /etc/systemd/system/prometheus.service > /dev/null <<EOF
+[Unit]
+Description=Prometheus Monitoring
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+User=prometheus
+Group=prometheus
+Type=simple
+ExecStart=/usr/local/bin/prometheus \\
+  --config.file=/etc/prometheus/prometheus.yml \\
+  --storage.tsdb.path=/var/lib/prometheus/
+
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+# -------------------------------
+# Step 7: Reload systemd and start Prometheus
+# -------------------------------
+echo "[INFO] Starting Prometheus service..."
+sudo systemctl daemon-reload
+sudo systemctl enable prometheus
+sudo systemctl start prometheus
+
+sleep 3
+
+# Validate service
+if systemctl is-active --quiet prometheus; then
+  echo "[SUCCESS] Prometheus is running."
+else
+  echo "[ERROR] Prometheus failed to start!"
+  sudo journalctl -u prometheus --no-pager | tail -20
+  exit 1
+fi
+
+echo "=== Prometheus installation completed successfully at $(date) ==="
+echo "[INFO] Logs available at $LOGFILE"
+
+
+------------------------------------
