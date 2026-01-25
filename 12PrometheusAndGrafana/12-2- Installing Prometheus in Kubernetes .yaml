@@ -1,0 +1,208 @@
+
+
+
+
+# install helm
+$ curl https://baltocdn.com/helm/signing.asc | gpg --dearmor | sudo tee /usr/share/keyrings/helm.gpg > /dev/null
+$ sudo apt-get install apt-transport-https --yes
+$ echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/helm.gpg] https://baltocdn.com/helm/stable/debian/ all main" | sudo tee /etc/apt/sources.list.d/helm-stable-debian.list
+$ sudo apt-get update
+$ sudo apt-get install helm
+
+$ helm version
+
+Then 
+
+helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+helm repo update
+
+
+ubuntu@master:~$ helm repo update
+Hang tight while we grab the latest from your chart repositories...
+...Successfully got an update from the "prometheus-community" chart repository
+Update Complete. ⎈Happy Helming!⎈
+
+helm install prometheus prometheus-community/prometheus
+
+
+PS C:\Users\ahmed.elhossainy> helm install prometheus prometheus-community/prometheus
+I0124 08:27:13.289186   29608 warnings.go:110] "Warning: spec.SessionAffinity is ignored for headless services"
+NAME: prometheus
+LAST DEPLOYED: Sat Jan 24 08:27:12 2026
+NAMESPACE: default
+STATUS: deployed
+REVISION: 1
+DESCRIPTION: Install complete
+TEST SUITE: None
+NOTES:
+The Prometheus server can be accessed via port 80 on the following DNS name from within your cluster:
+prometheus-server.default.svc.cluster.local
+
+
+Get the Prometheus server URL by running these commands in the same shell:
+  export POD_NAME=$(kubectl get pods --namespace default -l "app.kubernetes.io/name=prometheus,app.kubernetes.io/instance=prometheus" -o jsonpath="{.items[0].metadata.name}")
+  kubectl --namespace default port-forward $POD_NAME 9090
+
+
+The Prometheus alertmanager can be accessed via port 9093 on the following DNS name from within your cluster:
+prometheus-alertmanager.default.svc.cluster.local
+
+
+Get the Alertmanager URL by running these commands in the same shell:
+  export POD_NAME=$(kubectl get pods --namespace default -l "app.kubernetes.io/name=alertmanager,app.kubernetes.io/instance=prometheus" -o jsonpath="{.items[0].metadata.name}")
+  kubectl --namespace default port-forward $POD_NAME 9093
+#################################################################################
+######   WARNING: Pod Security Policy has been disabled by default since    #####
+######            it deprecated after k8s 1.25+. use                        #####
+######            (index .Values "prometheus-node-exporter" "rbac"          #####
+###### .          "pspEnabled") with (index .Values                         #####
+######            "prometheus-node-exporter" "rbac" "pspAnnotations")       #####
+######            in case you still need it.                                #####
+#################################################################################
+
+
+The Prometheus PushGateway can be accessed via port 9091 on the following DNS name from within your cluster:
+prometheus-prometheus-pushgateway.default.svc.cluster.local
+
+
+Get the PushGateway URL by running these commands in the same shell:
+  export POD_NAME=$(kubectl get pods --namespace default -l "app=prometheus-pushgateway,component=pushgateway" -o jsonpath="{.items[0].metadata.name}")
+  kubectl --namespace default port-forward $POD_NAME 9091
+
+For more information on running Prometheus, visit:
+https://prometheus.io/
+
+
+## If you want to unistall the one in defaulot namespace
+helm install prometheus prometheus-community/kube-prometheus-stack --namespace default
+Or if you want to install in monitoring namespace 
+helm install prometheus prometheus-community/kube-prometheus-stack --namespace monitoring --create-namespace
+but first you need to uninstall the previous one
+helm uninstall prometheus -n default
+kubectl delete clusterrole prometheus-kube-state-metrics
+kubectl delete clusterrolebinding prometheus-kube-state-metrics
+
+Then you can : 
+helm install prometheus prometheus-community/kube-prometheus-stack --namespace monitoring --create-namespace
+
+NAME: prometheus
+LAST DEPLOYED: Sat Jan 24 08:31:56 2026
+NAMESPACE: monitoring
+STATUS: deployed
+REVISION: 1
+DESCRIPTION: Install complete
+NOTES:
+kube-prometheus-stack has been installed. Check its status by running:
+  kubectl --namespace monitoring get pods -l "release=prometheus"
+
+
+🔧 Access Prometheus:
+
+kubectl -n monitoring port-forward svc/prometheus-kube-prometheus-prometheus 9090
+
+🔧 Access Alertmanager:
+kubectl -n monitoring port-forward svc/prometheus-kube-prometheus-alertmanager 9093
+
+
+🔧 Access Other Components:
+kubectl -n monitoring port-forward svc/prometheus-kube-state-metrics 8080
+kubectl -n monitoring port-forward svc/prometheus-prometheus-node-exporter 9100
+
+
+
+Get Grafana 'admin' user password by running:
+
+  kubectl --namespace monitoring get secrets prometheus-grafana -o jsonpath="{.data.admin-password}" | base64 -d ; echo
+  
+  # In windows 
+  $secret = kubectl -n monitoring get secret prometheus-grafana -o jsonpath="{.data.admin-password}"
+[System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String($secret))
+
+or :
+kubectl -n monitoring get secret prometheus-grafana -o go-template="{{.data.admin-password | base64decode}}"
+
+or if you have git bash or wsl 
+kubectl -n monitoring get secret prometheus-grafana -o jsonpath="{.data.admin-password}" | base64 --decode; echo
+
+
+Access Grafana local instance:
+
+  export POD_NAME=$(kubectl --namespace monitoring get pod -l "app.kubernetes.io/name=grafana,app.kubernetes.io/instance=prometheus" -oname)
+  kubectl --namespace monitoring port-forward $POD_NAME 3000
+  
+  # One line 
+  kubectl --namespace monitoring port-forward $(kubectl --namespace monitoring get pod -l "app.kubernetes.io/name=grafana,app.kubernetes.io/instance=prometheus" -o name) 3000
+
+
+Get your grafana admin user password by running:
+
+  kubectl get secret --namespace monitoring -l app.kubernetes.io/component=admin-secret -o jsonpath="{.items[0].data.admin-password}" | base64 --decode ; echo
+
+
+Visit https://github.com/prometheus-operator/kube-prometheus for instructions on how to create & configure Alertmanager and Prometheus instances using the Operator.
+
+
+
+ubuntu@master:~$ kubectl get all -n monitoring
+
+PS C:\Users\ahmed.elhossainy> kubectl get all -n monitoring
+NAME                                                         READY   STATUS              RESTARTS      AGE
+pod/alertmanager-prometheus-kube-prometheus-alertmanager-0   2/2     Running             0             101s
+pod/prometheus-grafana-655f9ff999-prb9x                      3/3     Running             0             2m4s
+pod/prometheus-kube-prometheus-operator-fb6b5655-lbrhz       1/1     Running             0             2m4s
+pod/prometheus-kube-state-metrics-7dfddfdf48-cqvgt           1/1     Running             0             2m4s
+pod/prometheus-prometheus-kube-prometheus-prometheus-0       2/2     Running             0             99s
+pod/prometheus-prometheus-node-exporter-cgk6s                0/1     RunContainerError   4 (16s ago)   2m4s
+
+NAME                                              TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)                      AGE
+service/alertmanager-operated                     ClusterIP   None            <none>        9093/TCP,9094/TCP,9094/UDP   101s
+service/prometheus-grafana                        ClusterIP   10.109.32.99    <none>        80/TCP                       2m4s
+service/prometheus-kube-prometheus-alertmanager   ClusterIP   10.99.219.90    <none>        9093/TCP,8080/TCP            2m4s
+service/prometheus-kube-prometheus-operator       ClusterIP   10.111.226.69   <none>        443/TCP                      2m4s
+service/prometheus-kube-prometheus-prometheus     ClusterIP   10.104.161.25   <none>        9090/TCP,8080/TCP            2m4s
+service/prometheus-kube-state-metrics             ClusterIP   10.102.105.60   <none>        8080/TCP                     2m4s
+service/prometheus-operated                       ClusterIP   None            <none>        9090/TCP                     100s
+service/prometheus-prometheus-node-exporter       ClusterIP   10.102.185.32   <none>        9100/TCP                     2m4s
+
+NAME                                                 DESIRED   CURRENT   READY   UP-TO-DATE   AVAILABLE   NODE SELECTOR            AGE
+daemonset.apps/prometheus-prometheus-node-exporter   1         1         0       1            0           kubernetes.io/os=linux   2m4s
+
+NAME                                                  READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/prometheus-grafana                    1/1     1            1           2m4s
+deployment.apps/prometheus-kube-prometheus-operator   1/1     1            1           2m4s
+deployment.apps/prometheus-kube-state-metrics         1/1     1            1           2m4s
+
+NAME                                                           DESIRED   CURRENT   READY   AGE
+replicaset.apps/prometheus-grafana-655f9ff999                  1         1         1       2m4s
+replicaset.apps/prometheus-kube-prometheus-operator-fb6b5655   1         1         1       2m4s
+replicaset.apps/prometheus-kube-state-metrics-7dfddfdf48       1         1         1       2m4s
+
+NAME                                                                    READY   AGE
+statefulset.apps/alertmanager-prometheus-kube-prometheus-alertmanager   1/1     102s
+statefulset.apps/prometheus-prometheus-kube-prometheus-prometheus       1/1     101s
+
+
+
+# Access Prometheus UI
+kubectl port-forward -n monitoring \
+$(kubectl get pods -n monitoring -l app.kubernetes.io/name=prometheus,app.kubernetes.io/instance=prometheus -o jsonpath='{.items[0].metadata.name}') \
+9090
+
+
+# Optionally 
+serverFiles:
+  prometheus.yml:
+    scrape_configs:
+      - job_name: 'prometheus'
+        static_configs:
+          - targets: ['localhost:9090']
+      - job_name: 'docker-daemon'
+        static_configs:
+          - targets: ['host.docker.internal:9323']
+          
+helm upgrade prometheus prometheus-community/prometheus -n monitoring -f prometheus-values.yaml
+
+
+
+
+
